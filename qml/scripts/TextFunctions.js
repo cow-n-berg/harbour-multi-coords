@@ -137,6 +137,25 @@ function wayptFoundButton(isWpt, isFound) {
 }
 
 /*
+*  Building up an button text
+*/
+function coverText(gccode, gcname, wpnumber, showAppName) {
+    var text = "";
+    if (gccode !== undefined) {
+        text += gccode + "\n" + truncateString(gcname,12);
+    }
+    if (wpnumber !== undefined) {
+        text += "\nWP " + wpnumber;
+    }
+    if (showAppName) {
+        if (gccode !== undefined)
+            text += "\n";
+        }
+        text += qsTr("GMFS");
+    return text
+}
+
+/*
 *  Total abuse of this function :D
 *  Write to console, and return an empty string!
 */
@@ -237,5 +256,66 @@ function showLetters( letters ) {
         }
     }
     result += "Checksum = " + checksum;
+    return result
+}
+
+/*
+*  Function to extract information from raw text
+*/
+function coordsByRegEx(rawText) {
+    var regExGcCode = /(GC.{1,5})/;
+    var regExGcName = /<groundspeak:name>([^<]*)/;
+    var regExLatLon = /<wpt lat="([^"]*)" lon="([^"]*)">/;
+    var regExCoords = /([NS]\s?[0-9]{1,2}°?\s[0-9]{1,2}\.[0-9]{1,3}\s[EW]\s?[0-9]{1,3}°?\s[0-9]{1,2}\.[0-9]{1,3})/g;
+    var regExFormul = /([NS].{8,50}[EW].{8,50})/g;
+
+    var result = {code: '', name: '', coords: [] };
+    var arrCoord = result.coords;
+    var waypt = 0;
+    var res;
+    var coordinate;
+
+
+    // In case they entered a GPX file
+    res = regExGcName.exec(rawText);
+    if (res !== null) {
+        result.name = res[1];
+    }
+
+    res = regExGcCode.exec(rawText);
+    if (res !== null) {
+        result.code = res[1];
+    }
+
+    res = regExLatLon.exec(rawText);
+    if (res !== null) {
+        var degLat = parseInt(res[1]);
+        var degLon = parseInt(res[2]);
+        var Lat = (parseFloat(res[1]) - degLat) * 60;
+        var Lon = (parseFloat(res[2]) - degLon) * 60;
+
+        coordinate  = degLat > 0 ?  "N" :  "S" + degLat.toString() + " " + Lat.toFixed(3);
+        coordinate += degLon > 0 ? " E" : " W" + degLon.toString() + " " + Lon.toFixed(3);
+        arrCoord.push({coord: coordinate});
+    }
+
+    do {
+        res = regExCoords.exec(rawText);
+        if (res !== null) {
+            coordinate = res[1];
+            arrCoord.push({coord: coordinate});
+        }
+    } while (res !== null)
+
+    do {
+        res = regExFormul.exec(rawText);
+        if (res !== null) {
+            coordinate = res[1];
+            arrCoord.push({coord: coordinate});
+        }
+    } while (res !== null)
+
+    console.log(JSON.stringify(result));
+
     return result
 }

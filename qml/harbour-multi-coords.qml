@@ -8,7 +8,7 @@ ApplicationWindow
 {
     id: generic
 
-    property string version            : "0.4"
+    property string version            : "0.5"
     property var browserUrl            : "https://coord.info/"
 
     property var gcName

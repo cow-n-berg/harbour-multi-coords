@@ -21,20 +21,21 @@
 
 var databaseHandler = null;
 var cleanRecs = false;
+var deleteDatabase
 
 function openDatabase() {
     if (databaseHandler === null)
     {
         try {
             databaseHandler = DB.LocalStorage.openDatabaseSync(
-                                "gmfs-db", "0.1",
+                                "gmfs-db", "",
                                 "GMFS Database", 1000000);
-    //        upgradeDatabase();
+//            upgradeDatabase();
             cleanTablesRecs();
             initializeDatabase();
-            if (generic.deleteDatabase) {
-                generic.deleteDatabase = false
-                setSetting( "deleteDatabase", generic.deleteDatabase )
+            if (deleteDatabase) {
+                deleteDatabase = false
+                setSetting( "deleteDatabase", deleteDatabase )
             }
         } catch (err) {
             console.log("initDatabase " + err);
@@ -43,10 +44,12 @@ function openDatabase() {
 }
 
 function cleanTablesRecs() {
-    var db = openDatabase();
 
+    deleteDatabase = getSetting( "deleteDatabase" );
+
+    var db = openDatabase();
     db.transaction(function(tx) {
-        if (generic.deleteDatabase) {
+        if (deleteDatabase) {
             tx.executeSql("\
                 DROP TABLE IF EXISTS \
                     geocaches \
@@ -119,10 +122,11 @@ function initializeDatabase()
                 wayptid INTEGER PRIMARY KEY, \
                 cacheid INTEGER NOT NULL, \
                 waypoint INTEGER NOT NULL, \
+                rawtext TEXT DEFAULT '', \
                 formula TEXT NOT NULL, \
                 note TEXT NOT NULL, \
                 is_waypoint INTEGER DEFAULT 0, \
-                found INTEGER DEFAULT 0
+                found INTEGER DEFAULT 0 \
             )");
         tx.executeSql("\
             CREATE INDEX IF NOT EXISTS waypt ON geo_waypts ( \
@@ -139,7 +143,8 @@ function initializeDatabase()
                 wayptid INTEGER NOT NULL, \
                 cacheid INTEGER NOT NULL, \
                 letter TEXT NOT NULL, \
-                lettervalue TEXT DEFAULT '' \
+                lettervalue TEXT DEFAULT '', \
+                remark TEXT DEFAULT ''  \
             )");
         tx.executeSql("\
             CREATE INDEX IF NOT EXISTS cache_letter ON geo_letters ( \
@@ -159,6 +164,33 @@ function initializeDatabase()
         }
 
     });
+}
+
+/*
+ * Handles updates of old databases.
+ */
+function upgradeDatabase()
+{
+    var db = openDatabase();
+
+    console.log(db.version);
+    if (db.version !== "0.2")
+    {
+        db.changeVersion(db.version, "0.3", function (tx) {
+            if (db.version === "0.1") {
+                /*
+                 * Enables remarks with geo_letters.
+                 */
+                tx.executeSql("ALTER TABLE geo_waypts ADD COLUMN rawtext TEXT DEFAULT ''");
+                tx.executeSql("ALTER TABLE geo_letters ADD COLUMN remark TEXT DEFAULT ''");
+                console.log("Tables altered");
+                /*
+                 * Upgrade complete.
+                 */
+                db.version = "0.2";
+            }
+        });
+    }
 }
 
 /*
@@ -220,7 +252,8 @@ function getLettersWP(wayptid)
                 wayptid, \
                 letterid, \
                 letter, \
-                ifnull(lettervalue, '') AS lettervalue \
+                lettervalue, \
+                remark \
                 FROM geo_letters \
                 WHERE wayptid=? \
                 ORDER BY letter \
@@ -240,7 +273,8 @@ function getLetters(cacheid)
     db.transaction(function(tx) {
         var rs = tx.executeSql("\
             SELECT letter, \
-                ifnull(lettervalue, '') AS lettervalue \
+                lettervalue, \
+                remark \
                 FROM geo_letters \
                 WHERE cacheid=? \
                 ORDER BY letter \
@@ -268,7 +302,7 @@ function addCache(geocache, name, found)
     });
 }
 
-function addStdCache()
+function addStd1Cache()
 {
     var geocache = 'GC3A7RC';
     var name = 'where it started';
@@ -378,14 +412,15 @@ function setWayptFound(id, found)
             WHERE wayptid = ?;', [id,found]);
     } )
 }
-function setLetter(letter, value)
+function setLetter(letter, value, remark)
 {
     var db = openDatabase();
     db.transaction(function(tx) {
         tx.executeSql('\
             UPDATE geo_letters \
-            SET lettervalue = ? \
-            WHERE letter = ?;', [value,letter]);
+            SET lettervalue = ?,
+                remark = ? \
+            WHERE letter = ?;', [value,remark,letter]);
     } )
 }
 

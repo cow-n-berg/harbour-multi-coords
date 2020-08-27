@@ -38,8 +38,11 @@ Page {
 
         VerticalScrollDecorator { flickable: wpView }
 
-        anchors.fill: parent
-        anchors.margins: Theme.paddingMedium
+        anchors {
+            fill: parent
+            leftMargin: Theme.paddingMedium
+            rightMargin: Theme.paddingMedium
+        }
         contentHeight: column.height + Theme.itemSizeMedium
         quickScroll : true
 
@@ -148,6 +151,12 @@ Page {
 //                visible: !generic.wpIsWp
             }
 
+        }
+        PullDownMenu {
+            MenuItem {
+                text: qsTr("Refresh")
+                onClicked: listModelLett.updateLett()
+            }
         }
     }
 }

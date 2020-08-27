@@ -152,6 +152,10 @@ Page {
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
             }
             MenuItem {
+                text: qsTr("Refresh")
+                onClicked: listModelGC.updateGC()
+            }
+            MenuItem {
                 text: qsTr("Add Geocache Multi")
                 onClicked: pageStack.push(Qt.resolvedUrl("MultiAddPage.qml"))
             }

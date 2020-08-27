@@ -67,15 +67,51 @@
         <source>View in browser</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Refresh</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
-    <name>CoverPage</name>
+    <name>MultiAddPage</name>
     <message>
-        <source>GMFS</source>
+        <source>Add Multi cache</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>WP </source>
+        <source>Past the entire Geocache description - or the content of a GPX file! - in the next text area. Use the button to extract possible coordinates and formulas. Use press-and-hold to remove options. Formulas may be too long, you can edit them later. </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>How to add</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paste description, formula or raw text here</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process raw text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Results: Geocache items</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Geocache code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Geocache name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Main coordinate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Waypoint formula (raw text)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -91,6 +127,10 @@
     </message>
     <message>
         <source>View in browser</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refresh</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -159,6 +199,10 @@
         <source>Found</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>GMFS</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WayptShowPage</name>
@@ -192,6 +236,10 @@
     </message>
     <message>
         <source>Calculations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refresh</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

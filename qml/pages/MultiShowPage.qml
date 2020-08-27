@@ -133,6 +133,10 @@ Page {
                 }
             }
             MenuItem {
+                text: qsTr("Refresh")
+                onClicked: listModelWP.updateWP()
+            }
+            MenuItem {
                 text: "Add Waypoint"
                 onClicked: {
                 }
