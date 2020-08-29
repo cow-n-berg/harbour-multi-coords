@@ -170,43 +170,47 @@ function textConsole( str ) {
 function formulaToObj( formula ) {
 //    formula = "N52 0[A+3].[B-9][C-8][D-2] E005 1[E-4].[F+2][G-1][H-5]";
 
-    var str = formula.replace(/\[/g, "|[");
-    str = str.replace(/\]/g, "|");
-    str = str.replace(/\|\|/g, "|");
-    var arr = str.split("|");
+    if (formula !== undefined) {
 
-    var obj = [];
-    for (var i = 0; i < arr.length; i++) {
-        var txt = arr[i];
-        var calc = ( txt.substr(0,1) === "[" );
-        if (calc) {
-            txt = txt.substr(1);
+        var str = formula.replace(/\[/g, "|[");
+        str = str.replace(/\]/g, "|");
+        str = str.replace(/\|\|/g, "|");
+        var arr = str.split("|");
+
+        var obj = [];
+        for (var i = 0; i < arr.length; i++) {
+            var txt = arr[i];
+            var calc = ( txt.substr(0,1) === "[" );
+            if (calc) {
+                txt = txt.substr(1);
+            }
+            if (txt.length > 0) {
+                obj.push( { "part": txt, "eval": calc } )
+            }
         }
-        if (txt.length > 0) {
-            obj.push( { "part": txt, "eval": calc } )
-        }
+
+        // console.log( JSON.stringify(obj) );
+        // Resultaat:
+        /*
+        * [
+        * {"eval":false,"part":"N52 0"},
+        * {"eval":true, "part":"A+3"},
+        * {"eval":false,"part":"."},
+        * {"eval":true, "part":"B-9"},
+        * {"eval":true, "part":"C-8"},
+        * {"eval":true, "part":"D-2"},
+        * {"eval":false,"part":" E005 1"},
+        * {"eval":true, "part":"E-4"},
+        * {"eval":false,"part":"."},
+        * {"eval":true, "part":"F+2"},
+        * {"eval":true, "part":"G-1"},
+        * {"eval":true, "part":"H-5"}
+        * ]
+        */
+
+        return obj
     }
-
-    // console.log( JSON.stringify(obj) );
-    // Resultaat:
-    /*
-    * [
-    * {"eval":false,"part":"N52 0"},
-    * {"eval":true, "part":"A+3"},
-    * {"eval":false,"part":"."},
-    * {"eval":true, "part":"B-9"},
-    * {"eval":true, "part":"C-8"},
-    * {"eval":true, "part":"D-2"},
-    * {"eval":false,"part":" E005 1"},
-    * {"eval":true, "part":"E-4"},
-    * {"eval":false,"part":"."},
-    * {"eval":true, "part":"F+2"},
-    * {"eval":true, "part":"G-1"},
-    * {"eval":true, "part":"H-5"}
-    * ]
-    */
-
-    return obj
+    return {}
 }
 
 /*
@@ -250,7 +254,11 @@ function showLetters( letters ) {
     var result = "";
     var checksum = 0;
     for (var j = 0; j < letters.length; j++) {
-        result += letters[j].letter + " = " + letters[j].lettervalue + "\n";
+        result += letters[j].letter + " = " + letters[j].lettervalue;
+        if (letters[j].remark !== "") {
+            result += ", " +letters[j].remark;
+        }
+        result += "\n";
         if (letters[j].lettervalue !== "") {
             checksum += Number(letters[j].lettervalue);
         }
@@ -265,9 +273,9 @@ function showLetters( letters ) {
 function coordsByRegEx(rawText) {
     var regExGcCode = /(GC.{1,5})/;
     var regExGcName = /<groundspeak:name>([^<]*)/;
-    var regExLatLon = /<wpt lat="([^"]*)" lon="([^"]*)">/;
+    var regExLatLon = /<wpt lat="([^"]*)" lon="([^"]*)">/g;
     var regExCoords = /([NS]\s?[0-9]{1,2}°?\s[0-9]{1,2}\.[0-9]{1,3}\s[EW]\s?[0-9]{1,3}°?\s[0-9]{1,2}\.[0-9]{1,3})/g;
-    var regExFormul = /([NS].{8,50}[EW].{8,50})/g;
+    var regExFormul = /([NS].{5,50}[EW].{5,50}'?)/g;
 
     var result = {code: '', name: '', coords: [] };
     var arrCoord = result.coords;
@@ -288,22 +296,29 @@ function coordsByRegEx(rawText) {
     }
 
     res = regExLatLon.exec(rawText);
+//    console.log(JSON.stringify(res) + " res1 " + res[1]+ " res2 " + res[2]  );
     if (res !== null) {
         var degLat = parseInt(res[1]);
         var degLon = parseInt(res[2]);
         var Lat = (parseFloat(res[1]) - degLat) * 60;
         var Lon = (parseFloat(res[2]) - degLon) * 60;
+        var strLat = "00" + degLat.toString()
+        var strLon = "00" + degLon.toString()
+        var minLat = "00" + Lat.toFixed(3)
+        var minLon = "00" + Lon.toFixed(3)
 
-        coordinate  = degLat > 0 ?  "N" :  "S" + degLat.toString() + " " + Lat.toFixed(3);
-        coordinate += degLon > 0 ? " E" : " W" + degLon.toString() + " " + Lon.toFixed(3);
-        arrCoord.push({coord: coordinate});
+        coordinate  = (degLat > 0 ?  "N " :  "S ") + strLat.slice(-2) + " " + minLat.slice(-6);
+        coordinate += (degLon > 0 ? " E " : " W ") + strLon.slice(-3) + " " + minLon.slice(-6);
+        arrCoord.push({coord: coordinate, number: waypt});
+        waypt++;
     }
 
     do {
         res = regExCoords.exec(rawText);
         if (res !== null) {
             coordinate = res[1];
-            arrCoord.push({coord: coordinate});
+            arrCoord.push({coord: coordinate, number: waypt});
+            waypt++;
         }
     } while (res !== null)
 
@@ -311,7 +326,8 @@ function coordsByRegEx(rawText) {
         res = regExFormul.exec(rawText);
         if (res !== null) {
             coordinate = res[1];
-            arrCoord.push({coord: coordinate});
+            arrCoord.push({coord: coordinate, number: waypt});
+            waypt++;
         }
     } while (res !== null)
 

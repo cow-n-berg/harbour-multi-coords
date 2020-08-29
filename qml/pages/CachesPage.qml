@@ -16,24 +16,26 @@ Page {
     allowedOrientations: Orientation.All
 
     ListModel {
-        id: listModelGC
+        id: listModel
 
-        function updateGC()
+        function update()
         {
-            listModelGC.clear();
+            listModel.clear();
             var caches = Database.getGeocaches();
             for (var i = 0; i < caches.length; ++i) {
-                listModelGC.append(caches[i]);
+                listModel.append(caches[i]);
+                console.log( JSON.stringify(caches[i]));
             }
-            console.log( "listModelGC updated");
+            console.log( "listModel Caches updated");
+            console.log(JSON.stringify(listModel.get(0)));
         }
     }
 
-    Component.onCompleted: listModelGC.updateGC();
+    Component.onCompleted: listModel.update();
 
     SilicaListView {
         id: gcListView
-        model: listModelGC
+        model: listModel
 
         anchors.fill: parent
         spacing: Theme.paddingLarge
@@ -45,7 +47,7 @@ Page {
 
         ViewPlaceholder {
             id: placeh
-            enabled: listModelGC.count === 0
+            enabled: listModel.count === 0
             text: "No geocaches yet"
             hintText: "Pull down to add,\nor go to Settings for examples"
         }
@@ -60,6 +62,21 @@ Page {
 
 //            height: contentItem.childrenRect.height
 //            anchors.margins: Theme.paddingLarge
+
+//            Label {
+//                id: workAround
+//                width: parent.width
+
+//                function checkRefresh(isDirty) {
+//                    if (isDirty) {
+//                        listModel.update()
+//                    }
+//                    return ""
+//                }
+
+//                text: checkRefresh(generic.cachesDirty)
+//                visible: false
+//            }
 
             Label {
                 id: nameGC
@@ -80,9 +97,8 @@ Page {
 
                 pageStack.push(Qt.resolvedUrl("MultiShowPage.qml"))
 			}
-            onPressAndHold: {
-
-            }
+//            onPressAndHold: {
+//            }
 
             Label {
                 id: codeGC
@@ -125,17 +141,18 @@ Page {
                     MenuItem {
                         text: qsTr("Edit")
                         onClicked: {
-                            console.log("Edit " + index + ", id " + cacheid)
+                            console.log("Edit " + model.index + ", id " + listModel[model.index].cacheid)
 //                            Database.deleteCache(cacheid)
-//                            listModelGC.updateGC()
+                            generic.cacheDirty = true
                         }
                     }
                     MenuItem {
                         text: qsTr("Delete")
-                        onClicked: remorse.execute("Clearing", function() {
-                            console.log("Remove " + index + ", id " + cacheid)
-                            Database.deleteCache(cacheid)
-                            listModelGC.updateGC()
+                        onClicked: remorse.execute("Clearing geocache", function() {
+//                            console.log(listModel.get(listModel.index))
+                            console.log("Remove " + geocache)
+//                            Database.deleteCache(cacheid)
+                            generic.cacheDirty = true
                         })
                     }
                 }
@@ -152,12 +169,18 @@ Page {
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
             }
             MenuItem {
-                text: qsTr("Refresh")
-                onClicked: listModelGC.updateGC()
-            }
-            MenuItem {
                 text: qsTr("Add Geocache Multi")
                 onClicked: pageStack.push(Qt.resolvedUrl("MultiAddPage.qml"))
+            }
+        }
+        PushUpMenu  {
+            MenuItem {
+                text: qsTr("Show Contents DB in Console")
+                onClicked: Database.showAllData()
+            }
+            MenuItem {
+                text: qsTr("Refresh")
+                onClicked: listModel.update()
             }
         }
 

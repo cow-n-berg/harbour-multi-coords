@@ -11,22 +11,23 @@ Page {
     allowedOrientations: Orientation.All
 
     ListModel {
-        id: listModelLett
+        id: listModel
 
-        function updateLett()
+        function update()
         {
-            listModelLett.clear();
+            listModel.clear();
             var lettrs = Database.getLettersWP(generic.wpId);
-            console.log( JSON.stringify(lettrs) );
+            console.log( "Waypt letters: " + JSON.stringify(lettrs) );
             for (var i = 0; i < lettrs.length; ++i) {
-                listModelLett.append(lettrs[i]);
+                listModel.append(lettrs[i]);
             }
-            console.log( "listModelLett updated");
-            generic.allLetters = Database.getLetters(generic.gcId)
+            console.log( "listModel Letters updated");
+            generic.allLetters = Database.getLetters(generic.gcId);
+
         }
     }
 
-    Component.onCompleted: listModelLett.updateLett();
+    Component.onCompleted: listModel.update()
 
     SilicaFlickable {
         id: wpView
@@ -65,6 +66,22 @@ Page {
                 margins: 0
             }
 
+//            TextField {
+//                id: workAround
+//                width: parent.width
+//                readOnly: true
+
+//                function checkRefresh(isDirty) {
+//                    if (isDirty) {
+//                        listModel.update()
+//                    }
+//                    return ""
+//                }
+
+//                text: checkRefresh(generic.wayptDirty)
+//                visible: false
+//            }
+
             TextArea {
                 id: wpcalc
                 width: parent.width
@@ -84,11 +101,11 @@ Page {
 
             SectionHeader {
                 text: qsTr("Options")
-                visible: listModelLett.count > 0 && generic.wpForm !== wpcalc.text
+                visible: listModel.count > 0 && generic.wpForm !== wpcalc.text
             }
 
             Repeater {
-                model: listModelLett
+                model: listModel
                 width: parent.width
 
                 ListItem {
@@ -102,8 +119,8 @@ Page {
                         onClicked: {
                             generic.lettEdit  = letter
                             pageStack.push(Qt.resolvedUrl("LetterPage.qml"),
-                                           {"lettervalue": lettervalue})
-                            listModelLett.updateLett();
+                                           {"letterid": letterid})
+//                            listModel.update();
                         }
                     }
 
@@ -117,7 +134,7 @@ Page {
                 text: TF.wayptFoundButton(generic.wpIsWp, generic.wpFound)
                 onClicked: {
                     generic.wpFound = !generic.wpFound
-                    Database.setWayptFound(generic.wpId, generic.wpFound)
+                    Database.setWayptFound(generic.wpId, generic.wpFound, generic.gcId)
                     if (!generic.wpIsWp) {
                         Database.setCacheFound(generic.gcId, generic.wpFound)
                     }
@@ -129,7 +146,7 @@ Page {
 
             SectionHeader {
                 text: qsTr("Calculations")
-//                visible: listModelLett.count > 0
+//                visible: listModel.count > 0
             }
             TextArea {
                 width: parent.width
@@ -152,10 +169,24 @@ Page {
             }
 
         }
+
+        RemorsePopup { id: remorse }
+
         PullDownMenu {
             MenuItem {
+                text: qsTr("Delete")
+                onClicked: remorse.execute("Clearing waypoint", function() {
+                    console.log("Remove waypt" + index + ", id " + generic.wpId)
+                    Database.deleteWaypt(generic.wpId, generic.gcId)
+                    generic.multiDirty = true
+                    pageStack.pop()
+                })
+            }
+        }
+        PushUpMenu {
+            MenuItem {
                 text: qsTr("Refresh")
-                onClicked: listModelLett.updateLett()
+                onClicked: listModel.update()
             }
         }
     }

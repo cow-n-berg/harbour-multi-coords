@@ -60,9 +60,11 @@ Dialog {
 
             if (cache1Adding) {
                 Database.addStd1Cache()
+                generic.cachesDirty = true
             }
             if (cache2Adding) {
                 Database.addStd2Cache()
+                generic.cachesDirty = true
             }
         }
     }

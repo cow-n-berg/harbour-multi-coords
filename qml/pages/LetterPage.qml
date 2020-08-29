@@ -6,8 +6,22 @@ import "../scripts/TextFunctions.js" as TF
 Dialog {
     id: dialog
 
+    property var    letterid
     property string lettervalue
-    property string letter : generic.lettEdit
+    property string letterremark
+    property string letter
+
+    function getThisLetter() {
+        var letters = Database.getOneLetter(letterid)
+        console.log("This letter: " + JSON.stringify(letters))
+        if (letters.length > 0) {
+            letter       = letters[0].letter
+            lettervalue  = letters[0].lettervalue
+            letterremark = letters[0].remark
+        }
+    }
+
+    Component.onCompleted: getThisLetter(letterid);
 
     Column {
         width: parent.width
@@ -24,26 +38,42 @@ Dialog {
             inputMethodHints: Qt.ImhFormattedNumbersOnly
             focus: true
             EnterKey.enabled: text.length > 0
-            EnterKey.iconSource: "image://theme/icon-m-enter-close"
+            EnterKey.iconSource: "image://theme/icon-m-enter-next"
 
             // When Enter key is pressed, accept the dialog
-            EnterKey.onClicked: dialog.accept()        }
+            EnterKey.onClicked: lettRemark.focus = true
+        }
 
         TextArea {
             width: parent.width
             readOnly: true
             text: generic.wpNote
-//            label: qsTr("Note")
             color: Theme.secondaryColor
+        }
+
+        TextField {
+            id: lettRemark
+            width: parent.width
+            text: letterremark
+            placeholderText: label
+            label: qsTr("Remark")
+            EnterKey.enabled: text.length > 0
+            EnterKey.iconSource: "image://theme/icon-m-enter-close"
+
+            // When Enter key is pressed, accept the dialog
+            EnterKey.onClicked: dialog.accept()
         }
     }
 
     onDone: {
         if (result == DialogResult.Accepted) {
             lettervalue = lettValue.text.valueOf()
-            Database.setLetter(letter, lettervalue)
+            console.log("letter value: " + lettervalue)
+            letterremark = lettRemark.text.valueOf()
+            console.log("letter remark: " + letterremark)
+            Database.setLetter(letterid, lettervalue, letterremark)
             generic.allLetters = Database.getLetters(generic.gcId)
-//            generic.lettEdited = true
+            generic.wayptDirty = true
         }
     }
 }

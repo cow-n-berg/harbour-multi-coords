@@ -40,27 +40,7 @@
 <context>
     <name>CachesPage</name>
     <message>
-        <source>Add Geocache Multi</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>All Geocaches</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -68,7 +48,38 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Geocache Multi</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Contents DB in Console</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Refresh</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>LetterPage</name>
+    <message>
+        <source>Remark</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -107,11 +118,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Main coordinate</source>
+        <source>Add Geocache</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Waypoint formula (raw text)</source>
+        <source>About the coordinates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>End of coordinates list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Coordinates list from raw text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Waypoint </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1) After creation you can delete irrelevant coordinates. 2) As formulas may get quite long, too much text may be selected. Editing is possible after creating the Geocache.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -240,6 +267,10 @@
     </message>
     <message>
         <source>Refresh</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

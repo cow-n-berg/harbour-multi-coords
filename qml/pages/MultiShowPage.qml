@@ -7,27 +7,27 @@ import "../scripts/TextFunctions.js" as TF
 Page {
     id: wayptsPage
 
-//    wayptsPage.onOpened() { listModelWP.updateWP() }
+//    wayptsPage.onOpened() { listModel.update() }
     allowedOrientations: Orientation.All
 
     ListModel {
-        id: listModelWP
+        id: listModel
 
-        function updateWP()
+        function update()
         {
-            listModelWP.clear();
+            listModel.clear();
             var waypts = Database.getWaypts(generic.gcId);
             for (var i = 0; i < waypts.length; ++i) {
-                listModelWP.append(waypts[i]);
-                console.log( JSON.stringify(waypts[i]));
+                listModel.append(waypts[i]);
+//                console.log( JSON.stringify(waypts[i]));
             }
-            console.log( "listModelWP updated");
+            console.log( "listModel MultiShow updated");
             generic.allLetters = Database.getLetters(generic.gcId)
 
         }
     }
 
-    Component.onCompleted: listModelWP.updateWP()
+    Component.onCompleted: listModel.update()
 
     SilicaFlickable {
 
@@ -44,7 +44,7 @@ Page {
 
         SilicaListView {
             id: listViewWP
-            model: listModelWP
+            model: listModel
 
             height: parent.height - pageHeader.height
 //            width: parent.width - 2 * Theme.paddingMedium
@@ -57,7 +57,7 @@ Page {
 
             ViewPlaceholder {
                 id: placeh
-                enabled: listModelWP.count === 0
+                enabled: listModel.count === 0
                 text: "No waypoints yet"
                 hintText: "Pull down to add them"
             }
@@ -75,6 +75,21 @@ Page {
                     x: Theme.paddingMedium
                     source: TF.wayptIconUrl( is_waypoint, Theme.colorScheme === Theme.LightOnDark )
                 }
+
+//                Label {
+//                    id: workAround
+//                    width: parent.width
+
+//                    function checkRefresh(isDirty) {
+//                        if (isDirty) {
+//                            listModel.update()
+//                        }
+//                        return ""
+//                    }
+
+//                    text: checkRefresh(generic.multiDirty)
+//                    visible: false
+//                }
 
                 Label {
                     anchors.left: iconContainer.right
@@ -94,8 +109,6 @@ Page {
                     pageStack.push(Qt.resolvedUrl("WayptShowPage.qml"))
                 }
 
-                RemorsePopup { id: remorse }
-
                 Component {
                     id: contextMenu
                     ContextMenu {
@@ -104,16 +117,15 @@ Page {
                             visible: false
                             onClicked: {
                                 console.log("Edit " + index + ", id " + cacheid)
-                                Database.deleteCache(cacheid)
-                                listModelGC.updateGC()
+//                                Database.deleteWaypt(wayptid)
                             }
                         }
                         MenuItem {
                             text: qsTr("Delete")
-                            onClicked: remorse.execute("Clearing", function() {
+                            onClicked: remorse.execute("Clearing waypoint", function() {
                                 console.log("Remove " + index + ", id " + cacheid)
-                                Database.deleteCache(cacheid)
-                                listModelGC.updateGC()
+                                Database.deleteWaypt(wayptid, cacheid)
+                                generic.multiDirty = true
                             })
                         }
                     }
@@ -124,6 +136,8 @@ Page {
 
         }
 
+        RemorsePopup { id: remorse }
+
         PullDownMenu {
             MenuItem {
                 text: qsTr("View in browser")
@@ -133,13 +147,16 @@ Page {
                 }
             }
             MenuItem {
-                text: qsTr("Refresh")
-                onClicked: listModelWP.updateWP()
-            }
-            MenuItem {
                 text: "Add Waypoint"
                 onClicked: {
+                    generic.multiDirty = true
                 }
+            }
+        }
+        PushUpMenu {
+            MenuItem {
+                text: qsTr("Refresh")
+                onClicked: listModel.update()
             }
         }
 

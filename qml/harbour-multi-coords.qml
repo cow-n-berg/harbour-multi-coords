@@ -9,6 +9,9 @@ ApplicationWindow
     id: generic
 
     property string version            : "0.5"
+    property string dbversion          : "1.0"
+    property var    dbhandler          : DB.openDatabase(dbversion)
+
     property var browserUrl            : "https://coord.info/"
 
     property var gcName
@@ -24,12 +27,16 @@ ApplicationWindow
     property var allLetters
     property var lettEdit
 
-    Component.onCompleted: { DB.openDatabase() }
+    // Work-around for refreshing pages
+    property bool cachesDirty : false
+    property bool multiDirty  : false
+    property bool wayptDirty  : false
 
-    property bool stdCacheAdded        : DB.getSetting( "stdCacheAdded", false )
-    property bool stdCache2Added       : DB.getSetting( "stdCache2Added", false )
+    // Settings
     property bool coverShowAppName     : DB.getSetting( "coverShowAppName", false )
     property bool deleteDatabase       : DB.getSetting( "deleteDatabase", false )
+
+    Component.onCompleted: { DB.openDatabase() }
 
     initialPage: Component { CachesPage { } }
     cover: Qt.resolvedUrl("pages/CoverPage.qml")
