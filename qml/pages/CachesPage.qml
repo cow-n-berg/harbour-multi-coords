@@ -96,7 +96,7 @@ Page {
                 generic.gcId   = cacheid
 
                 pageStack.push(Qt.resolvedUrl("MultiShowPage.qml"))
-			}
+            }
 //            onPressAndHold: {
 //            }
 
@@ -138,23 +138,22 @@ Page {
                             ExternalLinks.browse(generic.browserUrl + geocache)
                         }
                     }
-                    MenuItem {
-                        text: qsTr("Edit")
-                        onClicked: {
-                            console.log("Edit " + model.index + ", id " + listModel[model.index].cacheid)
-//                            Database.deleteCache(cacheid)
-                            generic.cacheDirty = true
-                        }
-                    }
-                    MenuItem {
-                        text: qsTr("Delete")
-                        onClicked: remorse.execute("Clearing geocache", function() {
-//                            console.log(listModel.get(listModel.index))
-                            console.log("Remove " + geocache)
-//                            Database.deleteCache(cacheid)
-                            generic.cacheDirty = true
-                        })
-                    }
+//                    MenuItem {
+//                        text: qsTr("Edit")
+//                        onClicked: {
+//                            console.log("Edit " + index + ", id " + listModel[model.index].cacheid)
+//                            generic.cacheDirty = true
+//                        }
+//                    }
+//                    MenuItem {
+//                        text: qsTr("Delete")
+//                        onClicked: remorse.execute("Clearing geocache", function() {
+//                            console.log("Remove geocache " + codeGC.text)
+////                            Database.deleteCache(codeGC.text)
+//                            generic.cacheDirty = true
+//                        })
+//                    }
+
                 }
             }
         }
@@ -175,12 +174,12 @@ Page {
         }
         PushUpMenu  {
             MenuItem {
-                text: qsTr("Show Contents DB in Console")
-                onClicked: Database.showAllData()
-            }
-            MenuItem {
                 text: qsTr("Refresh")
                 onClicked: listModel.update()
+            }
+            MenuItem {
+                text: qsTr("Show Contents DB in Console")
+                onClicked: Database.showAllData()
             }
         }
 

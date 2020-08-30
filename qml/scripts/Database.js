@@ -372,19 +372,27 @@ function addStd1Cache()
     var db = openDatabase();
 
     db.transaction(function(tx) {
-        var rs = tx.executeSql("INSERT OR REPLACE INTO geocaches (geocache, name, found) VALUES (?,?,?);", [geocache,name,found]);
+        var rs = tx.executeSql("\
+                    INSERT OR REPLACE INTO geocaches \
+                    (geocache, name, found) \
+                    VALUES (?,?,?);", [geocache,name,found]);
         console.log(JSON.stringify(rs));
         var cacheId = rs.insertId;
         console.log(cacheId);
         for (var i = 0; i < defaultWpts.length; ++i) {
             var lt = defaultWpts[i].letters;
-            rs = tx.executeSql("INSERT OR REPLACE INTO geo_waypts (cacheid, waypoint, formula, note, is_waypoint, found) VALUES (?,?,?,?,?,?);", [cacheId, defaultWpts[i].waypt, defaultWpts[i].formula, defaultWpts[i].note, defaultWpts[i].is_waypt, defaultWpts[i].found]);
+            rs = tx.executeSql("\
+                    INSERT OR REPLACE INTO geo_waypts \
+                    (cacheid, waypoint, formula, rawtext, note, is_waypoint, found) \
+                    VALUES (?,?,?,?,?,?);", [cacheId, defaultWpts[i].waypt, defaultWpts[i].formula, defaultWpts[i].formula, defaultWpts[i].note, defaultWpts[i].is_waypt, defaultWpts[i].found]);
             var wayptId = rs.insertId;
             for (var j = 0; j < lt.length; ++j) {
-                tx.executeSql("INSERT OR REPLACE INTO geo_letters (wayptid, cacheid, letter) VALUES (?,?,?);", [wayptId, cacheId, lt[j]]);
+                tx.executeSql("\
+                    INSERT OR REPLACE INTO geo_letters \
+                    (wayptid, cacheid, letter) \
+                    VALUES (?,?,?);", [wayptId, cacheId, lt[j]]);
             }
         }
-
     });
     return 1
 }
@@ -411,21 +419,27 @@ function addStd2Cache()
     var db = openDatabase();
 
     db.transaction(function(tx) {
-        var rs = tx.executeSql("INSERT OR REPLACE INTO geocaches (geocache, name, found) VALUES (?,?,?);", [geocache,name,found]);
+        var rs = tx.executeSql("\
+                    INSERT OR REPLACE INTO geocaches \
+                    (geocache, name, found) \
+                    VALUES (?,?,?);", [geocache,name,found]);
         console.log(JSON.stringify(rs));
         var cacheId = rs.insertId;
-        console.log("Cache" + cacheId);
+        console.log(cacheId);
         for (var i = 0; i < defaultWpts.length; ++i) {
             var lt = defaultWpts[i].letters;
-            rs = tx.executeSql("INSERT OR REPLACE INTO geo_waypts (cacheid, waypoint, formula, note, is_waypoint, found) VALUES (?,?,?,?,?,?);", [cacheId, defaultWpts[i].waypt, defaultWpts[i].formula, defaultWpts[i].note, defaultWpts[i].is_waypt, defaultWpts[i].found]);
+            rs = tx.executeSql("\
+                    INSERT OR REPLACE INTO geo_waypts \
+                    (cacheid, waypoint, formula, rawtext, note, is_waypoint, found) \
+                    VALUES (?,?,?,?,?,?);", [cacheId, defaultWpts[i].waypt, defaultWpts[i].formula, defaultWpts[i].formula, defaultWpts[i].note, defaultWpts[i].is_waypt, defaultWpts[i].found]);
             var wayptId = rs.insertId;
-            console.log(cacheId + " WP " + wayptId);
             for (var j = 0; j < lt.length; ++j) {
-                tx.executeSql("INSERT OR REPLACE INTO geo_letters (wayptid, cacheid, letter) VALUES (?,?,?);", [wayptId, cacheId, lt[j]]);
-                console.log("Letter " + lt[j]);
+                tx.executeSql("\
+                    INSERT OR REPLACE INTO geo_letters \
+                    (wayptid, cacheid, letter) \
+                    VALUES (?,?,?);", [wayptId, cacheId, lt[j]]);
             }
         }
-
     });
     return 1
 }
@@ -434,17 +448,19 @@ function addCache(geocache, name, waypts)
 {
     var db = openDatabase();
     var rs;
+    console.log(JSON.stringify(waypts))
     db.transaction(function(tx) {
         rs = tx.executeSql('\
                 INSERT OR REPLACE INTO geocaches \
                 (geocache, name, found) \
                 VALUES (?,?,0);', [geocache,name]);
         var cacheId = rs.insertId;
+        console.log("Geocache inserted, id=" + cacheId);
         for (var i = 0; i < waypts.length; ++i) {
             rs = tx.executeSql("\
                 INSERT OR REPLACE INTO geo_waypts \
-                (cacheid, waypoint, formula, note, is_waypoint, found) \
-                VALUES (?,?,?,'',1,0);", [cacheId, waypts[i].number, waypts[i].coord]);
+                (cacheid, waypoint, formula, rawtext, note, is_waypoint, found) \
+                VALUES (?,?,?,?,?,1,0);", [cacheId, waypts[i].number, waypts[i].coord, waypts[i].coord, waypts[i].note]);
             var wayptId = rs.insertId;
             console.log(cacheId + " WP " + wayptId);
         }

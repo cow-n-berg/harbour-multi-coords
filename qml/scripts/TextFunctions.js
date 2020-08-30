@@ -271,53 +271,106 @@ function showLetters( letters ) {
 *  Function to extract information from raw text
 */
 function coordsByRegEx(rawText) {
+
+    var regExNewlin = /\r?\n|\r/g;                             // to remove newlines
     var regExGcCode = /(GC.{1,5})/;
     var regExGcName = /<groundspeak:name>([^<]*)/;
-    var regExLatLon = /<wpt lat="([^"]*)" lon="([^"]*)">/g;
+
+    // Stages in GPX file
+//  var regExStages = /<wpt lat="([^"]*)" lon="([^"]*)">.+?<name>(.{2}).+?<\/name>.+?<cmt>(.*?)<\/cmt>.+?<desc>(.*?)<\/desc>.+?<sym>(.*?)<\/sym>.+?<\/wpt>/g;
+    var regExWaypt  = /(<wpt lat=.+?<\/wpt)>/g;
+    var regExStWayp = /<wpt lat="([^"]*)" lon="([^"]*)">/;
+    var regExStName = /<name>(.{2}).+?<\/name>/;
+    var regExStCmt  = /<cmt>(.*?)<\/cmt>/;
+    var regExStDesc = /<desc>(.*?)<\/desc>/;
+    var regExStSym  = /<sym>(.*?)<\/sym>/;
+
     var regExCoords = /([NS]\s?[0-9]{1,2}°?\s[0-9]{1,2}\.[0-9]{1,3}\s[EW]\s?[0-9]{1,3}°?\s[0-9]{1,2}\.[0-9]{1,3})/g;
     var regExFormul = /([NS].{5,50}[EW].{5,50}'?)/g;
 
-    var result = {code: '', name: '', coords: [] };
-    var arrCoord = result.coords;
+    var result = {code: '', name: '', coords: undefined };
+    var arrCoord = [];
     var waypt = 0;
     var res;
     var coordinate;
+    var note;
+    var toBeDeleted = [];
 
+    rawText = rawText.replace(regExNewlin, "");
 
     // In case they entered a GPX file
-    res = regExGcName.exec(rawText);
-    if (res !== null) {
-        result.name = res[1];
+    result.name = simpleRegEx(rawText, regExGcName);
+    result.code = simpleRegEx(rawText, regExGcCode);
+
+    var regex = /<wpt lat=.+?<\/wpt>/g;
+    var m;
+
+    // Stages in GPX file
+    do {
+        res = regExWaypt.exec(rawText);
+        if (res !== null) {
+            console.log("Stage GPX found: "+ res[1]);
+            var wpt = res[1];
+
+            var coordObj = coordLatLon(wpt);
+            coordinate = coordObj.coord;
+            if (coordinate !== "") {
+                toBeDeleted.push(coordObj.regex);
+
+                // Check whether we have a full GPX, where main
+                // coordinate shows up twice. If so, throw it out
+                if (arrCoord.length >= 1) {
+                    if (arrCoord[0].coord === coordinate) {
+                        arrCoord.shift();
+                    }
+                }
+
+                // Get information from waypoint
+                var wpName = simpleRegEx(wpt, regExStName);
+                var wpCmt  = simpleRegEx(wpt, regExStCmt );
+                var wpDesc = simpleRegEx(wpt, regExStDesc);
+                var wpSym  = simpleRegEx(wpt, regExStSym );
+
+                console.log("wpName: " + wpName + ", wpCmt: " + wpCmt + ", wpDesc: " + wpDesc + ", wpSym: " + wpSym );
+                if (wpName === "GC") {
+                    var wpnr = 1;
+                }
+                else {
+                    if (wpName.slice(0,1) === "P") {
+                        wpnr = 0;
+                    }
+                    else {
+                        wpnr = parseInt(wpName);
+                    }
+                }
+                console.log("Wp " + wpnr)
+
+                note  = wpSym + " - " + wpDesc + " - " + wpCmt
+                arrCoord.push({coord: coordinate, number: wpnr, note: note});
+                waypt = Math.max(wpnr,waypt) + 1;
+            }
+
+        }
+    } while (res !== null)
+
+    for (var i = 0; i < toBeDeleted.length; i++) {
+        // Remove coord from rawtext to prevent doubles
+        var coordRe = toBeDeleted[i];
+        rawText = rawText.replace(coordRe, " ");
     }
 
-    res = regExGcCode.exec(rawText);
-    if (res !== null) {
-        result.code = res[1];
-    }
-
-    res = regExLatLon.exec(rawText);
-//    console.log(JSON.stringify(res) + " res1 " + res[1]+ " res2 " + res[2]  );
-    if (res !== null) {
-        var degLat = parseInt(res[1]);
-        var degLon = parseInt(res[2]);
-        var Lat = (parseFloat(res[1]) - degLat) * 60;
-        var Lon = (parseFloat(res[2]) - degLon) * 60;
-        var strLat = "00" + degLat.toString()
-        var strLon = "00" + degLon.toString()
-        var minLat = "00" + Lat.toFixed(3)
-        var minLon = "00" + Lon.toFixed(3)
-
-        coordinate  = (degLat > 0 ?  "N " :  "S ") + strLat.slice(-2) + " " + minLat.slice(-6);
-        coordinate += (degLon > 0 ? " E " : " W ") + strLon.slice(-3) + " " + minLon.slice(-6);
-        arrCoord.push({coord: coordinate, number: waypt});
-        waypt++;
-    }
+    note = "";
 
     do {
         res = regExCoords.exec(rawText);
         if (res !== null) {
+            console.log("Text coord found: " + res[1]);
             coordinate = res[1];
-            arrCoord.push({coord: coordinate, number: waypt});
+            // Remove coord from rawtext to prevent doubles
+            coordRe = new RegExp(coordinate, 'g');
+            rawText = rawText.replace(coordRe, " ");
+
+            arrCoord.push({coord: coordinate, number: waypt, note: note});
             waypt++;
         }
     } while (res !== null)
@@ -325,13 +378,59 @@ function coordsByRegEx(rawText) {
     do {
         res = regExFormul.exec(rawText);
         if (res !== null) {
+            console.log("Formula found: " + res[1]);
             coordinate = res[1];
-            arrCoord.push({coord: coordinate, number: waypt});
+            arrCoord.push({coord: coordinate, number: waypt, note: note});
             waypt++;
         }
     } while (res !== null)
 
+    result.coords = arrCoord;
     console.log(JSON.stringify(result));
 
     return result
+}
+
+function simpleRegEx(rawText, regEx) {
+    var res = regEx.exec(rawText);
+    if (res !== null) {
+        return res[1];
+    }
+    return ""
+}
+
+function coordLatLon(rawText) {
+    var regExLatLon = /<wpt\slat="([^"]*)"\slon="([^"]*)">/;
+    var coordinate = "";
+    var re;
+    console.log(rawText);
+    var res = regExLatLon.exec(rawText);
+    if (res !== null) {
+        console.log(JSON.stringify(res) + " res1 " + res[1]+ " res2 " + res[2]  );
+        var degLat = parseInt(res[1]);
+        var degLon = parseInt(res[2]);
+        var Lat = (parseFloat(res[1]) - degLat) * 60;
+        var Lon = (parseFloat(res[2]) - degLon) * 60;
+        var strLat = "00" + degLat.toString();
+        var strLon = "00" + degLon.toString();
+        var minLat = "00" + Lat.toFixed(3);
+        var minLon = "00" + Lon.toFixed(3);
+
+        coordinate  = (degLat > 0 ?  "N " :  "S ") + strLat.slice(-2) + "° " + minLat.slice(-6);
+        coordinate += (degLon > 0 ? " E " : " W ") + strLon.slice(-3) + "° " + minLon.slice(-6);
+
+        strLat = degLat.toString();
+        strLon = degLon.toString();
+        minLat = Lat.toFixed(3);
+        minLon = Lon.toFixed(3);
+
+        var regExStr = (degLat > 0 ?  "N" :  "S") + ".{0,1}" + strLat + ".{1,3}" + minLat+ ".{1,5}" + strLon+ ".{1,3}" + minLon;
+        console.log(regExStr);
+        re = new RegExp(regExStr, 'g');
+    }
+    else {
+        console.log("No coord found");
+    }
+
+    return { coord: coordinate, regex: re}
 }

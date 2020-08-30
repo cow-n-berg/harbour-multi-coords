@@ -138,26 +138,30 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>1) After creation you can delete irrelevant coordinates. 2) As formulas may get quite long, too much text may be selected. Editing is possible after creating the Geocache.</source>
+        <source>As formulas may get quite long, too much text may be selected. Editing is possible now, or after creating the Geocache.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MultiShowPage</name>
     <message>
-        <source>Edit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>View in browser</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Refresh</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit waypoint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete waypoint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete geocache</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

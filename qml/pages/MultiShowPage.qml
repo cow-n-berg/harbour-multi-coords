@@ -109,27 +109,26 @@ Page {
                     pageStack.push(Qt.resolvedUrl("WayptShowPage.qml"))
                 }
 
-                Component {
-                    id: contextMenu
-                    ContextMenu {
-                        MenuItem {
-                            text: qsTr("Edit")
-                            visible: false
-                            onClicked: {
-                                console.log("Edit " + index + ", id " + cacheid)
-//                                Database.deleteWaypt(wayptid)
-                            }
-                        }
-                        MenuItem {
-                            text: qsTr("Delete")
-                            onClicked: remorse.execute("Clearing waypoint", function() {
-                                console.log("Remove " + index + ", id " + cacheid)
-                                Database.deleteWaypt(wayptid, cacheid)
-                                generic.multiDirty = true
-                            })
-                        }
-                    }
-                }
+//                Component {
+//                    id: contextMenu
+//                    ContextMenu {
+//                        MenuItem {
+//                            text: qsTr("Edit waypoint")
+//                            visible: false
+//                            onClicked: {
+//                                console.log("Edit " + index + ", id " + cacheid)
+//                            }
+//                        }
+//                        MenuItem {
+//                            text: qsTr("Delete waypoint")
+//                            onClicked: remorse.execute("Clearing waypoint", function() {
+//                                console.log("Remove waypoint " + index + ", id " + wayptid)
+//                                Database.deleteWaypt(wayptid, cacheid)
+//                                generic.multiDirty = true
+//                            })
+//                        }
+//                    }
+//                }
             }
 
             VerticalScrollDecorator {}
@@ -139,6 +138,15 @@ Page {
         RemorsePopup { id: remorse }
 
         PullDownMenu {
+            MenuItem {
+                text: qsTr("Delete geocache")
+                onClicked: remorse.execute("Clearing geocache", function() {
+                    console.log("Remove geocache " + index + ", id " + cacheid)
+                    Database.deleteCache(cacheid)
+                    pageStack.pop()
+                    generic.cacheDirty = true
+                })
+            }
             MenuItem {
                 text: qsTr("View in browser")
                 onClicked:  {
