@@ -48,14 +48,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Edit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
@@ -77,6 +69,13 @@
     </message>
 </context>
 <context>
+    <name>Database</name>
+    <message>
+        <source>, requires: &apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>LetterPage</name>
     <message>
         <source>Remark</source>
@@ -87,10 +86,6 @@
     <name>MultiAddPage</name>
     <message>
         <source>Add Multi cache</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Past the entire Geocache description - or the content of a GPX file! - in the next text area. Use the button to extract possible coordinates and formulas. Use press-and-hold to remove options. Formulas may be too long, you can edit them later. </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -118,10 +113,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Add Geocache</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>About the coordinates</source>
         <translation type="unfinished"></translation>
     </message>
@@ -138,7 +129,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>As formulas may get quite long, too much text may be selected. Editing is possible now, or after creating the Geocache.</source>
+        <source>As formulas may get quite long, too much text may be selected. Editing is possible AFTER creating the Geocache.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paste the entire Geocache description - or the content of a GPX file! - in the next text area. Use the button to extract possible coordinates and formulas. Use press-and-hold to remove options. Formulas may be too long, you can edit them later. </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -150,14 +145,6 @@
     </message>
     <message>
         <source>Refresh</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Edit waypoint</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delete waypoint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -236,6 +223,77 @@
     </message>
 </context>
 <context>
+    <name>WayptAddPage</name>
+    <message>
+        <source>Waypoint number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Imported raw text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Formula to be processed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Letters for this waypoint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>How to add letters to a waypoint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Letters, space separated</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overview of entire geocache</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All letters (so far)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Waypoint is </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>just a waypoint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>the cache location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All information between brackets [] will be evaluated, e.g. [A+1]. Parentheses () are for calculations like [(B+3)/2].</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Letters input should be space separated. E.g. &apos;A B&apos; will lead to two letters &apos;A&apos; and &apos;B&apos;. You are not confined to single characters: &apos;yy zz&apos; will lead to two letters &apos;yy&apos; and &apos;zz&apos;. Hence, entering &apos;ABC&apos; will lead to one letter &apos;ABC&apos;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Formula editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No raw text has been imported</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Formula conventions</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>WayptShowPage</name>
     <message>
         <source>Calculated</source>
@@ -274,7 +332,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Delete</source>
+        <source>Delete waypoint</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

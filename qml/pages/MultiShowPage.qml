@@ -64,7 +64,7 @@ Page {
 
             delegate: ListItem {
                 id: listItem
-                menu: contextMenu
+//                menu: contextMenu
 
                 width: parent.width
                 contentHeight: Theme.itemSizeExtraSmall
@@ -141,8 +141,8 @@ Page {
             MenuItem {
                 text: qsTr("Delete geocache")
                 onClicked: remorse.execute("Clearing geocache", function() {
-                    console.log("Remove geocache " + index + ", id " + cacheid)
-                    Database.deleteCache(cacheid)
+                    console.log("Remove geocache id " + generic.gcId)
+                    Database.deleteCache(generic.gcId)
                     pageStack.pop()
                     generic.cacheDirty = true
                 })
@@ -155,8 +155,10 @@ Page {
                 }
             }
             MenuItem {
-                text: "Add Waypoint"
+                text: "Add waypoint"
                 onClicked: {
+                    onClicked: pageStack.push(Qt.resolvedUrl("WayptAddPage.qml"),
+                                              {"wayptid": undefined})
                     generic.multiDirty = true
                 }
             }

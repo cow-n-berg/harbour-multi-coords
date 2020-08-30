@@ -39,8 +39,6 @@ Dialog {
             focus: true
             EnterKey.enabled: text.length > 0
             EnterKey.iconSource: "image://theme/icon-m-enter-next"
-
-            // When Enter key is pressed, accept the dialog
             EnterKey.onClicked: lettRemark.focus = true
         }
 

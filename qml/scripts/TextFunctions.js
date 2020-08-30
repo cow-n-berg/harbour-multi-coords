@@ -268,6 +268,17 @@ function showLetters( letters ) {
 }
 
 /*
+*  Function to show result for letters entry
+*/
+function lettersResult(txtLetters) {
+    var letters = txtLetters.split(" ");
+    var result = "";
+    for (var j = 0; j < letters.length; j++) {
+        result += (j===0 ? "" : ", ") + "'" + letters[j] + "'";
+    }
+}
+
+/*
 *  Function to extract information from raw text
 */
 function coordsByRegEx(rawText) {
@@ -331,7 +342,6 @@ function coordsByRegEx(rawText) {
                 var wpDesc = simpleRegEx(wpt, regExStDesc);
                 var wpSym  = simpleRegEx(wpt, regExStSym );
 
-                console.log("wpName: " + wpName + ", wpCmt: " + wpCmt + ", wpDesc: " + wpDesc + ", wpSym: " + wpSym );
                 if (wpName === "GC") {
                     var wpnr = 1;
                 }
@@ -343,7 +353,6 @@ function coordsByRegEx(rawText) {
                         wpnr = parseInt(wpName);
                     }
                 }
-                console.log("Wp " + wpnr)
 
                 note  = wpSym + " - " + wpDesc + " - " + wpCmt
                 arrCoord.push({coord: coordinate, number: wpnr, note: note});
@@ -403,10 +412,9 @@ function coordLatLon(rawText) {
     var regExLatLon = /<wpt\slat="([^"]*)"\slon="([^"]*)">/;
     var coordinate = "";
     var re;
-    console.log(rawText);
     var res = regExLatLon.exec(rawText);
     if (res !== null) {
-        console.log(JSON.stringify(res) + " res1 " + res[1]+ " res2 " + res[2]  );
+//        console.log(JSON.stringify(res) + " res1 " + res[1]+ " res2 " + res[2]  );
         var degLat = parseInt(res[1]);
         var degLon = parseInt(res[2]);
         var Lat = (parseFloat(res[1]) - degLat) * 60;
@@ -425,11 +433,11 @@ function coordLatLon(rawText) {
         minLon = Lon.toFixed(3);
 
         var regExStr = (degLat > 0 ?  "N" :  "S") + ".{0,1}" + strLat + ".{1,3}" + minLat+ ".{1,5}" + strLon+ ".{1,3}" + minLon;
-        console.log(regExStr);
+//        console.log(regExStr);
         re = new RegExp(regExStr, 'g');
     }
     else {
-        console.log("No coord found");
+        console.log("No coord found from " + rawText);
     }
 
     return { coord: coordinate, regex: re}

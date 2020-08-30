@@ -22,6 +22,13 @@ Dialog {
             checked: generic.coverShowAppName
             onClicked: generic.coverShowAppName = !generic.coverShowAppName
         }
+        IconTextSwitch {
+            text: qsTr("Show hints on dialogs")
+            description: qsTr("Explanations of entry fields")
+            icon.source: "image://theme/icon-m-annotation"
+            checked: generic.showDialogHints
+            onClicked: generic.showDialogHints = !generic.showDialogHints
+        }
 
         SectionHeader {
             text: qsTr("Database actions")
@@ -56,6 +63,7 @@ Dialog {
     onDone: {
         if (result == DialogResult.Accepted) {
             Database.setSetting( "coverShowAppName"    , generic.coverShowAppName   )
+            Database.setSetting( "showDialogHints"     , generic.showDialogHints    )
             Database.setSetting( "deleteDatabase"      , generic.deleteDatabase     )
 
             if (cache1Adding) {

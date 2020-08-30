@@ -140,12 +140,12 @@ function initializeDatabase()
                 remark TEXT DEFAULT ''  \
             )");
         tx.executeSql("\
-            CREATE INDEX IF NOT EXISTS cache_letter ON geo_letters ( \
+            CREATE UNIQUE INDEX IF NOT EXISTS cache_letter ON geo_letters ( \
                 cacheid, \
                 letter \
             );");
         tx.executeSql("\
-            CREATE INDEX IF NOT EXISTS waypt_letter ON geo_letters ( \
+            CREATE UNIQUE INDEX IF NOT EXISTS waypt_letter ON geo_letters ( \
                 wayptid, \
                 letter \
             );");
@@ -174,6 +174,23 @@ function upgradeDatabase( dbversion )
                 rs = tx.executeSql("ALTER TABLE geo_letters ADD COLUMN remark TEXT DEFAULT ''");
                 console.log(rs);
                 console.log("Tables altered");
+            }
+            if (db.version < "1.2") {
+                /*
+                 * Enables remarks with geo_letters, and a (formula) rawtext with geo_waypts.
+                 */
+                rs = tx.executeSql("DROP INDEX IF EXISTS cache_letter;");
+                rs = tx.executeSql("DROP INDEX IF EXISTS waypt_letter;");
+                tx.executeSql("\
+                    CREATE UNIQUE INDEX IF NOT EXISTS cache_letter ON geo_letters ( \
+                        cacheid, \
+                        letter \
+                    );");
+                tx.executeSql("\
+                    CREATE UNIQUE INDEX IF NOT EXISTS waypt_letter ON geo_letters ( \
+                        wayptid, \
+                        letter \
+                    );");
             }
             /*
              * Upgrade complete.
@@ -277,6 +294,44 @@ function getLettersWP(wayptid)
     return letters;
 }
 
+function getOneWaypt(wayptid)
+{
+    var waypt
+    var db = openDatabase();
+    db.transaction(function(tx) {
+        var rs = tx.executeSql("\
+            SELECT waypoint, \
+                rawtext, \
+                formula, \
+                note, \
+                is_waypoint \
+                FROM geo_waypts \
+                WHERE wayptid=? \
+            ;", [wayptid]);
+        waypt = { waypoint: rs.rows.item(0).waypoint,
+                  rawtext : rs.rows.item(0).rawtext,
+                  formula : rs.rows.item(0).formula,
+                  note    : rs.rows.item(0).note,
+                  iswp    : rs.rows.item(0).is_waypoint,
+                  letters : undefined };
+        rs = tx.executeSql("\
+            SELECT letter\
+                FROM geo_letters \
+                WHERE wayptid=? \
+                ORDER BY letter \
+            ;", [wayptid]);
+        var str = "";
+        for (var i = 0; i < rs.rows.length; ++i) {
+            str += (rs.rows.item(i).letter) + " ";
+        }
+        waypt.letters = str;
+        console.log(JSON.stringify(waypt));
+    });
+
+    return waypt;
+
+}
+
 function getOneLetter(letterid)
 {
     var letters = [];
@@ -351,6 +406,35 @@ function showAllData() {
     });
 
     return 1
+}
+
+/*
+*  Function to show all waypoints and letters
+*/
+function showWayptLetters( cacheid ) {
+    var result = "";
+    var oldWpt = "";
+    var db = openDatabase();
+    db.transaction(function(tx) {
+        var rs = tx.executeSql("\
+            SELECT w.waypoint, \
+                l.letter \
+                FROM geo_waypts AS w
+                INNER JOIN geo_letters AS l ON w.wayptid = l.wayptid\
+                WHERE w.cacheid=? \
+                ORDER BY w.waypoint, l.letter \
+            ;", [cacheid]);
+        for (var i = 0; i < rs.rows.length; ++i) {
+            if (rs.rows.item(i).waypoint === oldWpt) {
+                result += ", '" + rs.rows.item(i).letter + "'";
+            }
+            else {
+                oldWpt = rs.rows.item(i).waypoint;
+                result += (i === 0 ? "" : "\n") + "WP " + oldWpt + qsTr(", requires: '") + rs.rows.item(i).letter + "'";
+            }
+        }
+    });
+    return result
 }
 
 /*
@@ -457,12 +541,50 @@ function addCache(geocache, name, waypts)
         var cacheId = rs.insertId;
         console.log("Geocache inserted, id=" + cacheId);
         for (var i = 0; i < waypts.length; ++i) {
+            console.log("WP: " + JSON.stringify(waypts[i]));
+            var number = waypts[i].number;
+            var formula = waypts[i].coord;
+            var note = waypts[i].note === "" ? "''" : waypts[i].note;
             rs = tx.executeSql("\
                 INSERT OR REPLACE INTO geo_waypts \
                 (cacheid, waypoint, formula, rawtext, note, is_waypoint, found) \
-                VALUES (?,?,?,?,?,1,0);", [cacheId, waypts[i].number, waypts[i].coord, waypts[i].coord, waypts[i].note]);
+                VALUES (?,?,?,?,?,1,0);", [cacheId, number, formula, formula, note]);
             var wayptId = rs.insertId;
             console.log(cacheId + " WP " + wayptId);
+        }
+
+    } );
+    return 1;
+}
+
+function addWaypt(cacheid, wpid, number, formula, note, is_waypoint, letters)
+{
+    var db = openDatabase();
+    var rs;
+    var wayptId = wpid || "NULL";
+
+    var nr = parseInt(number);
+    var iswp = is_waypoint ? 1 : 0;
+
+    db.transaction(function(tx) {
+        rs = tx.executeSql("\
+            INSERT OR REPLACE INTO geo_waypts \
+            (cacheid, wayptid, waypoint, formula, note, is_waypoint) \
+            VALUES (?,?,?,?,?,?);", [cacheid, wayptId, nr, formula, note, iswp]);
+        wayptId = rs.insertId;
+        console.log("Waypoint inserted, id=" + wayptId);
+
+        var arrLett = letters.split(" ");
+        for (var i = 0; i < arrLett.length; ++i) {
+//            console.log("WP: " + JSON.stringify(arrLett[i]));
+            if (arrLett[i]) {
+                rs = tx.executeSql("\
+                    INSERT OR REPLACE INTO geo_letters \
+                    (cacheid, wayptid, letter) \
+                    VALUES (?,?,?);", [cacheid, wayptId, arrLett[i]]);
+                var lettId = rs.insertId;
+                console.log(cacheid + " Letter " + lettId);
+            }
         }
 
     } );
@@ -482,6 +604,7 @@ function setCacheFound(cacheid, found)
             WHERE cacheid = ?;', [sqlFound,cacheid]);
     } )
 }
+
 function setWayptFound(wayptid, found, cacheid)
 {
     var sqlFound = found ? 1 : 0
@@ -502,6 +625,7 @@ function setWayptFound(wayptid, found, cacheid)
 
     } )
 }
+
 function setLetter(letterid, value, remark)
 {
     var db = openDatabase();

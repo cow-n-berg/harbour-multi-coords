@@ -66,6 +66,8 @@ Page {
                 margins: 0
             }
 
+            spacing: Theme.paddingMedium
+
 //            TextField {
 //                id: workAround
 //                width: parent.width
@@ -174,13 +176,21 @@ Page {
 
         PullDownMenu {
             MenuItem {
-                text: qsTr("Delete")
+                text: qsTr("Delete waypoint")
                 onClicked: remorse.execute("Clearing waypoint", function() {
                     console.log("Remove waypt" + index + ", id " + generic.wpId)
                     Database.deleteWaypt(generic.wpId, generic.gcId)
                     generic.multiDirty = true
                     pageStack.pop()
                 })
+            }
+            MenuItem {
+                text: "Edit waypoint"
+                onClicked: {
+                    pageStack.push(Qt.resolvedUrl("WayptAddPage.qml"),
+                                   {"wayptid": generic.wpId})
+                    generic.wayptDirty = true
+                }
             }
         }
         PushUpMenu {

@@ -3,12 +3,26 @@ import Sailfish.Silica 1.0
 import "../scripts/Database.js" as Database
 import "../scripts/TextFunctions.js" as TF
 
-Page {
+Dialog {
     id: page
 
     property var coords
 
     allowedOrientations: Orientation.All
+    canAccept: txtCode.text !== "" && txtName.text !== ""
+    onAccepted: {
+        var coords = [];
+        var numberItems = listModel.count;
+        for (var i = 0; i < numberItems; ++i) {
+            var wpnr = listModel.get(i).number + (listStartWp1.checked ? 1 : 0);
+            var coord = listModel.get(i).coord;
+            var note = listModel.get(i).note;
+            coords.push({coord: coord, number: wpnr, note: note});
+        }
+        Database.addCache(txtCode.text, txtName.text, coords)
+        generic.multiDirty = true
+        pageStack.pop()
+    }
 
     ListModel {
         id: listModel
@@ -57,7 +71,7 @@ Page {
                 id: description1
                 width: parent.width
                 height: Screen.height / 6
-                text: qsTr("Past the entire Geocache description - or the content of a GPX file! - in the next text area. Use the button to extract possible coordinates and formulas. Use press-and-hold to remove options. Formulas may be too long, you can edit them later. ")
+                text: qsTr("Paste the entire Geocache description - or the content of a GPX file! - in the next text area. Use the button to extract possible coordinates and formulas. Use press-and-hold to remove options. Formulas may be too long, you can edit them later. ")
                 label: qsTr("How to add")
                 color: Theme.highlightColor
                 readOnly: true
@@ -177,27 +191,27 @@ Page {
                 text: qsTr("End of coordinates list")
             }
 
-            Button {
-                height: Theme.itemSizeLarge
-                preferredWidth: Theme.buttonWidthLarge
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: qsTr("Add Geocache")
-                enabled: txtCode.text != "" && txtName.text !== ""
-                onClicked: {
-                    var coords = [];
-                    var numberItems = listModel.count;
-                    console.log("items listModel: " + numberItems);
-                    for (var i = 0; i < numberItems; ++i) {
-                        var wpnr = listModel.get(i).number + (listStartWp1.checked ? 1 : 0);
-                        var coord = listModel.get(i).coord;
-                        console.log(wpnr + " - " + coord);
-                        coords.push({coord: coord, number: wpnr});
-                }
-                    Database.addCache(txtCode.text, txtName.text, coords)
-                    generic.multiDirty = true
-                    pageStack.pop()
-                }
-            }
+//            Button {
+//                height: Theme.itemSizeLarge
+//                preferredWidth: Theme.buttonWidthLarge
+//                anchors.horizontalCenter: parent.horizontalCenter
+//                text: qsTr("Add Geocache")
+//                enabled: txtCode.text != "" && txtName.text !== ""
+//                onClicked: {
+//                    var coords = [];
+//                    var numberItems = listModel.count;
+//                    console.log("items listModel: " + numberItems);
+//                    for (var i = 0; i < numberItems; ++i) {
+//                        var wpnr = listModel.get(i).number + (listStartWp1.checked ? 1 : 0);
+//                        var coord = listModel.get(i).coord;
+//                        console.log(wpnr + " - " + coord);
+//                        coords.push({coord: coord, number: wpnr});
+//                    }
+//                    Database.addCache(txtCode.text, txtName.text, coords)
+//                    generic.multiDirty = true
+//                    pageStack.pop()
+//                }
+//            }
         }
     }
 }

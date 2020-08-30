@@ -8,8 +8,8 @@ ApplicationWindow
 {
     id: generic
 
-    property string version            : "0.6"
-    property string dbversion          : "1.0"
+    property string version            : "0.7"
+    property string dbversion          : "1.2"
     property var    dbhandler          : DB.openDatabase(dbversion)
 
     property var browserUrl            : "https://coord.info/"
@@ -34,6 +34,7 @@ ApplicationWindow
 
     // Settings
     property bool coverShowAppName     : DB.getSetting( "coverShowAppName", false )
+    property bool showDialogHints      : DB.getSetting( "showDialogHints", true )
     property bool deleteDatabase       : DB.getSetting( "deleteDatabase", false )
 
     Component.onCompleted: { DB.openDatabase() }
