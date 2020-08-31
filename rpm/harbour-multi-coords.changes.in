@@ -12,7 +12,11 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
-* Sun Apr 13 2014 Jack Tar <jack.tar@example.com> 0.0.1-1
-- Scrubbed the deck
-- Hoisted the sails
+* Sun Aug 30 2020 Rob Kouwenbergr <sailfish@cow-n-berg.nl> 1.2-1
+- Deleting and adding waypoint actually works now
+- Cover action added: new geocache
+
+* Sun Aug 30 2020 Rob Kouwenbergr <sailfish@cow-n-berg.nl> 1.0-1
+- First operational version
+- Refreshing ListViews is a problem, a push-up menu provides a manual option
 

@@ -60,10 +60,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Show Contents DB in Console</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Refresh</source>
         <translation type="unfinished"></translation>
     </message>
@@ -90,10 +86,6 @@
     </message>
     <message>
         <source>How to add</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Paste description, formula or raw text here</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -134,6 +126,10 @@
     </message>
     <message>
         <source>Paste the entire Geocache description - or the content of a GPX file! - in the next text area. Use the button to extract possible coordinates and formulas. Use press-and-hold to remove options. Formulas may be too long, you can edit them later. </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paste description, gpx or raw text here</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -192,6 +188,14 @@
     </message>
     <message>
         <source>&apos;GMFS&apos; for better recognition of app tiles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show hints on dialogs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Explanations of entry fields</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

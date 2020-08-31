@@ -178,7 +178,7 @@ Page {
             MenuItem {
                 text: qsTr("Delete waypoint")
                 onClicked: remorse.execute("Clearing waypoint", function() {
-                    console.log("Remove waypt" + index + ", id " + generic.wpId)
+                    console.log("Remove waypt id " + generic.wpId)
                     Database.deleteWaypt(generic.wpId, generic.gcId)
                     generic.multiDirty = true
                     pageStack.pop()

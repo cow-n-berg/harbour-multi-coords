@@ -94,7 +94,7 @@ Page {
                 Label {
                     anchors.left: iconContainer.right
                     width: parent.width - iconContainer.width - Theme.paddingMedium
-                    text: ( is_waypoint ? "WP" + " " + index : "Cache" ) + ": " + TF.evalFormula(formula, generic.allLetters)
+                    text: ( is_waypoint ? "WP" + " " + waypoint : "Cache" ) + ": " + TF.evalFormula(formula, generic.allLetters)
                     color: found ? Theme.secondaryColor : Theme.primaryColor
                     truncationMode: TruncationMode.Elide
                 }

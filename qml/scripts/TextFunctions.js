@@ -148,10 +148,11 @@ function coverText(gccode, gcname, wpnumber, showAppName) {
         text += "\nWP " + wpnumber;
     }
     if (showAppName) {
-        if (gccode !== undefined)
+        if (gccode !== undefined) {
             text += "\n";
         }
         text += qsTr("GMFS");
+    }
     return text
 }
 
@@ -432,7 +433,7 @@ function coordLatLon(rawText) {
         minLat = Lat.toFixed(3);
         minLon = Lon.toFixed(3);
 
-        var regExStr = (degLat > 0 ?  "N" :  "S") + ".{0,1}" + strLat + ".{1,3}" + minLat+ ".{1,5}" + strLon+ ".{1,3}" + minLon;
+        var regExStr = (degLat > 0 ?  "N" :  "S") + ".{0,1}" + strLat + ".{1,3}" + minLat + ".{1,5}" + strLon+ ".{1,3}" + minLon;
 //        console.log(regExStr);
         re = new RegExp(regExStr, 'g');
     }

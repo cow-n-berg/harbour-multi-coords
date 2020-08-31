@@ -32,5 +32,14 @@ CoverBackground {
     }
     CoverActionList {
         id: coverAction
+        CoverAction {
+            iconSource: "image://theme/icon-cover-new"
+            onTriggered: {
+                if (!generic.applicationActive) {
+                    pageStack.push(Qt.resolvedUrl("MultiAddPage.qml"))
+                    generic.activate();
+                }
+            }
+        }
     }
 }

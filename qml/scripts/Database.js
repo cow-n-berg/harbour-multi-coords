@@ -561,7 +561,7 @@ function addWaypt(cacheid, wpid, number, formula, note, is_waypoint, letters)
 {
     var db = openDatabase();
     var rs;
-    var wayptId = wpid || "NULL";
+    var wayptId = wpid || "";
 
     var nr = parseInt(number);
     var iswp = is_waypoint ? 1 : 0;
@@ -666,7 +666,7 @@ function deleteWaypt(wayptid, cacheid)
         tx.executeSql('\
             UPDATE geocaches \
             SET updatd = CURRENT_TIMESTAMP \
-            WHERE cacheid = ?;', [id]);
+            WHERE cacheid = ?;', [cacheid]);
         tx.executeSql("\
             DELETE FROM geo_waypts \
                 WHERE wayptid=? \

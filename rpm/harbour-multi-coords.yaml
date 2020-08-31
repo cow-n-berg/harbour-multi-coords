@@ -1,7 +1,7 @@
 Name: harbour-multi-coords
 Summary: GMFS - Geocaching Multi Formula Solver
-Version: 0.7
-Release: 0
+Version: 1.2
+Release: 2
 # The contents of the Group field should be one of the groups listed here:
 # https://github.com/mer-tools/spectacle/blob/master/data/GROUPS
 Group: Qt/Qt
@@ -13,7 +13,9 @@ License: LICENSE
 Sources:
 - '%{name}-%{version}.tar.bz2'
 Description: |
-  Short description of my Sailfish OS Application
+  GMFS - Geocaching Multi Formula Solver
+  Tool intended to help with Geocaching Multis, where you have to collect values
+  in order to solve formulas for the next coordinates.
 Configure: none
 Builder: qmake5
 

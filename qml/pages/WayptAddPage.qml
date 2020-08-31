@@ -17,6 +17,11 @@ Dialog {
     property var wpIsWp    : true
     property var wpLetters : ""
 
+    property var regExPar1  : /\(/g;
+    property var regExPar2  : /\)/g;
+    property var regExTimes : /x/g;
+    property var regExDivid : /÷/g;
+
     canAccept: txtFormula.text !== "" && txtWpNr.text !== ""
     onAccepted: {
         Database.addWaypt(generic.gcId, wayptid, txtWpNr.text, txtFormula.text, txtNote.text, isWP.checked, txtLetters.text)
@@ -34,6 +39,7 @@ Dialog {
             wpIsWp    = true
             wpLetters = ""
             isWP.checked = wpIsWp
+            txtWpNr.focus = true
         }
         else {
             var waypt = Database.getOneWaypt(wayptid)
@@ -46,6 +52,7 @@ Dialog {
             wpIsWp    = waypt.iswp
             wpLetters = waypt.letters
             isWP.checked = wpIsWp === 1
+            txtWpNr.focus = txtWpNr.txt === ""
 
         }
     }
@@ -98,10 +105,16 @@ Dialog {
                 label: qsTr("Waypoint number")
                 placeholderText: label
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
-                focus: true
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                EnterKey.onClicked: focus = false
+                EnterKey.onClicked: {
+                    if (txtNote.text === "") {
+                        txtNote.focus = true
+                    }
+                    else {
+                        focus = false
+                    }
+                }
             }
 
             TextArea {
@@ -110,6 +123,16 @@ Dialog {
                 text: wpNote
                 placeholderText: label
                 label: qsTr("Description")
+                EnterKey.enabled: text.length > 0
+                EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                EnterKey.onClicked: {
+                    if (txtFormula.text === "") {
+                        txtFormula.focus = true
+                    }
+                    else {
+                        focus = false
+                    }
+                }
             }
 
             TextSwitch {
@@ -130,10 +153,11 @@ Dialog {
                 color: Theme.highlightColor
                 readOnly: true
                 font.pixelSize: Theme.fontSizeExtraSmall
+                visible: generic.showDialogHints
             }
 
             TextArea {
-                id: wpraw
+                id: txtRaw
                 width: parent.width
                 readOnly: true
                 label: qsTr("Imported raw text")
@@ -148,13 +172,24 @@ Dialog {
                 preferredWidth: Theme.buttonWidthExtraSmall
                 Button {
                     text: "From raw"
-                    visible: wpraw.text !== ""
+                    visible: txtRaw.text !== ""
+                    onClicked: {
+                        txtFormula.text = txtRaw.text
+                    }
                 }
                 Button {
                     text: "() » []"
+                    onClicked: {
+                        txtFormula.text = txtFormula.text.replace(regExPar1, '[')
+                        txtFormula.text = txtFormula.text.replace(regExPar2, ']')
+                    }
                 }
                 Button {
                     text: "x÷ » */"
+                    onClicked: {
+                        txtFormula.text = txtFormula.text.replace(regExTimes, '*')
+                        txtFormula.text = txtFormula.text.replace(regExDivid, '/')
+                    }
                 }
             }
 
@@ -164,6 +199,16 @@ Dialog {
                 label: qsTr("Formula to be processed")
                 text: formula
                 placeholderText: label
+                EnterKey.enabled: text.length > 0
+                EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                EnterKey.onClicked: {
+                    if (txtLetters.text === "") {
+                        txtLetters.focus = true
+                    }
+                    else {
+                        focus = false
+                    }
+                }
             }
 
             SectionHeader {
@@ -179,6 +224,7 @@ Dialog {
                 color: Theme.highlightColor
                 readOnly: true
                 font.pixelSize: Theme.fontSizeExtraSmall
+                visible: generic.showDialogHints
             }
 
             TextField {
@@ -188,6 +234,8 @@ Dialog {
                 placeholderText: label
                 label: qsTr("Letters, space separated")
 //                label: TF.lettersResult(wpLetters.text)
+                EnterKey.iconSource: "image://theme/icon-m-enter-close"
+                EnterKey.onClicked: focus = false
             }
 
             SectionHeader {

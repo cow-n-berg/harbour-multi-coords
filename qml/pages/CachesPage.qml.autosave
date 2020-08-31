@@ -13,7 +13,7 @@ Page {
         rightMargin: Theme.paddingMedium
     }
 
-    allowedOrientations: Orientation.All
+    allowedOrientations: Orientation.Portrait
 
     ListModel {
         id: listModel
@@ -60,24 +60,6 @@ Page {
             contentHeight: Theme.itemSizeSmall
             ListView.onRemove: animateRemoval(listItem)
 
-//            height: contentItem.childrenRect.height
-//            anchors.margins: Theme.paddingLarge
-
-//            Label {
-//                id: workAround
-//                width: parent.width
-
-//                function checkRefresh(isDirty) {
-//                    if (isDirty) {
-//                        listModel.update()
-//                    }
-//                    return ""
-//                }
-
-//                text: checkRefresh(generic.cachesDirty)
-//                visible: false
-//            }
-
             Label {
                 id: nameGC
                 text: TF.truncateString(name, 35)
@@ -87,7 +69,6 @@ Page {
                     right: foundGC.left
                     margins: Theme.paddingSmall
                 }
-//                width: parent.width - foundGC.width
             }
             onClicked: {
                 console.log("Clicked GC " + index)
