@@ -21,11 +21,12 @@ Dialog {
     property var regExPar2  : /\)/g;
     property var regExTimes : /x/g;
     property var regExDivid : /÷/g;
+    property var regExSquar : /²/g;
 
     canAccept: txtFormula.text !== "" && txtWpNr.text !== ""
     onAccepted: {
         Database.addWaypt(generic.gcId, wayptid, txtWpNr.text, txtFormula.text, txtNote.text, isWP.checked, txtLetters.text)
-        generic.multiDirty = true
+//        generic.multiDirty = true
         pageStack.pop()
     }
 
@@ -84,8 +85,8 @@ Dialog {
                 verticalCenter: pageHeader.verticalCenter
             }
 
-            source: TF.wayptIconUrl( wpIsWp, Theme.colorScheme === Theme.LightOnDark )
-            color: Theme.highlightColor
+            source: TF.wayptIconUrl( wpIsWp )
+            color: generic.highlightColor
         }
 
         Column {
@@ -104,6 +105,7 @@ Dialog {
                 text: wpNumber
                 label: qsTr("Waypoint number")
                 placeholderText: label
+                color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
@@ -123,6 +125,7 @@ Dialog {
                 text: wpNote
                 placeholderText: label
                 label: qsTr("Description")
+                color: generic.primaryColor
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: {
@@ -142,6 +145,7 @@ Dialog {
 
             SectionHeader {
                 text: qsTr("Formula editor")
+                color: generic.highlightColor
             }
 
             TextArea {
@@ -150,7 +154,7 @@ Dialog {
                 height: Screen.height / 6
                 text: qsTr("All information between brackets [] will be evaluated, e.g. [A+1]. Parentheses () are for calculations like [(B+3)/2].")
                 label: qsTr("Formula conventions")
-                color: Theme.highlightColor
+                color: generic.highlightColor
                 readOnly: true
                 font.pixelSize: Theme.fontSizeExtraSmall
                 visible: generic.showDialogHints
@@ -164,7 +168,7 @@ Dialog {
                 text: rawText
                 placeholderText: qsTr("No raw text has been imported")
                 font.pixelSize: Theme.fontSizeExtraSmall
-                color: Theme.secondaryColor
+                color: generic.secondaryColor
                 visible: text !== ""
             }
 
@@ -173,12 +177,14 @@ Dialog {
                 Button {
                     text: "From raw"
                     visible: txtRaw.text !== ""
+                    color: generic.primaryColor
                     onClicked: {
                         txtFormula.text = txtRaw.text
                     }
                 }
                 Button {
                     text: "() » []"
+                    color: generic.primaryColor
                     onClicked: {
                         txtFormula.text = txtFormula.text.replace(regExPar1, '[')
                         txtFormula.text = txtFormula.text.replace(regExPar2, ']')
@@ -186,9 +192,11 @@ Dialog {
                 }
                 Button {
                     text: "x÷ » */"
+                    color: generic.primaryColor
                     onClicked: {
                         txtFormula.text = txtFormula.text.replace(regExTimes, '*')
                         txtFormula.text = txtFormula.text.replace(regExDivid, '/')
+                        txtFormula.text = txtFormula.text.replace(regExSquar, '^2')
                     }
                 }
             }
@@ -199,6 +207,7 @@ Dialog {
                 label: qsTr("Formula to be processed")
                 text: formula
                 placeholderText: label
+                color: generic.primaryColor
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: {
@@ -213,6 +222,7 @@ Dialog {
 
             SectionHeader {
                 text: qsTr("Letters for this waypoint")
+                color: generic.highlightColor
             }
 
             TextArea {
@@ -221,7 +231,7 @@ Dialog {
                 height: Screen.height / 6
                 text: qsTr("Letters input should be space separated. E.g. 'A B' will lead to two letters 'A' and 'B'. You are not confined to single characters: 'yy zz' will lead to two letters 'yy' and 'zz'. Hence, entering 'ABC' will lead to one letter 'ABC'.")
                 label: qsTr("How to add letters to a waypoint")
-                color: Theme.highlightColor
+                color: generic.highlightColor
                 readOnly: true
                 font.pixelSize: Theme.fontSizeExtraSmall
                 visible: generic.showDialogHints
@@ -232,14 +242,15 @@ Dialog {
                 width: parent.width
                 text: wpLetters
                 placeholderText: label
+                color: generic.primaryColor
                 label: qsTr("Letters, space separated")
-//                label: TF.lettersResult(wpLetters.text)
                 EnterKey.iconSource: "image://theme/icon-m-enter-close"
                 EnterKey.onClicked: focus = false
             }
 
             SectionHeader {
                 text: qsTr("Overview of entire geocache")
+                color: generic.highlightColor
             }
 
             TextArea {
@@ -248,7 +259,7 @@ Dialog {
                 label: qsTr("All letters (so far)")
                 text: Database.showWayptLetters(generic.gcId)
                 font.pixelSize: Theme.fontSizeExtraSmall
-                color: Theme.secondaryColor
+                color: generic.secondaryColor
             }
 
         }

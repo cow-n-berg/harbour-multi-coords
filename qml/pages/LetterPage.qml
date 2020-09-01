@@ -35,6 +35,7 @@ Dialog {
             width: parent.width
             text: lettervalue
             label: letter
+            color: generic.primaryColor
             inputMethodHints: Qt.ImhFormattedNumbersOnly
             focus: true
             EnterKey.enabled: text.length > 0
@@ -46,7 +47,7 @@ Dialog {
             width: parent.width
             readOnly: true
             text: generic.wpNote
-            color: Theme.secondaryColor
+            color: generic.secondaryColor
         }
 
         TextField {
@@ -55,6 +56,7 @@ Dialog {
             text: letterremark
             placeholderText: label
             label: qsTr("Remark")
+            color: generic.primaryColor
             EnterKey.enabled: text.length > 0
             EnterKey.iconSource: "image://theme/icon-m-enter-close"
 
@@ -71,7 +73,7 @@ Dialog {
             console.log("letter remark: " + letterremark)
             Database.setLetter(letterid, lettervalue, letterremark)
             generic.allLetters = Database.getLetters(generic.gcId)
-            generic.wayptDirty = true
+//            generic.wayptDirty = true
         }
     }
 }

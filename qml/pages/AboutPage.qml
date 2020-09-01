@@ -45,22 +45,22 @@ Page {
                 width: parent.width
                 height: childrenRect.height
 
-//                Image {
-//                    id: coverImage
-//                    source: Qt.resolvedUrl("images/img.jpg")
-//                    fillMode: Image.PreserveAspectFit
-//                    smooth: true
-//                    clip: true
-//                    asynchronous: true
-//                    width: parent.width - 2*Theme.paddingLarge
-//                    anchors.horizontalCenter: parent.horizontalCenter
-//                }
+                Image {
+                    id: coverImage
+                    source: Qt.resolvedUrl("../images/harbour-cover-image.png")
+                    fillMode: Image.PreserveAspectFit
+                    smooth: true
+                    clip: true
+                    asynchronous: true
+                    width: parent.width - 2*Theme.paddingLarge
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
 
                 Label {
                     id: topText
                     anchors {
-                        top: parent.top
-//                        top: coverImage.bottom
+//                        top: parent.top
+                        top: coverImage.bottom
                         topMargin: Theme.paddingSmall
                         horizontalCenter: parent.horizontalCenter
                     }
@@ -100,7 +100,7 @@ Page {
                         italic: true
                         pixelSize: Theme.fontSizeExtraSmall
                     }
-                    color: Theme.highlightColor
+                    color: generic.highlightColor
                     horizontalAlignment: Text.AlignHCenter
                     text: qsTr("created by %1").arg(author)
                 }
@@ -119,9 +119,10 @@ Page {
                         height: Theme.iconSizeMedium
                         width: Theme.iconSizeMedium
                         icon {
-                            source: TF.coverGithubUrl()
+                            source: Qt.resolvedUrl("../images/icon-github.svg")
                             height: Theme.iconSizeMedium
                             fillMode: Image.PreserveAspectFit
+                            color: Theme.primaryColor
                         }
                         onClicked: ExternalLinks.browse(repoGithub)
                     }
@@ -134,6 +135,7 @@ Page {
                             source: "image://theme/icon-m-mail"
                             height: Theme.iconSizeMedium
                             fillMode: Image.PreserveAspectFit
+                            color: Theme.primaryColor
                         }
                         onClicked: ExternalLinks.mail(constants.devMail, mailSubjectHeader, constants.mailBodyHeader)
                     }
@@ -151,7 +153,7 @@ Page {
                 font.pixelSize: Theme.fontSizeExtraSmall
                 horizontalAlignment: Text.AlignHCenter
                 textFormat: Text.StyledText
-                linkColor: Theme.highlightColor
+                linkColor: generic.highlightColor
                 onLinkActivated: ExternalLinks.browse(link)
             }
 
@@ -166,7 +168,7 @@ Page {
                 font.pixelSize: Theme.fontSizeExtraSmall
                 horizontalAlignment: Text.AlignHCenter
                 textFormat: Text.StyledText
-                linkColor: Theme.highlightColor
+                linkColor: generic.highlightColor
                 onLinkActivated: ExternalLinks.browse(link)
             }
 

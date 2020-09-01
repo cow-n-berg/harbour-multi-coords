@@ -13,7 +13,7 @@ Page {
         rightMargin: Theme.paddingMedium
     }
 
-    allowedOrientations: Orientation.All
+    allowedOrientations: Orientation.Portrait
 
     ListModel {
         id: listModel
@@ -60,24 +60,6 @@ Page {
             contentHeight: Theme.itemSizeSmall
             ListView.onRemove: animateRemoval(listItem)
 
-//            height: contentItem.childrenRect.height
-//            anchors.margins: Theme.paddingLarge
-
-//            Label {
-//                id: workAround
-//                width: parent.width
-
-//                function checkRefresh(isDirty) {
-//                    if (isDirty) {
-//                        listModel.update()
-//                    }
-//                    return ""
-//                }
-
-//                text: checkRefresh(generic.cachesDirty)
-//                visible: false
-//            }
-
             Label {
                 id: nameGC
                 text: TF.truncateString(name, 35)
@@ -87,7 +69,7 @@ Page {
                     right: foundGC.left
                     margins: Theme.paddingSmall
                 }
-//                width: parent.width - foundGC.width
+                color: generic.primaryColor
             }
             onClicked: {
                 console.log("Clicked GC " + index)
@@ -104,7 +86,7 @@ Page {
                 id: codeGC
                 text: geocache
                 font.pixelSize: Theme.fontSizeSmall
-                color: Theme.secondaryColor
+                color: generic.secondaryColor
                 anchors {
                           top: nameGC.bottom
                           left: parent.left
@@ -119,11 +101,13 @@ Page {
                           right: parent.right
                           margins: Theme.paddingSmall
                         }
-                source: TF.foundIconUrl(found, Theme.colorScheme === Theme.LightOnDark)
+                source: TF.foundIconUrl(found)
+                color: generic.primaryColor
             }
 
             Separator {
                 width: parent.width
+                color: generic.primaryColor
             }
 
             RemorsePopup { id: remorse }
@@ -142,7 +126,7 @@ Page {
 //                        text: qsTr("Edit")
 //                        onClicked: {
 //                            console.log("Edit " + index + ", id " + listModel[model.index].cacheid)
-//                            generic.cacheDirty = true
+//                            generic.cachesDirty = true
 //                        }
 //                    }
 //                    MenuItem {
@@ -150,7 +134,7 @@ Page {
 //                        onClicked: remorse.execute("Clearing geocache", function() {
 //                            console.log("Remove geocache " + codeGC.text)
 ////                            Database.deleteCache(codeGC.text)
-//                            generic.cacheDirty = true
+//                            generic.cachesDirty = true
 //                        })
 //                    }
 

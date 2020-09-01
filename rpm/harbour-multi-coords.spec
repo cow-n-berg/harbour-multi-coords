@@ -9,8 +9,8 @@ Name:       harbour-multi-coords
 # << macros
 
 Summary:    GMFS - Geocaching Multi Formula Solver
-Version:    1.2
-Release:    2
+Version:    1.4
+Release:    1
 Group:      Qt/Qt
 License:    LICENSE
 BuildArch:  noarch

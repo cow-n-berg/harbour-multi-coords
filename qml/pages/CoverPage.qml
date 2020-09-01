@@ -11,7 +11,7 @@ CoverBackground {
 
     Image {
         id: backgroundImage
-        source: TF.coverIconUrl(Theme.colorScheme === Theme.LightOnDark)
+        source: TF.coverIconUrl(Theme.colorScheme === Theme.LightOnDark, generic.nightCacheMode)
         anchors.fill: parent
         fillMode: Image.PreserveAspectCrop
         opacity: 0.15
@@ -21,13 +21,11 @@ CoverBackground {
         Label {
             anchors {
                 centerIn: parent
-//                top: parent.height / 2
-//                horizontalCenter: parent.horizontalCenter
-//                margins: Theme.paddingMedium
             }
 
             id: code
             text: TF.coverText(gccode, gcname, wpnumb, generic.coverShowAppName)
+            color: generic.primaryColor
         }
     }
     CoverActionList {

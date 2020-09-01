@@ -50,10 +50,13 @@ function replString(str, repl) {
 /*
 *  Building up an icon url
 */
-function coverIconUrl(darkTheme) {
+function coverIconUrl(darkTheme, nightMode) {
     var url;
     var filename = "../images/icon-cover-";
-    if (darkTheme) {
+    if (nightMode){
+        filename += "red.svg";
+    }
+    else if (darkTheme) {
         filename += "white.svg";
     }
     else {
@@ -64,20 +67,7 @@ function coverIconUrl(darkTheme) {
     return url
 }
 
-function coverGithubUrl(darkTheme) {
-    var url;
-    var filename = "../images/icon-github-";
-    if (darkTheme) {
-        filename += "white.png";
-    }
-    else {
-        filename += "black.png";
-    }
-    url = Qt.resolvedUrl(filename)
-    return url
-}
-
-function foundIconUrl(found, darkTheme) {
+function foundIconUrl(found) {
     var url;
     var filename = "../images/icon-";
     if (found) {
@@ -86,17 +76,13 @@ function foundIconUrl(found, darkTheme) {
     else {
         filename += "blank-";
     }
-    if (darkTheme) {
-        filename += "white.svg";
-    }
-    else {
-        filename += "black.svg";
-    }
+    filename += "black.svg";
     url = Qt.resolvedUrl(filename)
+//    console.log("foundIcon " + filename)
     return url
 }
 
-function wayptIconUrl(isWpt, darkTheme) {
+function wayptIconUrl(isWpt) {
     var url;
     var filename = "../images/icon-";
     if (isWpt) {
@@ -105,13 +91,9 @@ function wayptIconUrl(isWpt, darkTheme) {
     else {
         filename += "cache-";
     }
-    if (darkTheme) {
-        filename += "white.svg";
-    }
-    else {
-        filename += "black.svg";
-    }
+    filename += "black.svg";
     url = Qt.resolvedUrl(filename)
+//    console.log("wayptIcon " + filename)
     return url
 }
 
@@ -282,9 +264,11 @@ function lettersResult(txtLetters) {
 /*
 *  Function to extract information from raw text
 */
-function coordsByRegEx(rawText) {
+function coordsByRegEx(rawText, searchLength) {
 
     var regExNewlin = /\r?\n|\r/g;                             // to remove newlines
+    var regExEmpty  = /N\/S[^_]+?__[^_]+?__[^_]+?___\sW\/E[^_]+?___[^_]+?__[^_]+?___/g;
+
     var regExGcCode = /(GC.{1,5})/;
     var regExGcName = /<groundspeak:name>([^<]*)/;
 
@@ -298,10 +282,13 @@ function coordsByRegEx(rawText) {
     var regExStSym  = /<sym>(.*?)<\/sym>/;
 
     var regExCoords = /([NS]\s?[0-9]{1,2}°?\s[0-9]{1,2}\.[0-9]{1,3}\s[EW]\s?[0-9]{1,3}°?\s[0-9]{1,2}\.[0-9]{1,3})/g;
-    var regExFormul = /([NS].{5,50}[EW].{5,50}'?)/g;
+    var regExString = "([NS][^#]{5," + searchLength + "}\\s[EW][^#&,']{5," + searchLength + "})"
+    var regExFormul = new RegExp(regExString, "g");
+    // Should be like /([NS][^#]{5,40}\s[EW][^#&,']{5,40})/g
 
     var result = {code: '', name: '', coords: undefined };
     var arrCoord = [];
+    var sortCoord = [];
     var waypt = 0;
     var res;
     var coordinate;
@@ -309,6 +296,7 @@ function coordsByRegEx(rawText) {
     var toBeDeleted = [];
 
     rawText = rawText.replace(regExNewlin, "");
+    rawText = rawText.replace(regExEmpty, "");
 
     // In case they entered a GPX file
     result.name = simpleRegEx(rawText, regExGcName);
@@ -352,21 +340,23 @@ function coordsByRegEx(rawText) {
                     }
                     else {
                         wpnr = parseInt(wpName);
+//                        wpnr = wpnr === waypt ? wpnr++ : wpnr
                     }
                 }
 
                 note  = wpSym + " - " + wpDesc + " - " + wpCmt
-                arrCoord.push({coord: coordinate, number: wpnr, note: note});
-                waypt = Math.max(wpnr,waypt) + 1;
+                arrCoord.push({number: wpnr, coord: coordinate, note: note});
+                console.log("added coord: " + coordinate + ", nr: " + wpnr + ", note: " + note)
+                waypt = Math.max(wpnr, waypt);
             }
-
+            waypt++;
         }
     } while (res !== null)
 
     for (var i = 0; i < toBeDeleted.length; i++) {
         // Remove coord from rawtext to prevent doubles
         var coordRe = toBeDeleted[i];
-        rawText = rawText.replace(coordRe, " ");
+        rawText = rawText.replace(coordRe, "#");
     }
 
     note = "";
@@ -378,9 +368,9 @@ function coordsByRegEx(rawText) {
             coordinate = res[1];
             // Remove coord from rawtext to prevent doubles
             coordRe = new RegExp(coordinate, 'g');
-            rawText = rawText.replace(coordRe, " ");
+            rawText = rawText.replace(coordRe, "#");
 
-            arrCoord.push({coord: coordinate, number: waypt, note: note});
+            arrCoord.push({number: waypt, coord: coordinate, note: note});
             waypt++;
         }
     } while (res !== null)
@@ -390,12 +380,27 @@ function coordsByRegEx(rawText) {
         if (res !== null) {
             console.log("Formula found: " + res[1]);
             coordinate = res[1];
-            arrCoord.push({coord: coordinate, number: waypt, note: note});
+            arrCoord.push({number: waypt, coord: coordinate, note: note});
             waypt++;
         }
     } while (res !== null)
 
-    result.coords = arrCoord;
+    // Manual sort of coordinates
+    var minNr = 99;
+    var maxNr = -1;
+    for (i = 0; i < arrCoord.length; i++) {
+        minNr = Math.min(arrCoord[i].number, minNr);
+        maxNr = Math.max(arrCoord[i].number, maxNr);
+    }
+    for (var j = minNr; j <= maxNr; j++) {
+        for (i = 0; i < arrCoord.length; i++) {
+            if (j === arrCoord[i].number) {
+                sortCoord.push(arrCoord[i]);
+            }
+        }
+    }
+
+    result.coords = sortCoord;
     console.log(JSON.stringify(result));
 
     return result

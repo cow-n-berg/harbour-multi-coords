@@ -8,71 +8,99 @@ Dialog {
     property var cache1Adding : false
     property var cache2Adding : false
 
-    Column {
-        width: parent.width
-
-        DialogHeader {
-            title: qsTr("Settings" )
-        }
-
-        IconTextSwitch {
-            text: qsTr("Show app name on cover")
-            description: qsTr("'GMFS' for better recognition of app tiles")
-            icon.source: "image://theme/icon-m-about"
-            checked: generic.coverShowAppName
-            onClicked: generic.coverShowAppName = !generic.coverShowAppName
-        }
-        IconTextSwitch {
-            text: qsTr("Show hints on dialogs")
-            description: qsTr("Explanations of entry fields")
-            icon.source: "image://theme/icon-m-annotation"
-            checked: generic.showDialogHints
-            onClicked: generic.showDialogHints = !generic.showDialogHints
-        }
-
-        SectionHeader {
-            text: qsTr("Database actions")
-        }
-
-        IconTextSwitch {
-            text: qsTr("Clear database next start-up")
-            description: qsTr("Will be executed only once")
-            icon.source: "image://theme/icon-m-levels"
-            checked: generic.deleteDatabase
-            onClicked: generic.deleteDatabase = !generic.deleteDatabase
-        }
-
-        IconTextSwitch {
-            text: qsTr("(Re-)create Multi GC3A7RC")
-            description: qsTr("'where it started' from Seattle. It may only be visible after restarting the app.")
-            icon.source: "image://theme/icon-m-location"
-            checked: cache1Adding
-            onClicked: cache1Adding = !cache1Adding
-        }
-
-        IconTextSwitch {
-            text: qsTr("(Re-)create Multi GC83QV1")
-            description: qsTr("'Het Utrechts zonnestelsel...' from The Netherlands. It may only be visible after restarting the app.")
-            icon.source: "image://theme/icon-m-location"
-            checked: cache2Adding
-            onClicked: cache2Adding = !cache2Adding
-        }
-
-    }
-
     onDone: {
         if (result == DialogResult.Accepted) {
-            Database.setSetting( "coverShowAppName"    , generic.coverShowAppName   )
-            Database.setSetting( "showDialogHints"     , generic.showDialogHints    )
-            Database.setSetting( "deleteDatabase"      , generic.deleteDatabase     )
+            Database.setSetting( "coverShowAppName", generic.coverShowAppName )
+            Database.setSetting( "showDialogHints" , generic.showDialogHints  )
+            Database.setSetting( "nightCacheMode"  , generic.nightCacheMode   )
+            Database.setSetting( "deleteDatabase"  , generic.deleteDatabase   )
 
             if (cache1Adding) {
                 Database.addStd1Cache()
-                generic.cachesDirty = true
+//                generic.cachesDirty = true
             }
             if (cache2Adding) {
                 Database.addStd2Cache()
-                generic.cachesDirty = true
+//                generic.cachesDirty = true
+            }
+        }
+    }
+
+    SilicaFlickable {
+        id: settings
+
+        anchors.fill: parent
+        anchors.margins: Theme.paddingMedium
+        contentHeight: column.height + Theme.itemSizeMedium
+        quickScroll : true
+
+        PageHeader {
+            id: pageHeader
+            title: qsTr("Settings" )
+        }
+
+        VerticalScrollDecorator { flickable: settings }
+
+        Column {
+            id: column
+            width: parent.width
+            anchors {
+                top: pageHeader.bottom
+                margins: 0
+            }
+
+            SectionHeader {
+                text: qsTr("General settings")
+            }
+
+            IconTextSwitch {
+                text: qsTr("Show hints on dialogs")
+                description: qsTr("Explanations of entry fields")
+                icon.source: "image://theme/icon-m-annotation"
+                checked: generic.showDialogHints
+                onClicked: generic.showDialogHints = !generic.showDialogHints
+            }
+            IconTextSwitch {
+                text: qsTr("Dark mode")
+                description: qsTr("Red characters on black background")
+                icon.source: "image://theme/icon-m-moon"
+                checked: generic.nightCacheMode
+                onClicked: generic.nightCacheMode = !generic.nightCacheMode
+            }
+            IconTextSwitch {
+                text: qsTr("Show app name on cover")
+                description: qsTr("'GMFS' for better recognition of app tiles")
+                icon.source: "image://theme/icon-m-about"
+                checked: generic.coverShowAppName
+                onClicked: generic.coverShowAppName = !generic.coverShowAppName
+            }
+
+            SectionHeader {
+                text: qsTr("Database actions")
+            }
+
+            IconTextSwitch {
+                text: qsTr("Clear database next start-up")
+                description: qsTr("Will be executed only once")
+                icon.source: "image://theme/icon-m-levels"
+                checked: generic.deleteDatabase
+                onClicked: generic.deleteDatabase = !generic.deleteDatabase
+            }
+
+            IconTextSwitch {
+                text: qsTr("(Re-)create Multi GC3A7RC")
+                description: qsTr("'where it started' from Seattle. It may only be visible after restarting the app.")
+                icon.source: "image://theme/icon-m-location"
+                checked: cache1Adding
+                onClicked: cache1Adding = !cache1Adding
+            }
+
+            IconTextSwitch {
+                text: qsTr("(Re-)create Multi GC83QV1")
+                description: qsTr("'Het Utrechts zonnestelsel...' from The Netherlands. It may only be visible after restarting the app.")
+                icon.source: "image://theme/icon-m-location"
+                checked: cache2Adding
+                onClicked: cache2Adding = !cache2Adding
             }
         }
     }

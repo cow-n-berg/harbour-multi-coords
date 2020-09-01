@@ -73,7 +73,8 @@ Page {
                 Icon {
                     id: iconContainer
                     x: Theme.paddingMedium
-                    source: TF.wayptIconUrl( is_waypoint, Theme.colorScheme === Theme.LightOnDark )
+                    source: TF.wayptIconUrl( is_waypoint )
+                    color: generic.primaryColor
                 }
 
 //                Label {
@@ -95,7 +96,7 @@ Page {
                     anchors.left: iconContainer.right
                     width: parent.width - iconContainer.width - Theme.paddingMedium
                     text: ( is_waypoint ? "WP" + " " + waypoint : "Cache" ) + ": " + TF.evalFormula(formula, generic.allLetters)
-                    color: found ? Theme.secondaryColor : Theme.primaryColor
+                    color: found ? generic.secondaryColor : generic.primaryColor
                     truncationMode: TruncationMode.Elide
                 }
                 onClicked: {
@@ -144,7 +145,7 @@ Page {
                     console.log("Remove geocache id " + generic.gcId)
                     Database.deleteCache(generic.gcId)
                     pageStack.pop()
-                    generic.cacheDirty = true
+//                    generic.cachesDirty = true
                 })
             }
             MenuItem {
@@ -159,7 +160,7 @@ Page {
                 onClicked: {
                     onClicked: pageStack.push(Qt.resolvedUrl("WayptAddPage.qml"),
                                               {"wayptid": undefined})
-                    generic.multiDirty = true
+//                    generic.multiDirty = true
                 }
             }
         }

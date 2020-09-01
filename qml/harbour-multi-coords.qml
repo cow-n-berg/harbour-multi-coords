@@ -8,11 +8,20 @@ ApplicationWindow
 {
     id: generic
 
-    property string version            : "1.2"
+    property string version            : "1.4"
     property string dbversion          : "1.2"
     property var    dbhandler          : DB.openDatabase(dbversion)
 
+    // Settings
+    property bool coverShowAppName     : DB.getSetting( "coverShowAppName", false )
+    property bool showDialogHints      : DB.getSetting( "showDialogHints", true )
+    property bool deleteDatabase       : DB.getSetting( "deleteDatabase", false )
+    property bool nightCacheMode       : DB.getSetting( "nightCacheMode", false )
+
     property var browserUrl            : "https://coord.info/"
+    property var primaryColor          : nightCacheMode ? "firebrick" : Theme.primaryColor
+    property var secondaryColor        : nightCacheMode ? "maroon"    : Theme.secondaryColor
+    property var highlightColor        : nightCacheMode ? "red"       : Theme.highlightColor
 
     property var gcName
     property var gcCode
@@ -31,11 +40,6 @@ ApplicationWindow
     property bool cachesDirty : false
     property bool multiDirty  : false
     property bool wayptDirty  : false
-
-    // Settings
-    property bool coverShowAppName     : DB.getSetting( "coverShowAppName", false )
-    property bool showDialogHints      : DB.getSetting( "showDialogHints", true )
-    property bool deleteDatabase       : DB.getSetting( "deleteDatabase", false )
 
     Component.onCompleted: { DB.openDatabase() }
 

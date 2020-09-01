@@ -54,8 +54,8 @@ Page {
                 verticalCenter: pageHeader.verticalCenter
             }
 
-            source: TF.wayptIconUrl( generic.wpIsWp, Theme.colorScheme === Theme.LightOnDark )
-            color: Theme.highlightColor
+            source: TF.wayptIconUrl( generic.wpIsWp )
+            color: generic.highlightColor
         }
 
         Column {
@@ -91,6 +91,7 @@ Page {
                 label: qsTr("Calculated")
                 text: TF.evalFormula(generic.wpForm, generic.allLetters)
                 visible: true
+                color: generic.primaryColor
             }
 
             TextArea {
@@ -99,11 +100,13 @@ Page {
                 text: generic.wpNote
                 label: qsTr("Description")
                 visible: TF.trimString(generic.wpNote) !== ""
+                color: generic.primaryColor
             }
 
             SectionHeader {
                 text: qsTr("Options")
                 visible: listModel.count > 0 && generic.wpForm !== wpcalc.text
+                color: generic.highlightColor
             }
 
             Repeater {
@@ -118,6 +121,7 @@ Page {
                         preferredWidth: Theme.buttonWidthLarge
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: letter + " = " + (lettervalue === "" ? "<?>" : lettervalue) + qsTr(". Click to change")
+                        color: generic.primaryColor
                         onClicked: {
                             generic.lettEdit  = letter
                             pageStack.push(Qt.resolvedUrl("LetterPage.qml"),
@@ -134,6 +138,7 @@ Page {
                 preferredWidth: Theme.buttonWidthLarge
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: TF.wayptFoundButton(generic.wpIsWp, generic.wpFound)
+                color: generic.primaryColor
                 onClicked: {
                     generic.wpFound = !generic.wpFound
                     Database.setWayptFound(generic.wpId, generic.wpFound, generic.gcId)
@@ -148,7 +153,7 @@ Page {
 
             SectionHeader {
                 text: qsTr("Calculations")
-//                visible: listModel.count > 0
+                color: generic.highlightColor
             }
             TextArea {
                 width: parent.width
@@ -156,7 +161,7 @@ Page {
                 label: qsTr("Original formula")
                 text: generic.wpForm
                 font.pixelSize: Theme.fontSizeExtraSmall
-                color: Theme.secondaryColor
+                color: generic.secondaryColor
                 visible: generic.wpForm !== wpcalc.text
             }
 
@@ -166,7 +171,7 @@ Page {
                 label: qsTr("All values")
                 text: TF.showLetters(generic.allLetters)
                 font.pixelSize: Theme.fontSizeExtraSmall
-                color: Theme.secondaryColor
+                color: generic.secondaryColor
 //                visible: !generic.wpIsWp
             }
 
@@ -180,7 +185,7 @@ Page {
                 onClicked: remorse.execute("Clearing waypoint", function() {
                     console.log("Remove waypt id " + generic.wpId)
                     Database.deleteWaypt(generic.wpId, generic.gcId)
-                    generic.multiDirty = true
+//                    generic.multiDirty = true
                     pageStack.pop()
                 })
             }
@@ -189,7 +194,7 @@ Page {
                 onClicked: {
                     pageStack.push(Qt.resolvedUrl("WayptAddPage.qml"),
                                    {"wayptid": generic.wpId})
-                    generic.wayptDirty = true
+//                    generic.wayptDirty = true
                 }
             }
         }

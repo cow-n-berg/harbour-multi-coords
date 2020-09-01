@@ -121,15 +121,47 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>As formulas may get quite long, too much text may be selected. Editing is possible AFTER creating the Geocache.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Paste the entire Geocache description - or the content of a GPX file! - in the next text area. Use the button to extract possible coordinates and formulas. Use press-and-hold to remove options. Formulas may be too long, you can edit them later. </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Paste description, gpx or raw text here</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About waypoint numbering</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Offset for waypoint numbers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Waypoint numbering</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Raw text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Formula search: characters after NSEW</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>From GPX files, a Parking WP will be put before Main coordinate. You may want to offset the numbering below.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>As formulas may get quite long, too much text may be selected. Editing is possible AFTER creating the Geocache. Too much text selected or too little? Change formula search length and try again.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change formula search length</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide formula search length</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -152,10 +184,6 @@
     <name>SettingsPage</name>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Database actions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -196,6 +224,22 @@
     </message>
     <message>
         <source>Explanations of entry fields</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dark mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Red characters on black background</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>General settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Database actions</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
