@@ -117,10 +117,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Waypoint </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Paste the entire Geocache description - or the content of a GPX file! - in the next text area. Use the button to extract possible coordinates and formulas. Use press-and-hold to remove options. Formulas may be too long, you can edit them later. </source>
         <translation type="unfinished"></translation>
     </message>
@@ -130,10 +126,6 @@
     </message>
     <message>
         <source>About waypoint numbering</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Offset for waypoint numbers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -149,10 +141,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>From GPX files, a Parking WP will be put before Main coordinate. You may want to offset the numbering below.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>As formulas may get quite long, too much text may be selected. Editing is possible AFTER creating the Geocache. Too much text selected or too little? Change formula search length and try again.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -162,6 +150,22 @@
     </message>
     <message>
         <source>Hide formula search length</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WP </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>, orig. </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>From GPX files, a Parking WP will be put before Main coordinate, resp. WP 0 and 1. You may want to offset the numbering below.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Offset for waypoint numbers</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -326,10 +330,6 @@
     </message>
     <message>
         <source>Letters input should be space separated. E.g. &apos;A B&apos; will lead to two letters &apos;A&apos; and &apos;B&apos;. You are not confined to single characters: &apos;yy zz&apos; will lead to two letters &apos;yy&apos; and &apos;zz&apos;. Hence, entering &apos;ABC&apos; will lead to one letter &apos;ABC&apos;.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Formula editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

@@ -25,7 +25,8 @@ Dialog {
 
     canAccept: txtFormula.text !== "" && txtWpNr.text !== ""
     onAccepted: {
-        Database.addWaypt(generic.gcId, wayptid, txtWpNr.text, txtFormula.text, txtNote.text, isWP.checked, txtLetters.text)
+        rawText = txtRaw.text === "" ? txtFormula.text : txtRaw.text
+        Database.addWaypt(generic.gcId, wayptid, txtWpNr.text, txtFormula.text, rawText, txtNote.text, isWP.checked, txtLetters.text)
 //        generic.multiDirty = true
         pageStack.pop()
     }
@@ -143,11 +144,6 @@ Dialog {
                 text: qsTr("Waypoint is ") + (checked ? qsTr("just a waypoint") : qsTr("the cache location") )
             }
 
-            SectionHeader {
-                text: qsTr("Formula editor")
-                color: generic.highlightColor
-            }
-
             TextArea {
                 id: description1
                 width: parent.width
@@ -161,52 +157,12 @@ Dialog {
             }
 
             TextArea {
-                id: txtRaw
-                width: parent.width
-                readOnly: true
-                label: qsTr("Imported raw text")
-                text: rawText
-                placeholderText: qsTr("No raw text has been imported")
-                font.pixelSize: Theme.fontSizeExtraSmall
-                color: generic.secondaryColor
-                visible: text !== ""
-            }
-
-            ButtonLayout {
-                preferredWidth: Theme.buttonWidthExtraSmall
-                Button {
-                    text: "From raw"
-                    visible: txtRaw.text !== ""
-                    color: generic.primaryColor
-                    onClicked: {
-                        txtFormula.text = txtRaw.text
-                    }
-                }
-                Button {
-                    text: "() » []"
-                    color: generic.primaryColor
-                    onClicked: {
-                        txtFormula.text = txtFormula.text.replace(regExPar1, '[')
-                        txtFormula.text = txtFormula.text.replace(regExPar2, ']')
-                    }
-                }
-                Button {
-                    text: "x÷ » */"
-                    color: generic.primaryColor
-                    onClicked: {
-                        txtFormula.text = txtFormula.text.replace(regExTimes, '*')
-                        txtFormula.text = txtFormula.text.replace(regExDivid, '/')
-                        txtFormula.text = txtFormula.text.replace(regExSquar, '^2')
-                    }
-                }
-            }
-
-            TextArea {
                 id: txtFormula
                 width: parent.width
                 label: qsTr("Formula to be processed")
                 text: formula
                 placeholderText: label
+                font.pixelSize: Theme.fontSizeExtraLarge
                 color: generic.primaryColor
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
@@ -218,6 +174,51 @@ Dialog {
                         focus = false
                     }
                 }
+            }
+
+            ButtonLayout {
+                preferredWidth: Theme.buttonWidthExtraSmall
+                Button {
+                    text: "() » []"
+                    color: generic.primaryColor
+                    onClicked: {
+                        txtFormula.text = txtFormula.text.replace(regExPar1, '[')
+                        txtFormula.text = txtFormula.text.replace(regExPar2, ']')
+                        // nog een keer precies kijken met zoekterm /\[\[.+?\]\]/g
+                    }
+                }
+                Button {
+                    text: "x÷² » */^"
+                    color: generic.primaryColor
+                    onClicked: {
+                        txtFormula.text = txtFormula.text.replace(regExTimes, '*')
+                        txtFormula.text = txtFormula.text.replace(regExDivid, '/')
+                        txtFormula.text = txtFormula.text.replace(regExSquar, '^2')
+                    }
+                }
+            }
+
+            Button {
+                text: "From raw"
+                visible: txtRaw.text !== ""
+                color: generic.primaryColor
+                preferredWidth: Theme.buttonWidthMedium
+                anchors.horizontalCenter: parent.horizontalCenter
+                onClicked: {
+                    txtFormula.text = txtRaw.text
+                }
+            }
+
+            TextArea {
+                id: txtRaw
+                width: parent.width
+                readOnly: true
+                label: qsTr("Imported raw text")
+                text: rawText
+                placeholderText: qsTr("No raw text has been imported")
+                font.pixelSize: Theme.fontSizeExtraSmall
+                color: generic.secondaryColor
+                visible: text !== ""
             }
 
             SectionHeader {

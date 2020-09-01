@@ -17,6 +17,7 @@
   Just take a dark photo, and choose red (left hand side) as highlight
   Then again, not all Silica elements can't be tweaked (or else: let me know!)
 - Optimised formula search, with optional search length
+- Changed layout of Add/Edit pages
 
 * Sun Aug 30 2020 Rob Kouwenbergr <sailfish@cow-n-berg.nl> 1.2-1
 - Deleting and adding waypoint actually works now

@@ -192,6 +192,21 @@ function upgradeDatabase( dbversion )
                         letter \
                     );");
             }
+//            if (db.version < "1.3") {
+//                /*
+//                 * Enables remarks with geo_letters, and a (formula) rawtext with geo_waypts.
+//                 */
+//                rs = tx.executeSql("ALTER TABLE geo_waypts ADD COLUMN remark TEXT DEFAULT ''");
+//                console.log(rs);
+//                rs = tx.executeSql("\
+//                    UPDATE geo_waypts AS w \
+//                    INNER JOIN geo_letters AS l \
+//                    ON w.wayptid = l.wayptid \
+//                    SET w.remark = w.remark + l.letter + ': ' + l.remark + ' | ' \
+//                    WHERE l.remark <> ''");
+//                console.log(rs);
+//                console.log("Tables altered");
+//            }
             /*
              * Upgrade complete.
              */
@@ -557,7 +572,7 @@ function addCache(geocache, name, waypts)
     return 1;
 }
 
-function addWaypt(cacheid, wpid, number, formula, note, is_waypoint, letters)
+function addWaypt(cacheid, wpid, number, formula, rawtext, note, is_waypoint, letters)
 {
     var db = openDatabase();
     var rs;
@@ -569,8 +584,8 @@ function addWaypt(cacheid, wpid, number, formula, note, is_waypoint, letters)
     db.transaction(function(tx) {
         rs = tx.executeSql("\
             INSERT OR REPLACE INTO geo_waypts \
-            (cacheid, wayptid, waypoint, formula, note, is_waypoint) \
-            VALUES (?,?,?,?,?,?);", [cacheid, wayptId, nr, formula, note, iswp]);
+            (cacheid, wayptid, waypoint, formula, rawtext, note, is_waypoint) \
+            VALUES (?,?,?,?,?,?,?);", [cacheid, wayptId, nr, formula, rawtext, note, iswp]);
         wayptId = rs.insertId;
         console.log("Waypoint inserted, id=" + wayptId);
 
