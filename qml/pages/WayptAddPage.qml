@@ -27,7 +27,7 @@ Dialog {
     onAccepted: {
         rawText = txtRaw.text === "" ? txtFormula.text : txtRaw.text
         Database.addWaypt(generic.gcId, wayptid, txtWpNr.text, txtFormula.text, rawText, txtNote.text, isWP.checked, txtLetters.text)
-//        generic.multiDirty = true
+        generic.multiDirty = true
         pageStack.pop()
     }
 
@@ -60,6 +60,13 @@ Dialog {
     }
 
     Component.onCompleted: getThisWaypt(wayptid);
+
+    Rectangle {
+        anchors.fill: parent
+        color: "black"
+        opacity: 1.0
+        visible: generic.nightCacheMode
+    }
 
     SilicaFlickable {
         id: wpView

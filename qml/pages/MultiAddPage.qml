@@ -12,19 +12,20 @@ Dialog {
     property var offsetValue      : 0
 
     allowedOrientations: Orientation.All
+
     canAccept: txtCode.text !== "" && txtName.text !== ""
     onAccepted: {
-        var coords = [];
+        var resCoords = [];
         var numberItems = listModel.count;
         for (var i = 0; i < numberItems; ++i) {
             var wpnr = i + (offsetValue.value);
-//            var wpnr = i + offsetValue;
+            var wpnr = i + offsetValue;
             var coord = listModel.get(i).coord;
             var note = listModel.get(i).note;
-            coords.push({coord: coord, number: wpnr, note: note});
+            resCoords.push({coord: coord, number: wpnr, note: note});
         }
-        Database.addCache(txtCode.text, txtName.text, coords)
-//        generic.multiDirty = true
+        Database.addCache(txtCode.text, txtName.text, resCoords)
+        generic.cachesDirty = true
         pageStack.pop()
     }
 
@@ -46,6 +47,12 @@ Dialog {
 
     Component.onCompleted: listModel.update();
 
+    Rectangle {
+        anchors.fill: parent
+        color: "black"
+        opacity: 1.0
+        visible: generic.nightCacheMode
+    }
     SilicaFlickable {
         id: addMulti
 

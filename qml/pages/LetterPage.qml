@@ -23,6 +23,13 @@ Dialog {
 
     Component.onCompleted: getThisLetter(letterid);
 
+    Rectangle {
+        anchors.fill: parent
+        color: "black"
+        opacity: 1.0
+        visible: generic.nightCacheMode
+    }
+
     Column {
         width: parent.width
 
@@ -55,9 +62,8 @@ Dialog {
             width: parent.width
             text: letterremark
             placeholderText: label
-            label: qsTr("Remark")
+            label: qsTr("Optional remark")
             color: generic.primaryColor
-            EnterKey.enabled: text.length > 0
             EnterKey.iconSource: "image://theme/icon-m-enter-close"
 
             // When Enter key is pressed, accept the dialog
@@ -73,7 +79,7 @@ Dialog {
             console.log("letter remark: " + letterremark)
             Database.setLetter(letterid, lettervalue, letterremark)
             generic.allLetters = Database.getLetters(generic.gcId)
-//            generic.wayptDirty = true
+            generic.wayptDirty = true
         }
     }
 }

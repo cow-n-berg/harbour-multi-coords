@@ -3,12 +3,32 @@ import Sailfish.Silica 1.0
 import "../scripts/Database.js" as Database
 import "../scripts/TextFunctions.js" as TF
 
-Page {
-    id: thisWayptPage
+Dialog {
+    id: dialog
 
 //    anchors.fill: parent
 
     allowedOrientations: Orientation.All
+
+    onAccepted: {
+//        var resLettrs = [];
+//        var numberItems = listModel.count;
+//        console.log("numberItems " + numberItems)
+//        for (var i = 0; i < numberItems; ++i) {
+//            var letterid = listModel.get(i).letterid;
+//            var lettervalue = listModel.get(i).lettervalue.valueOf();
+//            var letterremark = listModel.get(i).remark;
+//            console.log("id " + letterid + " val " + lettervalue + " remark " + letterremark)
+//            Database.setLetter(letterid, lettervalue, letterremark)
+//        }
+        Database.setWayptFound(generic.gcId, generic.wpId, generic.wpFound)
+        if (!generic.wpIsWp) {
+            Database.setCacheFound(generic.gcId, generic.wpFound)
+            generic.cachesDirty = true
+        }
+        generic.multiDirty = true
+        pageStack.pop()
+    }
 
     ListModel {
         id: listModel
@@ -23,11 +43,18 @@ Page {
             }
             console.log( "listModel Letters updated");
             generic.allLetters = Database.getLetters(generic.gcId);
-
+            generic.wayptDirty = false
         }
     }
 
     Component.onCompleted: listModel.update()
+
+    Rectangle {
+        anchors.fill: parent
+        color: "black"
+        opacity: 1.0
+        visible: generic.nightCacheMode
+    }
 
     SilicaFlickable {
         id: wpView
@@ -66,23 +93,7 @@ Page {
                 margins: 0
             }
 
-            spacing: Theme.paddingMedium
-
-//            TextField {
-//                id: workAround
-//                width: parent.width
-//                readOnly: true
-
-//                function checkRefresh(isDirty) {
-//                    if (isDirty) {
-//                        listModel.update()
-//                    }
-//                    return ""
-//                }
-
-//                text: checkRefresh(generic.wayptDirty)
-//                visible: false
-//            }
+            spacing: Theme.paddingLarge
 
             TextArea {
                 id: wpcalc
@@ -103,58 +114,59 @@ Page {
                 color: generic.primaryColor
             }
 
-            SectionHeader {
-                text: qsTr("Options")
-                visible: listModel.count > 0 && generic.wpForm !== wpcalc.text
-                color: generic.highlightColor
-            }
-
             Repeater {
                 model: listModel
                 width: parent.width
 
                 ListItem {
                     width: parent.width
+                    height: lettValue.height + lettRemark.height// + Theme.paddingSmall
 
-                    Button {
+
+                    Rectangle {
+                        width: parent.width
                         height: Theme.itemSizeMedium
-                        preferredWidth: Theme.buttonWidthLarge
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: letter + " = " + (lettervalue === "" ? "<?>" : lettervalue) + qsTr(". Click to change")
-                        color: generic.primaryColor
-                        onClicked: {
-                            generic.lettEdit  = letter
-                            pageStack.push(Qt.resolvedUrl("LetterPage.qml"),
-                                           {"letterid": letterid})
-//                            listModel.update();
+                        color: generic.highlightBackgroundColor
+                        opacity: 0.85
+
+                        TextField {
+                            id: lettValue
+                            anchors.centerIn: parent
+                            text: letter + " = " + (lettervalue === "" ? "<?>" : lettervalue) + qsTr(". Click to change")
+//                            font.bold: true
+                            labelVisible: false
+                            readOnly: true
+                            horizontalAlignment: TextInput.AlignHCenter
+                            color: generic.primaryColor
+                            opacity: 1.0
+                            onClicked: {
+                                generic.lettEdit  = letter
+                                pageStack.push(Qt.resolvedUrl("LetterPage.qml"),
+                                               {"letterid": letterid})
+                            }
                         }
                     }
-
-                 }
+                }
             }
 
-            Button {
-                height: Theme.itemSizeLarge
-                preferredWidth: Theme.buttonWidthLarge
-                anchors.horizontalCenter: parent.horizontalCenter
+            IconTextSwitch {
                 text: TF.wayptFoundButton(generic.wpIsWp, generic.wpFound)
-                color: generic.primaryColor
+                icon.source: TF.foundIconUrl(generic.wpFound)
+                icon.color: generic.primaryColor
+                checked: generic.wpFound
                 onClicked: {
                     generic.wpFound = !generic.wpFound
-                    Database.setWayptFound(generic.wpId, generic.wpFound, generic.gcId)
-                    if (!generic.wpIsWp) {
-                        Database.setCacheFound(generic.gcId, generic.wpFound)
-                    }
                     if (generic.wpFound) {
-                        pageStack.pop()
+                        dialog.accept()
                     }
                 }
             }
 
             SectionHeader {
-                text: qsTr("Calculations")
+                text: qsTr("Overview")
                 color: generic.highlightColor
             }
+
             TextArea {
                 width: parent.width
                 readOnly: true
@@ -172,7 +184,6 @@ Page {
                 text: TF.showLetters(generic.allLetters)
                 font.pixelSize: Theme.fontSizeExtraSmall
                 color: generic.secondaryColor
-//                visible: !generic.wpIsWp
             }
 
         }
@@ -204,5 +215,25 @@ Page {
                 onClicked: listModel.update()
             }
         }
+    }
+    Rectangle {
+        visible: generic.wayptDirty
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            bottom: parent.bottom
+        }
+        height: Theme.itemSizeLarge
+        color: Theme.highlightBackgroundColor
+        opacity: 1.0
+        Label {
+            anchors.centerIn: parent
+            text: qsTr("Pull-up to refresh")
+            color: generic.highlightColor
+        }
+//        MouseArea {
+//            anchors.fill: parent
+//            onClicked: listModel.update()
+//            enabled: generic.wayptDirty
+//        }
     }
 }

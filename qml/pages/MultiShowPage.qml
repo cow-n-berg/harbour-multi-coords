@@ -7,7 +7,6 @@ import "../scripts/TextFunctions.js" as TF
 Page {
     id: wayptsPage
 
-//    wayptsPage.onOpened() { listModel.update() }
     allowedOrientations: Orientation.All
 
     ListModel {
@@ -23,12 +22,18 @@ Page {
             }
             console.log( "listModel MultiShow updated");
             generic.allLetters = Database.getLetters(generic.gcId)
-
+            generic.multiDirty = false
         }
     }
 
     Component.onCompleted: listModel.update()
 
+    Rectangle {
+        anchors.fill: parent
+        color: "black"
+        opacity: 1.0
+        visible: generic.nightCacheMode
+    }
     SilicaFlickable {
 
         anchors {
@@ -47,7 +52,6 @@ Page {
             model: listModel
 
             height: parent.height - pageHeader.height
-//            width: parent.width - 2 * Theme.paddingMedium
             width: parent.width
             anchors {
                 top: pageHeader.bottom
@@ -76,21 +80,6 @@ Page {
                     source: TF.wayptIconUrl( is_waypoint )
                     color: generic.primaryColor
                 }
-
-//                Label {
-//                    id: workAround
-//                    width: parent.width
-
-//                    function checkRefresh(isDirty) {
-//                        if (isDirty) {
-//                            listModel.update()
-//                        }
-//                        return ""
-//                    }
-
-//                    text: checkRefresh(generic.multiDirty)
-//                    visible: false
-//                }
 
                 Label {
                     anchors.left: iconContainer.right
@@ -160,7 +149,6 @@ Page {
                 onClicked: {
                     onClicked: pageStack.push(Qt.resolvedUrl("WayptAddPage.qml"),
                                               {"wayptid": undefined})
-//                    generic.multiDirty = true
                 }
             }
         }
@@ -172,4 +160,26 @@ Page {
         }
 
     }
+
+    Rectangle {
+        visible: generic.multiDirty
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            bottom: parent.bottom
+        }
+        height: Theme.itemSizeLarge
+        color: Theme.highlightBackgroundColor
+        opacity: 1.0
+        Label {
+            anchors.centerIn: parent
+            text: qsTr("Pull-up to refresh")
+            color: generic.highlightColor
+        }
+//        MouseArea {
+//            anchors.fill: parent
+//            onClicked: listModel.update()
+//            enabled: generic.multiDirty
+//        }
+    }
+
 }

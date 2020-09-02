@@ -9,8 +9,6 @@ Page {
 
     anchors {
         fill: parent
-        leftMargin: Theme.paddingMedium
-        rightMargin: Theme.paddingMedium
     }
 
     allowedOrientations: Orientation.Portrait
@@ -28,17 +26,29 @@ Page {
             }
             console.log( "listModel Caches updated");
             console.log(JSON.stringify(listModel.get(0)));
+            generic.cachesDirty = false
         }
     }
 
     Component.onCompleted: listModel.update();
 
+    Rectangle {
+        anchors.fill: parent
+        color: "black"
+        opacity: 1.0
+        visible: generic.nightCacheMode
+    }
+
     SilicaListView {
         id: gcListView
         model: listModel
 
-        anchors.fill: parent
-        spacing: Theme.paddingLarge
+        anchors {
+            fill: parent
+            leftMargin: Theme.paddingMedium
+            rightMargin: Theme.paddingMedium
+        }
+        spacing: Theme.paddingMedium
 
         header: PageHeader {
             id: pageHeader
@@ -170,4 +180,26 @@ Page {
         VerticalScrollDecorator {}
 
     }
+
+    Rectangle {
+        visible: generic.cachesDirty
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            bottom: parent.bottom
+        }
+        height: Theme.itemSizeLarge
+        color: Theme.highlightBackgroundColor
+        opacity: 1.0
+        Label {
+            anchors.centerIn: parent
+            text: qsTr("Pull-up to refresh")
+            color: generic.highlightColor
+        }
+//        MouseArea {
+//            anchors.fill: parent
+//            onClicked: listModel.update()
+//            enabled: generic.cachesDirty
+//        }
+    }
+
 }

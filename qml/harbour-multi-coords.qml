@@ -8,20 +8,22 @@ ApplicationWindow
 {
     id: generic
 
-    property string version            : "1.4"
-    property string dbversion          : "1.3"
-    property var    dbhandler          : DB.openDatabase(dbversion)
+    property string version               : "1.5"
+    property string dbversion             : "1.3"
+    property var    dbhandler             : DB.openDatabase(dbversion)
 
-    // Settings
-    property bool coverShowAppName     : DB.getSetting( "coverShowAppName", false )
-    property bool showDialogHints      : DB.getSetting( "showDialogHints", true )
-    property bool deleteDatabase       : DB.getSetting( "deleteDatabase", false )
-    property bool nightCacheMode       : DB.getSetting( "nightCacheMode", false )
+    // Settings                           
+    property bool coverShowAppName        : DB.getSetting( "coverShowAppName", false )
+    property bool showDialogHints         : DB.getSetting( "showDialogHints", true )
+    property bool deleteDatabase          : DB.getSetting( "deleteDatabase", false )
+    property bool nightCacheMode          : DB.getSetting( "nightCacheMode", false )
 
-    property var browserUrl            : "https://coord.info/"
-    property var primaryColor          : nightCacheMode ? "firebrick" : Theme.primaryColor
-    property var secondaryColor        : nightCacheMode ? "maroon"    : Theme.secondaryColor
-    property var highlightColor        : nightCacheMode ? "red"       : Theme.highlightColor
+    property var browserUrl               : "https://coord.info/"
+    property var primaryColor             : nightCacheMode ? "firebrick" : Theme.primaryColor
+    property var secondaryColor           : nightCacheMode ? "maroon"    : Theme.secondaryColor
+    property var highlightColor           : nightCacheMode ? "red"       : Theme.highlightColor
+    property var secondaryHighlightColor  : nightCacheMode ? "crimson"   : Theme.secondaryHighlightColor
+    property var highlightBackgroundColor : nightCacheMode ? "maroon"    : Theme.highlightBackgroundColor
 
     property var gcName
     property var gcCode

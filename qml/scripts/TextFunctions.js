@@ -102,18 +102,18 @@ function wayptIconUrl(isWpt) {
 */
 function wayptFoundButton(isWpt, isFound) {
     //qsTr("Mark waypoint as Found")
-    var text = qsTr("Mark ");
+    var text = qsTr("This ");
     if (isWpt) {
-        text += qsTr("waypoint as ");
+        text += qsTr("waypoint is ");
     }
     else {
-        text += qsTr("geocache as ");
+        text += qsTr("geocache is ");
     }
     if (isFound) {
-        text += qsTr("Not Found");
+        text += qsTr("Found");
     }
     else {
-        text += qsTr("Found");
+        text += qsTr("Not Found");
     }
     return text
 }

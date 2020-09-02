@@ -63,6 +63,10 @@
         <source>Refresh</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Pull-up to refresh</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Database</name>
@@ -74,7 +78,7 @@
 <context>
     <name>LetterPage</name>
     <message>
-        <source>Remark</source>
+        <source>Optional remark</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -183,6 +187,10 @@
         <source>Delete geocache</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Pull-up to refresh</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsPage</name>
@@ -250,18 +258,6 @@
 <context>
     <name>TextFunctions</name>
     <message>
-        <source>Mark </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>waypoint as </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>geocache as </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Not Found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -271,6 +267,18 @@
     </message>
     <message>
         <source>GMFS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>waypoint is </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>geocache is </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -356,10 +364,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>. Click to change</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
@@ -368,19 +372,23 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Calculations</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Refresh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Delete waypoint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>. Click to change</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pull-up to refresh</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

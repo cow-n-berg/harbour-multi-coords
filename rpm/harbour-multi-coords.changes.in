@@ -12,6 +12,10 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Tue Sep 1 2020 Rob Kouwenbergr <sailfish@cow-n-berg.nl> 1.5
+- Improved Dark mode. Rework on waypoint show page.
+- Alert when ListView needs to be refreshed.
+
 * Tue Sep 1 2020 Rob Kouwenbergr <sailfish@cow-n-berg.nl> 1.4
 - Introducing Dark mode. You need to create an Ambience yourself to support it
   Just take a dark photo, and choose red (left hand side) as highlight

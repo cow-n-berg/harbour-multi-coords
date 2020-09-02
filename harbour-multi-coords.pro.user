@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.9.1, 2020-09-01T15:24:05. -->
+<!-- Written by QtCreator 4.9.1, 2020-09-02T09:22:05. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -71,6 +71,8 @@
    <value type="int" key="ProjectExplorer.Target.ActiveDeployConfiguration">0</value>
    <value type="int" key="ProjectExplorer.Target.ActiveRunConfiguration">0</value>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.0">
+    <value type="QString" key="MerSfdkConfigurationAspect.Options"></value>
+    <value type="QString" key="MerSpecFileAspect.Path"></value>
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">C:/Users/Rob/Documents/GitHub/build-harbour-multi-coords-SailfishOS_3_3_0_16_i486_in_Sailfish_OS_Build_Engine-Debug</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
@@ -139,6 +141,8 @@
     <value type="bool" key="Qt4ProjectManager.Qt4BuildConfiguration.UseShadowBuild">true</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.1">
+    <value type="QString" key="MerSfdkConfigurationAspect.Options"></value>
+    <value type="QString" key="MerSpecFileAspect.Path"></value>
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">C:/Users/Rob/Documents/GitHub/build-harbour-multi-coords-SailfishOS_3_3_0_16_i486_in_Sailfish_OS_Build_Engine-Release</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
@@ -207,6 +211,8 @@
     <value type="bool" key="Qt4ProjectManager.Qt4BuildConfiguration.UseShadowBuild">true</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.2">
+    <value type="QString" key="MerSfdkConfigurationAspect.Options"></value>
+    <value type="QString" key="MerSpecFileAspect.Path"></value>
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">C:/Users/Rob/Documents/GitHub/build-harbour-multi-coords-SailfishOS_3_3_0_16_i486_in_Sailfish_OS_Build_Engine-Profile</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
@@ -430,6 +436,8 @@
    <value type="int" key="ProjectExplorer.Target.ActiveDeployConfiguration">1</value>
    <value type="int" key="ProjectExplorer.Target.ActiveRunConfiguration">0</value>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.0">
+    <value type="QString" key="MerSfdkConfigurationAspect.Options"></value>
+    <value type="QString" key="MerSpecFileAspect.Path"></value>
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">C:/Users/Rob/Documents/GitHub/build-harbour-multi-coords-SailfishOS_3_3_0_16_armv7hl_in_Sailfish_OS_Build_Engine-Debug</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
@@ -498,6 +506,8 @@
     <value type="bool" key="Qt4ProjectManager.Qt4BuildConfiguration.UseShadowBuild">true</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.1">
+    <value type="QString" key="MerSfdkConfigurationAspect.Options"></value>
+    <value type="QString" key="MerSpecFileAspect.Path"></value>
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">C:/Users/Rob/Documents/GitHub/build-harbour-multi-coords-SailfishOS_3_3_0_16_armv7hl_in_Sailfish_OS_Build_Engine-Release</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
@@ -566,6 +576,8 @@
     <value type="bool" key="Qt4ProjectManager.Qt4BuildConfiguration.UseShadowBuild">true</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.2">
+    <value type="QString" key="MerSfdkConfigurationAspect.Options"></value>
+    <value type="QString" key="MerSpecFileAspect.Path"></value>
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">C:/Users/Rob/Documents/GitHub/build-harbour-multi-coords-SailfishOS_3_3_0_16_armv7hl_in_Sailfish_OS_Build_Engine-Profile</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
