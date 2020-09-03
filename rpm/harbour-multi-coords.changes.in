@@ -15,6 +15,7 @@
 * Tue Sep 1 2020 Rob Kouwenbergr <sailfish@cow-n-berg.nl> 1.5
 - Improved Dark mode. Rework on waypoint show page.
 - Alert when ListView needs to be refreshed.
+- Add geocache: slider properly implemented
 
 * Tue Sep 1 2020 Rob Kouwenbergr <sailfish@cow-n-berg.nl> 1.4
 - Introducing Dark mode. You need to create an Ambience yourself to support it

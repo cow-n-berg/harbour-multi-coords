@@ -14,14 +14,15 @@ Page {
 
         function update()
         {
+            generic.allLetters = Database.getLetters(generic.gcId)
+//            console.log( JSON.stringify(generic.allLetters));
             listModel.clear();
             var waypts = Database.getWaypts(generic.gcId);
             for (var i = 0; i < waypts.length; ++i) {
                 listModel.append(waypts[i]);
 //                console.log( JSON.stringify(waypts[i]));
             }
-            console.log( "listModel MultiShow updated");
-            generic.allLetters = Database.getLetters(generic.gcId)
+//            console.log( "listModel MultiShow updated");
             generic.multiDirty = false
         }
     }
@@ -38,26 +39,50 @@ Page {
 
         anchors {
             fill: parent
-            leftMargin: Theme.paddingMedium
-            rightMargin: Theme.paddingMedium
+            leftMargin: Theme.paddingSmall
+            rightMargin: Theme.paddingSmall
         }
+//        contentHeight: listModel.count * listItem.contentHeight
+        quickScroll : true
 
         PageHeader {
             id: pageHeader
             title: generic.gcCode + " - " + generic.gcName
         }
 
+        Rectangle {
+            visible: generic.multiDirty
+            anchors {
+                fill: pageHeader
+                centerIn: pageHeader
+            }
+            color: generic.highlightBackgroundColor
+            opacity: 1.0
+            Label {
+                anchors.centerIn: parent
+                text: qsTr("Click to refresh")
+                color: generic.highlightColor
+                font.pixelSize: Theme.fontSizeHuge
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: listModel.update()
+                enabled: generic.multiDirty
+            }
+        }
+
         SilicaListView {
             id: listViewWP
             model: listModel
 
-            height: parent.height - pageHeader.height
+            height: parent.height - pageHeader.height + Theme.itemSizeHuge
+//            height: childrenRect.height + Theme.itemSizeHuge
             width: parent.width
             anchors {
                 top: pageHeader.bottom
-                leftMargin: Theme.paddingMedium
+                leftMargin: Theme.paddingSmall
             }
-            spacing: Theme.paddingLarge
+            spacing: Theme.paddingMedium
 
             ViewPlaceholder {
                 id: placeh
@@ -66,27 +91,32 @@ Page {
                 hintText: "Pull down to add them"
             }
 
+            VerticalScrollDecorator {}
+
             delegate: ListItem {
                 id: listItem
 //                menu: contextMenu
 
                 width: parent.width
-                contentHeight: Theme.itemSizeExtraSmall
+//                contentHeight: Theme.itemSizeExtraSmall
                 ListView.onRemove: animateRemoval(listItem)
-
+//                Row {
                 Icon {
                     id: iconContainer
-                    x: Theme.paddingMedium
+                    x: Theme.paddingSmall
                     source: TF.wayptIconUrl( is_waypoint )
                     color: generic.primaryColor
                 }
 
                 Label {
                     anchors.left: iconContainer.right
-                    width: parent.width - iconContainer.width - Theme.paddingMedium
-                    text: ( is_waypoint ? "WP" + " " + waypoint : "Cache" ) + ": " + TF.evalFormula(formula, generic.allLetters)
+                    width: parent.width - iconContainer.width - 2 * Theme.paddingSmall
+                    text: ( is_waypoint ? "WP" + " " + waypoint : "Cache" ) + ": " + TF.evalFormula(formula, generic.allLetters) + TF.reqWpLetters( generic.allLetters, wayptid )
+                    font.pixelSize: Theme.fontSizeMedium
                     color: found ? generic.secondaryColor : generic.primaryColor
-                    truncationMode: TruncationMode.Elide
+                    wrapMode: Text.WordWrap
+//                    truncationMode: TruncationMode.Elide
+//                }
                 }
                 onClicked: {
                     generic.wpId     = wayptid
@@ -121,8 +151,6 @@ Page {
 //                }
             }
 
-            VerticalScrollDecorator {}
-
         }
 
         RemorsePopup { id: remorse }
@@ -134,7 +162,7 @@ Page {
                     console.log("Remove geocache id " + generic.gcId)
                     Database.deleteCache(generic.gcId)
                     pageStack.pop()
-//                    generic.cachesDirty = true
+                    generic.cachesDirty = true
                 })
             }
             MenuItem {
@@ -175,11 +203,6 @@ Page {
             text: qsTr("Pull-up to refresh")
             color: generic.highlightColor
         }
-//        MouseArea {
-//            anchors.fill: parent
-//            onClicked: listModel.update()
-//            enabled: generic.multiDirty
-//        }
     }
 
 }

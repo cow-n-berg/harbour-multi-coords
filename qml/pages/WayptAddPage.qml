@@ -4,7 +4,7 @@ import "../scripts/Database.js" as Database
 import "../scripts/TextFunctions.js" as TF
 
 Dialog {
-    id: addWayptPage
+    id: dialog
 
     allowedOrientations: Orientation.All
 
@@ -16,6 +16,7 @@ Dialog {
     property var wpNote    : ""
     property var wpIsWp    : true
     property var wpLetters : ""
+    property var letterExtract: TF.lettersFromRaw(txtNote.text)
 
     property var regExPar1  : /\(/g;
     property var regExPar2  : /\)/g;
@@ -25,9 +26,10 @@ Dialog {
 
     canAccept: txtFormula.text !== "" && txtWpNr.text !== ""
     onAccepted: {
-        rawText = txtRaw.text === "" ? txtFormula.text : txtRaw.text
-        Database.addWaypt(generic.gcId, wayptid, txtWpNr.text, txtFormula.text, rawText, txtNote.text, isWP.checked, txtLetters.text)
+        generic.wayptDirty = true
         generic.multiDirty = true
+        rawText = txtRaw.text === "" ? txtFormula.text : txtRaw.text
+        Database.addWaypt(generic.gcId, wayptid, txtWpNr.text, txtFormula.text, rawText, txtNote.text, isWP.checked, txtLetters.text.trim())
         pageStack.pop()
     }
 
@@ -52,9 +54,10 @@ Dialog {
             formula   = waypt.formula
             wpNote    = waypt.note
             wpIsWp    = waypt.iswp
-            wpLetters = waypt.letters
+            wpLetters = waypt.letterstr
             isWP.checked = wpIsWp === 1
             txtWpNr.focus = txtWpNr.txt === ""
+            txtNote.text  = wpNote
 
         }
     }
@@ -203,16 +206,23 @@ Dialog {
                         txtFormula.text = txtFormula.text.replace(regExSquar, '^2')
                     }
                 }
-            }
+                Button {
+                    text: qsTr("From raw")
+                    enabled: txtRaw.text !== ""
+                    color: generic.primaryColor
+                    onClicked: {
+                        txtFormula.text = txtRaw.text
+                    }
+                }
 
-            Button {
-                text: "From raw"
-                visible: txtRaw.text !== ""
-                color: generic.primaryColor
-                preferredWidth: Theme.buttonWidthMedium
-                anchors.horizontalCenter: parent.horizontalCenter
-                onClicked: {
-                    txtFormula.text = txtRaw.text
+                Button {
+                    text: (letterExtract === "" ? qsTr("No letters?") : qsTr("Copy ") + letterExtract)
+                    enabled: letterExtract !== ""
+                    color: generic.primaryColor
+                    onClicked: {
+                        txtLetters.text = letterExtract
+                        txtLetters.focus = true
+                    }
                 }
             }
 
@@ -237,7 +247,7 @@ Dialog {
                 id: description2
                 width: parent.width
                 height: Screen.height / 6
-                text: qsTr("Letters input should be space separated. E.g. 'A B' will lead to two letters 'A' and 'B'. You are not confined to single characters: 'yy zz' will lead to two letters 'yy' and 'zz'. Hence, entering 'ABC' will lead to one letter 'ABC'.")
+                text: qsTr("The button above might copy the letters from the description. Normally, letters should be space separated. E.g. 'A B' will lead to two letters 'A' and 'B'. You are not confined to single characters: entering 'ABC' will lead to one letter 'ABC', but A, B and C will also be evaluated separately.")
                 label: qsTr("How to add letters to a waypoint")
                 color: generic.highlightColor
                 readOnly: true
@@ -251,9 +261,9 @@ Dialog {
                 text: wpLetters
                 placeholderText: label
                 color: generic.primaryColor
-                label: qsTr("Letters, space separated")
+                label: qsTr("Letters, space separated, or like ABC")
                 EnterKey.iconSource: "image://theme/icon-m-enter-close"
-                EnterKey.onClicked: focus = false
+                EnterKey.onClicked: dialog.accept()
             }
 
             SectionHeader {
@@ -265,7 +275,7 @@ Dialog {
                 width: parent.width
                 readOnly: true
                 label: qsTr("All letters (so far)")
-                text: Database.showWayptLetters(generic.gcId)
+                text: Database.showCacheLetters(generic.gcId)
                 font.pixelSize: Theme.fontSizeExtraSmall
                 color: generic.secondaryColor
             }

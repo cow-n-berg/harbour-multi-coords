@@ -73,13 +73,13 @@ Dialog {
 
     onDone: {
         if (result == DialogResult.Accepted) {
-            lettervalue = lettValue.text.valueOf()
-            console.log("letter value: " + lettervalue)
-            letterremark = lettRemark.text.valueOf()
-            console.log("letter remark: " + letterremark)
-            Database.setLetter(letterid, lettervalue, letterremark)
-            generic.allLetters = Database.getLetters(generic.gcId)
             generic.wayptDirty = true
+            lettervalue = lettValue.text.valueOf()
+//            console.log("letter value: " + lettervalue)
+            letterremark = lettRemark.text.valueOf()
+//            console.log("letter remark: " + letterremark)
+            Database.setLetter(generic.gcId, generic.wpId, letterid, letter, lettervalue, letterremark)
+            generic.allLetters = Database.getLetters(generic.gcId)
         }
     }
 }

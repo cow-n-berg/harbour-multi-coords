@@ -54,7 +54,7 @@ function coverIconUrl(darkTheme, nightMode) {
     var url;
     var filename = "../images/icon-cover-";
     if (nightMode){
-        filename += "red.svg";
+        filename += "black.svg";
     }
     else if (darkTheme) {
         filename += "white.svg";
@@ -203,11 +203,26 @@ function evalFormula( formstr, letters ) {
 //    var formula = JSON.parse(formjson);
     var formula = formulaToObj(formstr);
     var result = "";
+    var i, j;
 
-    for (var i = 0; i < formula.length; i++) {
+    var arrLen = letters.length;
+    for (i = 0; i < arrLen; i++) {
+        var lett = letters[i].letter;
+        var valu = letters[i].lettervalue;
+        var leng = lett.length;
+        if (leng > 1 && valu.length === leng) {
+            for (j = 0; j < leng; j++) {
+                var l = lett.slice( j, j + 1 );
+                var v = valu.slice( j, j + 1 );
+                letters.push({ letter: l, lettervalue: v });
+            }
+        }
+    }
+
+    for (i = 0; i < formula.length; i++) {
         if (formula[i].eval) {
             var str = formula[i].part;
-            for (var j = 0; j < letters.length; j++) {
+            for (j = 0; j < letters.length; j++) {
                 var val = letters[j].lettervalue;
                 if (val !== "") {
                     var re = new RegExp(letters[j].letter,"g");
@@ -247,6 +262,25 @@ function showLetters( letters ) {
         }
     }
     result += "Checksum = " + checksum;
+    return result
+}
+
+/*
+*  Function to show all letters and values
+*/
+function reqWpLetters( letters, wayptid ) {
+    var result = "";
+    var checksum = 0;
+    for (var j = 0; j < letters.length; j++) {
+//        console.log("Vergelijk " + letters[j].wayptid + ", " + wayptid + ", " + letters[j].letter );
+        if (letters[j].wayptid === wayptid) {
+            result += (result === "" ? "" : ", ") + letters[j].letter;
+        }
+    }
+    if (result !== "") {
+        result = ", " + qsTr("find ") + result;
+    }
+//    console.log("wayptid: " + wayptid + ", " + result + ", " + JSON.stringify(letters));
     return result
 }
 
@@ -335,13 +369,8 @@ function coordsByRegEx(rawText, searchLength) {
                     var wpnr = 1;
                 }
                 else {
-                    if (wpName.slice(0,1) === "P") {
-                        wpnr = 0;
-                    }
-                    else {
-                        wpnr = parseInt(wpName);
-//                        wpnr = wpnr === waypt ? wpnr++ : wpnr
-                    }
+                    var nr = parseInt(wpName);
+                    wpnr = isNaN(nr) ? 0 : nr;
                 }
 
                 note  = wpSym + " - " + wpDesc + " - " + wpCmt
@@ -447,4 +476,24 @@ function coordLatLon(rawText) {
     }
 
     return { coord: coordinate, regex: re}
+}
+
+function lettersFromRaw(rawText) {
+    var result = "";
+    var regExLetter = /((\b[A-Z]+?\b))/g
+    var res;
+
+    rawText = " " + rawText + " ";
+    console.log("rawText: '" + rawText + "'");
+    do {
+        res = regExLetter.exec(rawText);
+        if (res !== null) {
+            console.log("Word found: " + res[1]);
+            if (res[1] !== "WP" && result.search(res[1]) < 0) {
+                result += (result === "" ? "" : " ") + res[1];
+            }
+        }
+    } while (res !== null)
+
+    return result
 }

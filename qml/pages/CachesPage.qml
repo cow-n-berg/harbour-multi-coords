@@ -55,6 +55,30 @@ Page {
             title: qsTr("All Geocaches")
         }
 
+        Rectangle {
+            visible: generic.cachesDirty
+            anchors {
+                top: parent.top
+
+            }
+            width: parent.width
+            height: Theme.itemSizeExtraLarge
+            color: generic.highlightBackgroundColor
+            opacity: 1.0
+            Label {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: qsTr("Click to refresh")
+                color: generic.highlightColor
+                font.pixelSize: Theme.fontSizeHuge
+                font.bold: true
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: listModel.update()
+                enabled: generic.cachesDirty
+            }
+        }
+
         ViewPlaceholder {
             id: placeh
             enabled: listModel.count === 0
@@ -171,35 +195,13 @@ Page {
                 text: qsTr("Refresh")
                 onClicked: listModel.update()
             }
-//            MenuItem {
-//                text: qsTr("Show Contents DB in Console")
-//                onClicked: Database.showAllData()
-//            }
+            MenuItem {
+                text: qsTr("Show Contents DB in Console")
+                onClicked: Database.showAllData()
+            }
         }
 
         VerticalScrollDecorator {}
 
     }
-
-    Rectangle {
-        visible: generic.cachesDirty
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            bottom: parent.bottom
-        }
-        height: Theme.itemSizeLarge
-        color: Theme.highlightBackgroundColor
-        opacity: 1.0
-        Label {
-            anchors.centerIn: parent
-            text: qsTr("Pull-up to refresh")
-            color: generic.highlightColor
-        }
-//        MouseArea {
-//            anchors.fill: parent
-//            onClicked: listModel.update()
-//            enabled: generic.cachesDirty
-//        }
-    }
-
 }

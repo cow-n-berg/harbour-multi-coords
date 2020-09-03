@@ -64,7 +64,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Pull-up to refresh</source>
+        <source>Click to refresh</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Contents DB in Console</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -121,10 +125,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Paste the entire Geocache description - or the content of a GPX file! - in the next text area. Use the button to extract possible coordinates and formulas. Use press-and-hold to remove options. Formulas may be too long, you can edit them later. </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Paste description, gpx or raw text here</source>
         <translation type="unfinished"></translation>
     </message>
@@ -172,9 +172,17 @@
         <source>Offset for waypoint numbers</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Paste the entire Geocache description - or the content of a GPX file! - in the next text area. Use the button to extract possible coordinates and formulas. Use press-and-hold to remove options. Formulas may be too long, you can edit them later. Use TinyEdit for GPX downloads, or WlanKeyboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MultiShowPage</name>
+    <message>
+        <source>Delete geocache</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>View in browser</source>
         <translation type="unfinished"></translation>
@@ -184,11 +192,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Delete geocache</source>
+        <source>Pull-up to refresh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Pull-up to refresh</source>
+        <source>Click to refresh</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -281,6 +289,10 @@
         <source>geocache is </source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>find </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WayptAddPage</name>
@@ -309,10 +321,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Letters, space separated</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Overview of entire geocache</source>
         <translation type="unfinished"></translation>
     </message>
@@ -337,15 +345,31 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Letters input should be space separated. E.g. &apos;A B&apos; will lead to two letters &apos;A&apos; and &apos;B&apos;. You are not confined to single characters: &apos;yy zz&apos; will lead to two letters &apos;yy&apos; and &apos;zz&apos;. Hence, entering &apos;ABC&apos; will lead to one letter &apos;ABC&apos;.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>No raw text has been imported</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Formula conventions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>From raw</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No letters?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The button above might copy the letters from the description. Normally, letters should be space separated. E.g. &apos;A B&apos; will lead to two letters &apos;A&apos; and &apos;B&apos;. You are not confined to single characters: entering &apos;ABC&apos; will lead to one letter &apos;ABC&apos;, but A, B and C will also be evaluated separately.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Letters, space separated, or like ABC</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -388,7 +412,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Pull-up to refresh</source>
+        <source>Click to refresh</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

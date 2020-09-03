@@ -19,7 +19,7 @@ Dialog {
 //            var lettervalue = listModel.get(i).lettervalue.valueOf();
 //            var letterremark = listModel.get(i).remark;
 //            console.log("id " + letterid + " val " + lettervalue + " remark " + letterremark)
-//            Database.setLetter(letterid, lettervalue, letterremark)
+//            Database.setLetter(generic.gcId, generic.wpId, letterid, letter, lettervalue, letterremark)
 //        }
         Database.setWayptFound(generic.gcId, generic.wpId, generic.wpFound)
         if (!generic.wpIsWp) {
@@ -36,14 +36,24 @@ Dialog {
         function update()
         {
             listModel.clear();
-            var lettrs = Database.getLettersWP(generic.wpId);
+            var waypt = Database.getOneWaypt(generic.wpId)
+            console.log("This waypt: " + JSON.stringify(waypt))
+            generic.wpNumber = waypt.waypoint
+            generic.wpForm   = waypt.formula
+            generic.wpNote   = waypt.note
+            generic.wpIsWp   = waypt.iswp
+            generic.wpFound  = waypt.found
+
+            var lettrs = waypt.letters;
             console.log( "Waypt letters: " + JSON.stringify(lettrs) );
             for (var i = 0; i < lettrs.length; ++i) {
                 listModel.append(lettrs[i]);
             }
             console.log( "listModel Letters updated");
             generic.allLetters = Database.getLetters(generic.gcId);
+
             generic.wayptDirty = false
+            generic.multiDirty = false
         }
     }
 
@@ -62,6 +72,26 @@ Dialog {
         PageHeader {
             id: pageHeader
             title: generic.gcCode + (generic.wpIsWp ? " WP " + generic.wpNumber : qsTr(" Find cache!") ) + "    "
+        }
+        Rectangle {
+            visible: generic.wayptDirty
+            anchors {
+                fill: pageHeader
+                centerIn: pageHeader
+            }
+            color: generic.highlightBackgroundColor
+            opacity: 1.0
+            Label {
+                anchors.centerIn: parent
+                text: qsTr("Click to refresh")
+                color: generic.highlightColor
+                font.pixelSize: Theme.fontSizeHuge
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: listModel.update()
+                enabled: generic.wayptDirty
+            }
         }
 
         VerticalScrollDecorator { flickable: wpView }
@@ -120,10 +150,11 @@ Dialog {
 
                 ListItem {
                     width: parent.width
-                    height: lettValue.height + lettRemark.height// + Theme.paddingSmall
+                    height: rectLetter.height + Theme.paddingSmall
 
 
                     Rectangle {
+                        id: rectLetter
                         width: parent.width
                         height: Theme.itemSizeMedium
                         color: generic.highlightBackgroundColor
@@ -150,6 +181,7 @@ Dialog {
             }
 
             IconTextSwitch {
+                id: isFound
                 text: TF.wayptFoundButton(generic.wpIsWp, generic.wpFound)
                 icon.source: TF.foundIconUrl(generic.wpFound)
                 icon.color: generic.primaryColor
@@ -196,7 +228,7 @@ Dialog {
                 onClicked: remorse.execute("Clearing waypoint", function() {
                     console.log("Remove waypt id " + generic.wpId)
                     Database.deleteWaypt(generic.wpId, generic.gcId)
-//                    generic.multiDirty = true
+                    generic.multiDirty = true
                     pageStack.pop()
                 })
             }
@@ -206,6 +238,7 @@ Dialog {
                     pageStack.push(Qt.resolvedUrl("WayptAddPage.qml"),
                                    {"wayptid": generic.wpId})
 //                    generic.wayptDirty = true
+//                    generic.multiDirty = true
                 }
             }
         }
@@ -215,25 +248,5 @@ Dialog {
                 onClicked: listModel.update()
             }
         }
-    }
-    Rectangle {
-        visible: generic.wayptDirty
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            bottom: parent.bottom
-        }
-        height: Theme.itemSizeLarge
-        color: Theme.highlightBackgroundColor
-        opacity: 1.0
-        Label {
-            anchors.centerIn: parent
-            text: qsTr("Pull-up to refresh")
-            color: generic.highlightColor
-        }
-//        MouseArea {
-//            anchors.fill: parent
-//            onClicked: listModel.update()
-//            enabled: generic.wayptDirty
-//        }
     }
 }
