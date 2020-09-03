@@ -188,14 +188,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Refresh</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Pull-up to refresh</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Click to refresh</source>
         <translation type="unfinished"></translation>
     </message>

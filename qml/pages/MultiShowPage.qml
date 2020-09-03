@@ -72,17 +72,17 @@ Page {
         }
 
         SilicaListView {
-            id: listViewWP
+            id: listView
             model: listModel
 
-            height: parent.height - pageHeader.height + Theme.itemSizeHuge
+            height: parent.height
 //            height: childrenRect.height + Theme.itemSizeHuge
             width: parent.width
             anchors {
                 top: pageHeader.bottom
                 leftMargin: Theme.paddingSmall
             }
-            spacing: Theme.paddingMedium
+//            spacing: Theme.paddingSmall
 
             ViewPlaceholder {
                 id: placeh
@@ -93,13 +93,13 @@ Page {
 
             VerticalScrollDecorator {}
 
-            delegate: ListItem {
+            delegate: Item {
                 id: listItem
 //                menu: contextMenu
 
                 width: parent.width
-//                contentHeight: Theme.itemSizeExtraSmall
-                ListView.onRemove: animateRemoval(listItem)
+                height: iconContainer.height * 1.7
+//                ListView.onRemove: animateRemoval(listItem)
 //                Row {
                 Icon {
                     id: iconContainer
@@ -108,47 +108,28 @@ Page {
                     color: generic.primaryColor
                 }
 
-                Label {
+                TextArea {
+                    id: wpDescr
                     anchors.left: iconContainer.right
                     width: parent.width - iconContainer.width - 2 * Theme.paddingSmall
                     text: ( is_waypoint ? "WP" + " " + waypoint : "Cache" ) + ": " + TF.evalFormula(formula, generic.allLetters) + TF.reqWpLetters( generic.allLetters, wayptid )
-                    font.pixelSize: Theme.fontSizeMedium
+                    font.pixelSize: Theme.fontSizeExtraSmall
                     color: found ? generic.secondaryColor : generic.primaryColor
                     wrapMode: Text.WordWrap
-//                    truncationMode: TruncationMode.Elide
-//                }
-                }
-                onClicked: {
-                    generic.wpId     = wayptid
-                    generic.wpNumber = waypoint
-                    generic.wpForm   = formula
-                    generic.wpNote   = note
-                    generic.wpIsWp   = is_waypoint
-                    generic.wpFound  = found
-                    console.log("Clicked WP " + index)
-                    pageStack.push(Qt.resolvedUrl("WayptShowPage.qml"))
+                    readOnly: true
+                    onClicked: {
+                        generic.wpId     = wayptid
+                        generic.wpNumber = waypoint
+                        generic.wpForm   = formula
+                        generic.wpNote   = note
+                        generic.wpIsWp   = is_waypoint
+                        generic.wpFound  = found
+                        console.log("Clicked WP " + index)
+                        pageStack.push(Qt.resolvedUrl("WayptShowPage.qml"))
+                    }
                 }
 
-//                Component {
-//                    id: contextMenu
-//                    ContextMenu {
-//                        MenuItem {
-//                            text: qsTr("Edit waypoint")
-//                            visible: false
-//                            onClicked: {
-//                                console.log("Edit " + index + ", id " + cacheid)
-//                            }
-//                        }
-//                        MenuItem {
-//                            text: qsTr("Delete waypoint")
-//                            onClicked: remorse.execute("Clearing waypoint", function() {
-//                                console.log("Remove waypoint " + index + ", id " + wayptid)
-//                                Database.deleteWaypt(wayptid, cacheid)
-//                                generic.multiDirty = true
-//                            })
-//                        }
-//                    }
-//                }
+
             }
 
         }
@@ -180,29 +161,33 @@ Page {
                 }
             }
         }
-        PushUpMenu {
-            MenuItem {
-                text: qsTr("Refresh")
-                onClicked: listModel.update()
-            }
-        }
+//        PushUpMenu {
+//            MenuItem {
+//                text: qsTr("Refresh")
+//                onClicked: listModel.update()
+//            }
+//        }
 
     }
-
-    Rectangle {
-        visible: generic.multiDirty
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            bottom: parent.bottom
-        }
-        height: Theme.itemSizeLarge
-        color: Theme.highlightBackgroundColor
-        opacity: 1.0
-        Label {
-            anchors.centerIn: parent
-            text: qsTr("Pull-up to refresh")
-            color: generic.highlightColor
-        }
-    }
-
 }
+
+//                Component {
+//                    id: contextMenu
+//                    ContextMenu {
+//                        MenuItem {
+//                            text: qsTr("Edit waypoint")
+//                            visible: false
+//                            onClicked: {
+//                                console.log("Edit " + index + ", id " + cacheid)
+//                            }
+//                        }
+//                        MenuItem {
+//                            text: qsTr("Delete waypoint")
+//                            onClicked: remorse.execute("Clearing waypoint", function() {
+//                                console.log("Remove waypoint " + index + ", id " + wayptid)
+//                                Database.deleteWaypt(wayptid, cacheid)
+//                                generic.multiDirty = true
+//                            })
+//                        }
+//                    }
+//                }

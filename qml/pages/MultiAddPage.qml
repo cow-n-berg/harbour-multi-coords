@@ -59,7 +59,7 @@ Dialog {
             title: qsTr("Add Multi cache")
         }
 
-        VerticalScrollDecorator { flickable: wpView }
+        VerticalScrollDecorator { flickable: addMulti }
 
         anchors.fill: parent
         anchors.margins: Theme.paddingSmall
