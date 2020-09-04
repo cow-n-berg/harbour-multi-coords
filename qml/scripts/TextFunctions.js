@@ -315,6 +315,11 @@ function coordsByRegEx(rawText, searchLength) {
     var regExStDesc = /<desc>(.*?)<\/desc>/;
     var regExStSym  = /<sym>(.*?)<\/sym>/;
 
+    // To do: Additional Hidden Waypoints
+    var regExHidden = /Additional Hidden Waypoints(.*)<\/groundspeak:long_description>/;
+    var regExHidCmt = /(..)7JV34\s-\s(.+?)&lt;br\s\/\&gt; \&lt;br \/\&gt;(.+?)\&lt;br \/\&gt;/g
+    // Einde to do
+
     var regExCoords = /([NS]\s?[0-9]{1,2}°?\s[0-9]{1,2}\.[0-9]{1,3}\s[EW]\s?[0-9]{1,3}°?\s[0-9]{1,2}\.[0-9]{1,3})/g;
     var regExString = "([NS][^#]{5," + searchLength + "}\\s[EW][^#&,']{5," + searchLength + "})"
     var regExFormul = new RegExp(regExString, "g");
@@ -351,7 +356,7 @@ function coordsByRegEx(rawText, searchLength) {
             if (coordinate !== "") {
                 toBeDeleted.push(coordObj.regex);
 
-                // Check whether we have a full GPX, where main
+                // We may have a full GPX, where main
                 // coordinate shows up twice. If so, throw it out
                 if (arrCoord.length >= 1) {
                     if (arrCoord[0].coord === coordinate) {
@@ -387,6 +392,7 @@ function coordsByRegEx(rawText, searchLength) {
         var coordRe = toBeDeleted[i];
         rawText = rawText.replace(coordRe, "#");
     }
+
 
     note = "";
 
@@ -480,13 +486,23 @@ function coordLatLon(rawText) {
 
 function lettersFromRaw(rawText) {
     var result = "";
-    var regExLetter = /((\b[A-Z]+?\b))/g
+    var regExLetter1 = /(\b[A-Z]+?\b)/g
+    var regExLetter2 = /(\b[a-z]\b)/g
     var res;
 
     rawText = " " + rawText + " ";
     console.log("rawText: '" + rawText + "'");
     do {
-        res = regExLetter.exec(rawText);
+        res = regExLetter1.exec(rawText);
+        if (res !== null) {
+            console.log("Word found: " + res[1]);
+            if (res[1] !== "WP" && result.search(res[1]) < 0) {
+                result += (result === "" ? "" : " ") + res[1];
+            }
+        }
+    } while (res !== null)
+    do {
+        res = regExLetter2.exec(rawText);
         if (res !== null) {
             console.log("Word found: " + res[1]);
             if (res[1] !== "WP" && result.search(res[1]) < 0) {

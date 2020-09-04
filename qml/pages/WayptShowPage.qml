@@ -53,7 +53,6 @@ Dialog {
             generic.allLetters = Database.getLetters(generic.gcId);
 
             generic.wayptDirty = false
-            generic.multiDirty = false
         }
     }
 
@@ -63,6 +62,7 @@ Dialog {
         anchors.fill: parent
         color: "black"
         opacity: 1.0
+//        radius: 10
         visible: generic.nightCacheMode
     }
 
@@ -242,11 +242,11 @@ Dialog {
                 }
             }
         }
-        PushUpMenu {
-            MenuItem {
-                text: qsTr("Refresh")
-                onClicked: listModel.update()
-            }
-        }
+//        PushUpMenu {
+//            MenuItem {
+//                text: qsTr("Refresh")
+//                onClicked: listModel.update()
+//            }
+//        }
     }
 }

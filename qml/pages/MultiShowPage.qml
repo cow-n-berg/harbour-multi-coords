@@ -9,6 +9,8 @@ Page {
 
     allowedOrientations: Orientation.All
 
+    property var smallPrint : false
+
     ListModel {
         id: listModel
 
@@ -24,6 +26,7 @@ Page {
             }
 //            console.log( "listModel MultiShow updated");
             generic.multiDirty = false
+            smallPrint = listModel.count > 9
         }
     }
 
@@ -33,10 +36,11 @@ Page {
         anchors.fill: parent
         color: "black"
         opacity: 1.0
+//        radius: 10
         visible: generic.nightCacheMode
     }
     SilicaFlickable {
-
+        id: flickGC
         anchors {
             fill: parent
             leftMargin: Theme.paddingSmall
@@ -91,15 +95,15 @@ Page {
                 hintText: "Pull down to add them"
             }
 
-            VerticalScrollDecorator {}
+            VerticalScrollDecorator { flickable: flickGC}
 
             delegate: Item {
                 id: listItem
 //                menu: contextMenu
 
                 width: parent.width
-                height: iconContainer.height * 1.7
-//                ListView.onRemove: animateRemoval(listItem)
+                height: smallPrint ? iconContainer.height * 1.1 : Theme.itemSizeMedium
+                ListView.onRemove: animateRemoval(listItem)
 //                Row {
                 Icon {
                     id: iconContainer
@@ -109,14 +113,34 @@ Page {
                 }
 
                 TextArea {
-                    id: wpDescr
+                    id: wpDescrLarge
                     anchors.left: iconContainer.right
                     width: parent.width - iconContainer.width - 2 * Theme.paddingSmall
                     text: ( is_waypoint ? "WP" + " " + waypoint : "Cache" ) + ": " + TF.evalFormula(formula, generic.allLetters) + TF.reqWpLetters( generic.allLetters, wayptid )
-                    font.pixelSize: Theme.fontSizeExtraSmall
+                    font.pixelSize: smallPrint ? Theme.fontSizeExtraSmall : Theme.fontSizeSmall
                     color: found ? generic.secondaryColor : generic.primaryColor
-                    wrapMode: Text.WordWrap
                     readOnly: true
+                    visible: !smallPrint
+                    onClicked: {
+                        generic.wpId     = wayptid
+                        generic.wpNumber = waypoint
+                        generic.wpForm   = formula
+                        generic.wpNote   = note
+                        generic.wpIsWp   = is_waypoint
+                        generic.wpFound  = found
+                        console.log("Clicked WP " + index)
+                        pageStack.push(Qt.resolvedUrl("WayptShowPage.qml"))
+                    }
+                }
+                TextField {
+                    id: wpDescrSmall
+                    anchors.left: iconContainer.right
+                    width: parent.width - iconContainer.width - 2 * Theme.paddingSmall
+                    text: ( is_waypoint ? "WP" + " " + waypoint : "Cache" ) + ": " + TF.evalFormula(formula, generic.allLetters) + TF.reqWpLetters( generic.allLetters, wayptid )
+                    font.pixelSize: smallPrint ? Theme.fontSizeExtraSmall : Theme.fontSizeSmall
+                    color: found ? generic.secondaryColor : generic.primaryColor
+                    readOnly: true
+                    visible: smallPrint
                     onClicked: {
                         generic.wpId     = wayptid
                         generic.wpNumber = waypoint

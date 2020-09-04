@@ -36,6 +36,7 @@ Page {
         anchors.fill: parent
         color: "black"
         opacity: 1.0
+//        radius: 10
         visible: generic.nightCacheMode
     }
 
@@ -190,16 +191,16 @@ Page {
                 onClicked: pageStack.push(Qt.resolvedUrl("MultiAddPage.qml"))
             }
         }
-        PushUpMenu  {
-            MenuItem {
-                text: qsTr("Refresh")
-                onClicked: listModel.update()
-            }
-            MenuItem {
-                text: qsTr("Show Contents DB in Console")
-                onClicked: Database.showAllData()
-            }
-        }
+//        PushUpMenu  {
+//            MenuItem {
+//                text: qsTr("Refresh")
+//                onClicked: listModel.update()
+//            }
+//            MenuItem {
+//                text: qsTr("Show Contents DB in Console")
+//                onClicked: Database.showAllData()
+//            }
+//        }
 
         VerticalScrollDecorator {}
 

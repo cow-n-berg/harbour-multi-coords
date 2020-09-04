@@ -60,15 +60,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Refresh</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Click to refresh</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show Contents DB in Console</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -385,10 +377,6 @@
     </message>
     <message>
         <source>All values</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Refresh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
