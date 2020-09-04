@@ -380,7 +380,7 @@ function coordsByRegEx(rawText, searchLength) {
 
                 note  = wpSym + " - " + wpDesc + " - " + wpCmt
                 arrCoord.push({number: wpnr, coord: coordinate, note: note});
-                console.log("added coord: " + coordinate + ", nr: " + wpnr + ", note: " + note)
+                console.log("added coord: " + waypt + ", coord:"  + coordinate + ", nr: " + wpnr + ", note: " + note)
                 waypt = Math.max(wpnr, waypt);
             }
             waypt++;
@@ -392,10 +392,57 @@ function coordsByRegEx(rawText, searchLength) {
         var coordRe = toBeDeleted[i];
         rawText = rawText.replace(coordRe, "#");
     }
+    toBeDeleted = [];
 
+    // Stages in Hidden Waypoints within GPX file
+    var hidden = simpleRegEx(rawText, regExHidden);
+
+    do {
+        res = regExHidCmt.exec(hidden);
+        if (res !== null) {
+            console.log("Hidden waypoint found: "+ JSON.stringify(res));
+
+            if (res[1] === "FN") {
+                 wpnr = waypt;
+                console.log("Final Location, " + wpnr);
+            }
+            else {
+                nr = parseInt(res[1]);
+                wpnr = isNaN(nr) ? 0 : nr;
+            }
+
+            wpSym  = res[1];
+            wpDesc = res[2];
+            wpCmt  = res[3];
+            coordinate = simpleRegEx(wpCmt, regExFormul);
+//            console.log("wpSym " + wpSym + ", wpDesc " + wpDesc + ", coord: " + coordinate + ", wpCmt: " + wpCmt );
+
+            if (coordinate === "") {
+                var leng = Math.min(40, wpCmt.length + 1);
+                coordinate = wpCmt.slice(0,leng);
+            }
+
+            coordRe = new RegExp(escapeRegExp(wpCmt));
+            toBeDeleted.push(coordRe);
+
+            note  = wpSym + " - " + wpDesc + " - " + wpCmt
+            arrCoord.push({number: wpnr, coord: coordinate, note: note});
+            console.log("added hidden: " + waypt + ", coord:"  + coordinate + ", nr: " + wpnr + ", note: " + note)
+            waypt = Math.max(wpnr, waypt);
+
+            waypt++;
+        }
+    } while (res !== null)
+
+    // Remove hidden waypoints from rawtext to prevent doubles
+    for (i = 0; i < toBeDeleted.length; i++) {
+        coordRe = toBeDeleted[i];
+        rawText = rawText.replace(coordRe, "#");
+    }
 
     note = "";
 
+    // Remove coord from rawtext to prevent doubles
     do {
         res = regExCoords.exec(rawText);
         if (res !== null) {
@@ -410,6 +457,7 @@ function coordsByRegEx(rawText, searchLength) {
         }
     } while (res !== null)
 
+    // Search for formulas within rawtext
     do {
         res = regExFormul.exec(rawText);
         if (res !== null) {
@@ -482,6 +530,10 @@ function coordLatLon(rawText) {
     }
 
     return { coord: coordinate, regex: re}
+}
+
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
 
 function lettersFromRaw(rawText) {

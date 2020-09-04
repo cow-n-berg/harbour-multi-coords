@@ -8,7 +8,7 @@ ApplicationWindow
 {
     id: generic
 
-    property string version               : "1.5"
+    property string version               : "1.6"
     property string dbversion             : "1.3"
     property var    dbhandler             : DB.openDatabase(dbversion)
 
