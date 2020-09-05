@@ -253,7 +253,7 @@ function showLetters( letters ) {
     var checksum = 0;
     for (var j = 0; j < letters.length; j++) {
         result += letters[j].letter + " = " + letters[j].lettervalue;
-        if (letters[j].remark !== "") {
+        if (typeof letters[j].remark !== "undefined" && letters[j].remark !== "") {
             result += ", " +letters[j].remark;
         }
         result += "\n";
@@ -543,11 +543,9 @@ function lettersFromRaw(rawText) {
     var res;
 
     rawText = " " + rawText + " ";
-    console.log("rawText: '" + rawText + "'");
     do {
         res = regExLetter1.exec(rawText);
         if (res !== null) {
-            console.log("Word found: " + res[1]);
             if (res[1] !== "WP" && result.search(res[1]) < 0) {
                 result += (result === "" ? "" : " ") + res[1];
             }
@@ -556,7 +554,6 @@ function lettersFromRaw(rawText) {
     do {
         res = regExLetter2.exec(rawText);
         if (res !== null) {
-            console.log("Word found: " + res[1]);
             if (res[1] !== "WP" && result.search(res[1]) < 0) {
                 result += (result === "" ? "" : " ") + res[1];
             }
@@ -565,3 +562,52 @@ function lettersFromRaw(rawText) {
 
     return result
 }
+
+function addParentheses(formula, newLetterstr, allLetters) {
+    var reCardinals = /[NSEW]/;
+
+    // First replace the known letters
+    for (var i = 0; i < allLetters.length; i++) {
+        var letter = allLetters[i].letter;
+        // We won't change N, S, E, W
+        if (reCardinals.exec(letter) === null) {
+            var re = new RegExp(allLetters[i].letter, "g")
+            formula = formula.replace(re, "[" + letter + "]");
+        }
+    }
+
+    // Then, maybe, this waypoint uses new letters
+    // Format of newLetterstr is 'A B C DEF', to be splitted by space
+    var arrLett = newLetterstr.split(" ");
+    if (arrLett.length === 0) {
+        arrLett = [newLetterstr];
+    }
+
+    for (var j = 0; j < arrLett.length; j++) {
+        letter = arrLett[j];
+        var found = false;
+        for (i = 0; i < allLetters.length; i++) {
+            if (letter === allLetters[i].letter) {
+                found = true;
+            }
+        }
+        // We won't replace twice, and we won't change N, S, E, W
+        if (!found && reCardinals.exec(letter) === null) {
+            re = new RegExp(allLetters[i].letter, "g")
+            formula = formula.replace(re, "[" + letter + "]");
+        }
+    }
+
+    // Get rid of double brackets
+
+    formula = formula.replace(/\[\[/g, "[");
+    formula = formula.replace(/\]\]/g, "]");
+
+    return formula
+}
+
+function validateNewLetters( newLetters ) {
+    var re = /[^a-zA-Z ]/g
+    return re.exec(newLetters) === null
+}
+

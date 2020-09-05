@@ -275,7 +275,7 @@ function getLetters(cacheid)
             letters.push(rs.rows.item(i));
         }
     });
-//    console.log(JSON.stringify(letters));
+    console.log(JSON.stringify(letters));
     return letters;
 }
 

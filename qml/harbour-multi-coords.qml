@@ -11,6 +11,7 @@ ApplicationWindow
     property string version               : "1.6"
     property string dbversion             : "1.3"
     property var    dbhandler             : DB.openDatabase(dbversion)
+    property bool   debug                 : false
 
     // Settings                           
     property bool coverShowAppName        : DB.getSetting( "coverShowAppName", false )

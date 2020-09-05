@@ -108,7 +108,7 @@ Dialog {
                 margins: 0
             }
 
-            spacing: Theme.paddingMedium
+            spacing: Theme.paddingSmall
 
             TextField {
                 id: txtWpNr
@@ -135,7 +135,7 @@ Dialog {
                 width: parent.width
                 text: wpNote
                 placeholderText: label
-                label: qsTr("Description")
+                label: qsTr("Note")
                 color: generic.primaryColor
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
@@ -154,17 +154,60 @@ Dialog {
                 text: qsTr("Waypoint is ") + (checked ? qsTr("just a waypoint") : qsTr("the cache location") )
             }
 
+            SectionHeader {
+                text: qsTr("Formula editing")
+            }
+
             TextArea {
                 id: description1
                 width: parent.width
                 height: Screen.height / 6
-                text: qsTr("All information between brackets [] will be evaluated, e.g. [A+1]. Parentheses () are for calculations like [(B+3)/2].")
+                text: qsTr("All information between brackets [] will be evaluated, e.g. [A+1]. Parentheses () are for calculations like [(B+3)/2]. The buttons below may help with editing. The [A] won't replace NSEW in the formula.")
                 label: qsTr("Formula conventions")
+                labelVisible: false
                 color: generic.highlightColor
                 readOnly: true
                 font.pixelSize: Theme.fontSizeExtraSmall
                 visible: generic.showDialogHints
             }
+
+//            Row {
+//                id: iconButtons
+//                spacing: 0
+//                anchors.horizontalCenter: parent.horizontalCenter
+//                IconButton {
+//                    icon.source: Qt.resolvedUrl("../images/icon-m-left.svg")
+//                    onClicked: {
+//                        var pos = txtFormula.cursorPosition
+//                        if (pos > 0) { txtFormula.cursorPosition-- }
+//                        txtFormula.focus = true
+//                    }
+//                }
+//                IconButton {
+//                    icon.source: Qt.resolvedUrl("../images/icon-m-right.svg")
+//                    onClicked: {
+//                        var pos = txtFormula.cursorPosition
+//                        if (pos < txtFormula.text.length) { txtFormula.cursorPosition++ }
+//                        txtFormula.forceActiveFocus()
+//                    }
+//                }
+//                IconButton {
+//                    icon.source: Qt.resolvedUrl("../images/icon-bracket-left.svg")
+//                }
+//                IconButton {
+//                    icon.source: Qt.resolvedUrl("../images/icon-bracket-right.svg")
+//                }
+//                IconButton {
+//                    icon.source: Qt.resolvedUrl("../images/icon-parenthesis-left.svg")
+//                }
+//                IconButton {
+//                    icon.source: Qt.resolvedUrl("../images/icon-parenthesis-right.svg")
+//                }
+//                IconButton {
+//                    icon.source: Qt.resolvedUrl("../images/icon-m-backspace.svg")
+//                }
+
+//            }
 
             TextArea {
                 id: txtFormula
@@ -172,7 +215,7 @@ Dialog {
                 label: qsTr("Formula to be processed")
                 text: formula
                 placeholderText: label
-                font.pixelSize: Theme.fontSizeExtraLarge
+                font.pixelSize: Theme.fontSizeLarge
                 color: generic.primaryColor
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
@@ -192,9 +235,16 @@ Dialog {
                     text: "() » []"
                     color: generic.primaryColor
                     onClicked: {
-                        txtFormula.text = txtFormula.text.replace(regExPar1, '[')
-                        txtFormula.text = txtFormula.text.replace(regExPar2, ']')
+                        txtFormula.text = txtFormula.text.replace(regExPar1, '[(')
+                        txtFormula.text = txtFormula.text.replace(regExPar2, ')]')
                         // nog een keer precies kijken met zoekterm /\[\[.+?\]\]/g
+                    }
+                }
+                Button {
+                    text: "[A]"
+                    color: generic.primaryColor
+                    onClicked: {
+                        txtFormula.text = TF.addParentheses(txtFormula.text, txtLetters.text, generic.allLetters)
                     }
                 }
                 Button {
@@ -215,15 +265,6 @@ Dialog {
                     }
                 }
 
-                Button {
-                    text: (letterExtract === "" ? qsTr("No letters?") : qsTr("Copy ") + letterExtract)
-                    enabled: letterExtract !== ""
-                    color: generic.primaryColor
-                    onClicked: {
-                        txtLetters.text = letterExtract
-                        txtLetters.focus = true
-                    }
-                }
             }
 
             TextArea {
@@ -243,12 +284,25 @@ Dialog {
                 color: generic.highlightColor
             }
 
+            ButtonLayout {
+                Button {
+                    text: (letterExtract === "" ? qsTr("No letters?") : qsTr("Copy ") + letterExtract) + qsTr(" from Note")
+                    enabled: letterExtract !== ""
+                    color: generic.primaryColor
+                    onClicked: {
+                        txtLetters.text = letterExtract
+                        txtLetters.focus = true
+                    }
+                }
+            }
+
             TextArea {
                 id: description2
                 width: parent.width
                 height: Screen.height / 6
                 text: qsTr("The button above might copy the letters from the description. Normally, letters should be space separated. E.g. 'A B' will lead to two letters 'A' and 'B'. You are not confined to single characters: entering 'ABC' will lead to one letter 'ABC', but A, B and C will also be evaluated separately.")
                 label: qsTr("How to add letters to a waypoint")
+                labelVisible: false
                 color: generic.highlightColor
                 readOnly: true
                 font.pixelSize: Theme.fontSizeExtraSmall
@@ -260,8 +314,9 @@ Dialog {
                 width: parent.width
                 text: wpLetters
                 placeholderText: label
-                color: generic.primaryColor
+                color: errorHighlight ? generic.highlightColor : generic.primaryColor
                 label: qsTr("Letters, space separated, or like ABC")
+//                validator: TF.validateNewLetters( wpLetters.text )
                 EnterKey.iconSource: "image://theme/icon-m-enter-close"
                 EnterKey.onClicked: dialog.accept()
             }
@@ -275,6 +330,7 @@ Dialog {
                 width: parent.width
                 readOnly: true
                 label: qsTr("All letters (so far)")
+                labelVisible: false
                 text: Database.showCacheLetters(generic.gcId)
                 font.pixelSize: Theme.fontSizeExtraSmall
                 color: generic.secondaryColor

@@ -63,6 +63,10 @@
         <source>Click to refresh</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Show Contents DB in Console</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Database</name>
@@ -250,18 +254,6 @@
 <context>
     <name>TextFunctions</name>
     <message>
-        <source>Not Found</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Found</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>GMFS</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>This </source>
         <translation type="unfinished"></translation>
     </message>
@@ -271,6 +263,18 @@
     </message>
     <message>
         <source>geocache is </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not Found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GMFS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -290,10 +294,6 @@
     </message>
     <message>
         <source>Formula to be processed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -325,10 +325,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>All information between brackets [] will be evaluated, e.g. [A+1]. Parentheses () are for calculations like [(B+3)/2].</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>No raw text has been imported</source>
         <translation type="unfinished"></translation>
     </message>
@@ -354,6 +350,22 @@
     </message>
     <message>
         <source>Letters, space separated, or like ABC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Formula editing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Note</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> from Note</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All information between brackets [] will be evaluated, e.g. [A+1]. Parentheses () are for calculations like [(B+3)/2]. The buttons below may help with editing. The [A] won&apos;t replace NSEW in the formula.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

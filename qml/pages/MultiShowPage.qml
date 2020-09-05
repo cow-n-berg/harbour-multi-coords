@@ -103,7 +103,7 @@ Page {
 
                 width: parent.width
                 height: smallPrint ? iconContainer.height * 1.1 : Theme.itemSizeMedium
-                ListView.onRemove: animateRemoval(listItem)
+//                ListView.onRemove: animateRemoval(listItem)
 //                Row {
                 Icon {
                     id: iconContainer

@@ -191,16 +191,17 @@ Page {
                 onClicked: pageStack.push(Qt.resolvedUrl("MultiAddPage.qml"))
             }
         }
-//        PushUpMenu  {
+        PushUpMenu  {
+            enabled: generic.debug
 //            MenuItem {
 //                text: qsTr("Refresh")
 //                onClicked: listModel.update()
 //            }
-//            MenuItem {
-//                text: qsTr("Show Contents DB in Console")
-//                onClicked: Database.showAllData()
-//            }
-//        }
+            MenuItem {
+                text: qsTr("Show Contents DB in Console")
+                onClicked: Database.showAllData()
+            }
+        }
 
         VerticalScrollDecorator {}
 
