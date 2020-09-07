@@ -645,6 +645,9 @@ function addWaypt(cacheid, wpid, number, formula, rawtext, note, is_waypoint, le
     return 1;
 }
 
+function addLetters(cacheid, wpid, letters) {
+}
+
 function setCacheFound(cacheid, found)
 {
     var sqlFound = found ? 1 : 0
@@ -754,7 +757,8 @@ function clearValues(cacheid)
     db.transaction(function(tx) {
         tx.executeSql("\
             UPDATE geo_letters \
-                SET lettervalue = '' \
+                SET lettervalue = '',
+                    remark = '' \
                 WHERE cacheid=? \
             ;", [cacheid]);
     });

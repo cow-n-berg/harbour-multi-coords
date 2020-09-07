@@ -69,7 +69,7 @@ Page {
             Label {
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: qsTr("Click to refresh")
-                color: generic.highlightColor
+                color: generic.primaryColor
                 font.pixelSize: Theme.fontSizeHuge
                 font.bold: true
             }
@@ -142,7 +142,7 @@ Page {
 
             Separator {
                 width: parent.width
-                color: generic.primaryColor
+                color: generic.secondaryColor
             }
 
             RemorsePopup { id: remorse }

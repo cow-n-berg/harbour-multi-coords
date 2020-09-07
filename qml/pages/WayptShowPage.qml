@@ -73,10 +73,14 @@ Dialog {
     SilicaFlickable {
         id: wpView
 
-        PageHeader {
-            id: pageHeader
-            title: generic.gcCode + (generic.wpIsWp ? " WP " + generic.wpNumber : qsTr(" Find cache!") ) + "    "
+        anchors {
+            fill: parent
+            leftMargin: Theme.paddingMedium
+            rightMargin: Theme.paddingMedium
         }
+        contentHeight: column.height + Theme.itemSizeMedium
+        quickScroll : true
+
         Rectangle {
             visible: generic.wayptDirty
             anchors {
@@ -88,8 +92,9 @@ Dialog {
             Label {
                 anchors.centerIn: parent
                 text: qsTr("Click to refresh")
-                color: generic.highlightColor
+                color: generic.primaryColor
                 font.pixelSize: Theme.fontSizeHuge
+                font.bold: true
             }
             MouseArea {
                 anchors.fill: parent
@@ -98,15 +103,11 @@ Dialog {
             }
         }
 
-        VerticalScrollDecorator { flickable: wpView }
-
-        anchors {
-            fill: parent
-            leftMargin: Theme.paddingMedium
-            rightMargin: Theme.paddingMedium
+        PageHeader {
+            id: pageHeader
+            title: generic.gcCode + (generic.wpIsWp ? " WP " + generic.wpNumber : qsTr(" Find cache!") ) + "    "
         }
-        contentHeight: column.height + Theme.itemSizeMedium
-        quickScroll : true
+        VerticalScrollDecorator { flickable: wpView }
 
         Icon {
             id: iconContainer
@@ -117,6 +118,21 @@ Dialog {
 
             source: TF.wayptIconUrl( generic.wpIsWp )
             color: generic.highlightColor
+        }
+
+        IconButton {
+            id: iconClipboard
+            anchors {
+                right: parent.right
+                top: pageHeader.bottom
+            }
+
+            icon.source: "image://theme/icon-m-clipboard"
+            icon.color: generic.primaryColor
+//            visible: TF.formulaSolved (wpcalc.text)
+            onClicked: {
+                Clipboard.text = wpcalc.text
+            }
         }
 
         Column {
@@ -131,7 +147,7 @@ Dialog {
 
             TextArea {
                 id: wpcalc
-                width: parent.width
+                width: parent.width - iconClipboard.width
                 readOnly: true
                 label: qsTr("Calculated")
                 text: TF.evalFormula(generic.wpForm, generic.allLetters)
@@ -144,28 +160,28 @@ Dialog {
                 width: parent.width
                 readOnly: true
                 text: generic.wpNote
-                label: qsTr("Description")
+                label: qsTr("Note")
                 visible: TF.trimString(generic.wpNote) !== ""
                 color: generic.primaryColor
             }
 
-            TextArea {
-                width: parent.width
-                readOnly: true
-                text: qsTr("This waypoint has no letters attached. Click button to add them.")
-                visible: letterExtract !== "" && !lettersFilled
-                color: generic.highlightColor
-            }
+//            TextArea {
+//                width: parent.width
+//                readOnly: true
+//                text: qsTr("This waypoint has no letters attached. Click button to add them.")
+//                visible: letterExtract !== "" && !lettersFilled
+//                color: generic.highlightColor
+//            }
 
-            Button {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: qsTr("Add letters: " + letterExtract)
-                visible: letterExtract !== "" && !lettersFilled
-                color: generic.primaryColor
-                onClicked: {
+//            Button {
+//                anchors.horizontalCenter: parent.horizontalCenter
+//                text: qsTr("Add letters: " + letterExtract)
+//                visible: letterExtract !== "" && !lettersFilled
+//                color: generic.primaryColor
+//                onClicked: {
 
-                }
-            }
+//                }
+//            }
 
             Repeater {
                 model: listModel
@@ -261,12 +277,6 @@ Dialog {
                 onClicked: {
                     pageStack.push(Qt.resolvedUrl("WayptAddPage.qml"),
                                    {"wayptid": generic.wpId})
-                }
-            }
-            MenuItem {
-                text: "Copy to clipboard"
-                onClicked: {
-                    Clipboard.text = wpcalc.text
                 }
             }
         }

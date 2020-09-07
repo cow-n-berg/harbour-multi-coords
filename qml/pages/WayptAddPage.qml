@@ -232,7 +232,7 @@ Dialog {
             ButtonLayout {
                 preferredWidth: Theme.buttonWidthExtraSmall
                 Button {
-                    text: "() » []"
+                    text: "() » [()]"
                     color: generic.primaryColor
                     onClicked: {
                         txtFormula.text = txtFormula.text.replace(regExPar1, '[(')
@@ -241,7 +241,7 @@ Dialog {
                     }
                 }
                 Button {
-                    text: "[A]"
+                    text: "A » [A]"
                     color: generic.primaryColor
                     onClicked: {
                         txtFormula.text = TF.addParentheses(txtFormula.text, txtLetters.text, generic.allLetters)

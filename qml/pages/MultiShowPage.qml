@@ -26,7 +26,7 @@ Page {
             }
 //            console.log( "listModel MultiShow updated");
             generic.multiDirty = false
-            smallPrint = listModel.count > 9
+            smallPrint = listModel.count > 11
         }
     }
 
@@ -36,9 +36,9 @@ Page {
         anchors.fill: parent
         color: "black"
         opacity: 1.0
-//        radius: 10
         visible: generic.nightCacheMode
     }
+
     SilicaFlickable {
         id: flickGC
         anchors {
@@ -46,27 +46,27 @@ Page {
             leftMargin: Theme.paddingSmall
             rightMargin: Theme.paddingSmall
         }
-//        contentHeight: listModel.count * listItem.contentHeight
+        contentHeight: column.height
         quickScroll : true
 
-        PageHeader {
-            id: pageHeader
-            title: generic.gcCode + " - " + generic.gcName
-        }
+        VerticalScrollDecorator {}
 
         Rectangle {
             visible: generic.multiDirty
             anchors {
-                fill: pageHeader
-                centerIn: pageHeader
+                top: parent.top
+
             }
+            width: parent.width
+            height: Theme.itemSizeExtraLarge
             color: generic.highlightBackgroundColor
             opacity: 1.0
             Label {
                 anchors.centerIn: parent
                 text: qsTr("Click to refresh")
-                color: generic.highlightColor
+                color: generic.primaryColor
                 font.pixelSize: Theme.fontSizeHuge
+                font.bold: true
             }
             MouseArea {
                 anchors.fill: parent
@@ -75,87 +75,88 @@ Page {
             }
         }
 
-        SilicaListView {
-            id: listView
-            model: listModel
-
-            height: parent.height
-//            height: childrenRect.height + Theme.itemSizeHuge
+        Column {
+            id: column
             width: parent.width
-            anchors {
-                top: pageHeader.bottom
-                leftMargin: Theme.paddingSmall
+            spacing: Theme.paddingSmall
+
+            Rectangle {
+                visible: generic.multiDirty
+                width: parent.width
+                height: Theme.itemSizeExtraLarge
+                color: generic.highlightBackgroundColor
+                opacity: 1.0
+                Label {
+                    anchors.centerIn: parent
+                    text: qsTr("Click to refresh")
+                    color: generic.primaryColor
+                    font.pixelSize: Theme.fontSizeHuge
+                    font.bold: true
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: listModel.update()
+                    enabled: generic.multiDirty
+                }
             }
-//            spacing: Theme.paddingSmall
 
-            ViewPlaceholder {
-                id: placeh
-                enabled: listModel.count === 0
-                text: "No waypoints yet"
-                hintText: "Pull down to add them"
+            PageHeader {
+                id: pageHeader
+                title: generic.gcCode + " - " + generic.gcName
             }
 
-            VerticalScrollDecorator { flickable: flickGC}
-
-            delegate: Item {
-                id: listItem
-//                menu: contextMenu
+            ColumnView  {
+                id: columnView
+                model: listModel
 
                 width: parent.width
-                height: smallPrint ? iconContainer.height * 1.1 : Theme.itemSizeMedium
-//                ListView.onRemove: animateRemoval(listItem)
-//                Row {
-                Icon {
-                    id: iconContainer
-                    x: Theme.paddingSmall
-                    source: TF.wayptIconUrl( is_waypoint )
-                    color: generic.primaryColor
+                itemHeight: Theme.itemSizeExtraLarge + Theme.paddingMedium
+
+
+                ViewPlaceholder {
+                    id: placeh
+                    enabled: listModel.count === 0
+                    text: "No waypoints yet"
+                    hintText: "Pull down to add them"
                 }
 
-                TextArea {
-                    id: wpDescrLarge
-                    anchors.left: iconContainer.right
-                    width: parent.width - iconContainer.width - 2 * Theme.paddingSmall
-                    text: ( is_waypoint ? "WP" + " " + waypoint : "Cache" ) + ": " + TF.evalFormula(formula, generic.allLetters) + TF.reqWpLetters( generic.allLetters, wayptid )
-                    font.pixelSize: smallPrint ? Theme.fontSizeExtraSmall : Theme.fontSizeSmall
-                    color: found ? generic.secondaryColor : generic.primaryColor
-                    readOnly: true
-                    visible: !smallPrint
-                    onClicked: {
-                        generic.wpId     = wayptid
-                        generic.wpNumber = waypoint
-                        generic.wpForm   = formula
-                        generic.wpNote   = note
-                        generic.wpIsWp   = is_waypoint
-                        generic.wpFound  = found
-                        console.log("Clicked WP " + index)
-                        pageStack.push(Qt.resolvedUrl("WayptShowPage.qml"))
+                delegate: BackgroundItem {
+                    id: listItem
+//                    menu: contextMenu
+
+                    width: parent.width
+
+//                  ListView.onRemove: animateRemoval(listItem)
+
+                    Icon {
+                        id: iconContainer
+                        x: Theme.paddingSmall
+                        source: TF.wayptIconUrl( is_waypoint )
+                        color: generic.primaryColor
+                    }
+
+                    TextArea {
+                        id: wpDescr
+                        anchors.left: iconContainer.right
+                        width: parent.width - iconContainer.width - 2 * Theme.paddingSmall
+                        height: Theme.itemSizeExtraLarge + Theme.paddingSmall
+                        text: ( is_waypoint ? "WP" + " " + waypoint : "Cache" ) + ": " + TF.evalFormula(formula, generic.allLetters) + TF.reqWpLetters( generic.allLetters, wayptid )
+                        font.pixelSize: Theme.fontSizeMedium
+                        color: found ? generic.secondaryColor : generic.primaryColor
+                        readOnly: true
+                        onClicked: {
+                            generic.wpId     = wayptid
+                            generic.wpNumber = waypoint
+                            generic.wpForm   = formula
+                            generic.wpNote   = note
+                            generic.wpIsWp   = is_waypoint
+                            generic.wpFound  = found
+                            console.log("Clicked WP " + index)
+                            pageStack.push(Qt.resolvedUrl("WayptShowPage.qml"))
+                        }
                     }
                 }
-                TextField {
-                    id: wpDescrSmall
-                    anchors.left: iconContainer.right
-                    width: parent.width - iconContainer.width - 2 * Theme.paddingSmall
-                    text: ( is_waypoint ? "WP" + " " + waypoint : "Cache" ) + ": " + TF.evalFormula(formula, generic.allLetters) + TF.reqWpLetters( generic.allLetters, wayptid )
-                    font.pixelSize: smallPrint ? Theme.fontSizeExtraSmall : Theme.fontSizeSmall
-                    color: found ? generic.secondaryColor : generic.primaryColor
-                    readOnly: true
-                    visible: smallPrint
-                    onClicked: {
-                        generic.wpId     = wayptid
-                        generic.wpNumber = waypoint
-                        generic.wpForm   = formula
-                        generic.wpNote   = note
-                        generic.wpIsWp   = is_waypoint
-                        generic.wpFound  = found
-                        console.log("Clicked WP " + index)
-                        pageStack.push(Qt.resolvedUrl("WayptShowPage.qml"))
-                    }
-                }
-
-
             }
-
         }
 
         RemorsePopup { id: remorse }

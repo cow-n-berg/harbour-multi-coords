@@ -12,9 +12,12 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
-* Sat Sep 4 2020 Rob Kouwenbergr <sailfish@cow-n-berg.nl> 1.6
+* Mon Sep 7 2020 Rob Kouwenbergr <sailfish@cow-n-berg.nl> 1.6
 - Added Hidden Waypoints to GPX extracting routine
 - New button for editing formulas
+- Copy calculated formula to Clipboard
+- Added cross sums of waypoint Note
+- Rework of Multi show page
 
 * Fri Sep 4 2020 Rob Kouwenbergr <sailfish@cow-n-berg.nl> 1.5
 - Improved Dark mode. Rework on waypoint show page.

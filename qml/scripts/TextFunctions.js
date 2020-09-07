@@ -354,8 +354,16 @@ function remarkValues( remark ) {
         crossNumbers = Number(strNumbers) % 9;
     }
 
-    var str = "Letters: " + countLetters + " Sum: " + valueLetters + " Cross sum: " + crossLetters + "\n";
-    str +=    "Numbers: " + countNumbers + " Sum: " + valueNumbers + " Cross sum: " + crossNumbers + "\n";
+    // Modulo result 0 should be a 9
+    if (countLetters > 0 && crossLetters === 0) {
+        crossLetters = 9
+    }
+    if (countNumbers > 0 && crossNumbers === 0) {
+        crossNumbers = 9
+    }
+
+    var str = "Letters: " + countLetters + ", sum: " + valueLetters + ", cross sum: " + crossLetters + "\n";
+    str +=    "Numbers: " + countNumbers + ", sum: " + valueNumbers + ", cross sum: " + crossNumbers + "\n";
     str +=    "Chars: " + countChars;
 
     return str;
@@ -673,6 +681,17 @@ function simpleRegEx(rawText, regEx) {
         return res[1];
     }
     return ""
+}
+
+function formulaSolved (formula) {
+    var regExSolved = /[^\d NSEW°'.]/g;
+    console.log("formula");
+    var res = regExSolved.exec(formula);
+    if (res !== null) {
+        console.log( res[0] )
+    }
+
+    return res === null
 }
 
 function escapeRegExp(string) {

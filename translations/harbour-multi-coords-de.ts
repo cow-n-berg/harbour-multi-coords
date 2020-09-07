@@ -396,10 +396,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Description</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>All values</source>
         <translation type="unfinished"></translation>
     </message>
@@ -420,7 +416,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>This waypoint has no letters attached. Click button to add them.</source>
+        <source>Note</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
