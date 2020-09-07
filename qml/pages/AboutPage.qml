@@ -173,6 +173,25 @@ Page {
             }
 
             Label {
+                id: functionsLabel
+                width: parent.width - 2*Theme.paddingLarge
+                text: qsTr("GMFS is packed with powerful functions.
+                       <br/>Check out the possibilities for importing
+                       <br/>a gpx file from geocaching.com
+                       <br/>(Premium membership only).
+                       <br/>Or else, just copy the geocache page
+                       <br/>into the import routine. I recommend
+                       <br/>WlanKeyboard or TinyEdit for this.
+                       <br/>Edit formulas and letters, and go!")
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                font.pixelSize: Theme.fontSizeExtraSmall
+                horizontalAlignment: Text.AlignHCenter
+                textFormat: Text.StyledText
+                linkColor: generic.highlightColor
+                onLinkActivated: ExternalLinks.browse(link)
+            }
+
+            Label {
                 id: enjoyLabel
                 width: parent.width
                 text: qsTr("Enjoy!")

@@ -75,30 +75,30 @@ Page {
             }
         }
 
+        Rectangle {
+            visible: generic.multiDirty
+            width: parent.width
+            height: Theme.itemSizeExtraLarge
+            color: generic.highlightBackgroundColor
+            opacity: 1.0
+            Label {
+                anchors.centerIn: parent
+                text: qsTr("Click to refresh")
+                color: generic.primaryColor
+                font.pixelSize: Theme.fontSizeHuge
+                font.bold: true
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: listModel.update()
+                enabled: generic.multiDirty
+            }
+        }
+
         Column {
             id: column
             width: parent.width
             spacing: Theme.paddingSmall
-
-            Rectangle {
-                visible: generic.multiDirty
-                width: parent.width
-                height: Theme.itemSizeExtraLarge
-                color: generic.highlightBackgroundColor
-                opacity: 1.0
-                Label {
-                    anchors.centerIn: parent
-                    text: qsTr("Click to refresh")
-                    color: generic.primaryColor
-                    font.pixelSize: Theme.fontSizeHuge
-                    font.bold: true
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: listModel.update()
-                    enabled: generic.multiDirty
-                }
-            }
 
             PageHeader {
                 id: pageHeader

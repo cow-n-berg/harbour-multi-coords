@@ -36,6 +36,17 @@
                        &lt;br/&gt;Now there is a native app!</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>GMFS is packed with powerful functions.
+                       &lt;br/&gt;Check out the possibilities for importing
+                       &lt;br/&gt;a gpx file from geocaching.com
+                       &lt;br/&gt;(Premium membership only).
+                       &lt;br/&gt;Or else, just copy the geocache page
+                       &lt;br/&gt;into the import routine. I recommend
+                       &lt;br/&gt;WlanKeyboard or TinyEdit for this.
+                       &lt;br/&gt;Edit formulas and letters, and go!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CachesPage</name>
