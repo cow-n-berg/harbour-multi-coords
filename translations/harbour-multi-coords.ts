@@ -81,6 +81,14 @@
         <source>Optional remark</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Remark analysis</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Value for: </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MultiAddPage</name>
@@ -185,6 +193,10 @@
     </message>
     <message>
         <source>Click to refresh</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear letter values</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -337,10 +349,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Copy </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>No letters?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -361,11 +369,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source> from Note</source>
+        <source>Reset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>All information between brackets [] will be evaluated, e.g. [A+1]. Parentheses () are for calculations like [(B+3)/2]. The buttons below may help with editing. The [A] won&apos;t replace NSEW in the formula.</source>
+        <source>All information between brackets [] will be evaluated, e.g. [A+1]. Parentheses () are for calculations like [(B+3)/2]. The buttons below may help with editing. The [A] button won&apos;t replace NSEW in the formula.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -405,6 +417,10 @@
     </message>
     <message>
         <source>Click to refresh</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This waypoint has no letters attached. Click button to add them.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

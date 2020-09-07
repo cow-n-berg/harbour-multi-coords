@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.2
 import Sailfish.Silica 1.0
 import "../scripts/Database.js" as Database
 import "../scripts/TextFunctions.js" as TF
@@ -6,7 +6,9 @@ import "../scripts/TextFunctions.js" as TF
 Dialog {
     id: dialog
 
-//    anchors.fill: parent
+    property bool lettersFilled : true
+    property var  letterExtract: ""
+    property var  bracketsFormula: ""
 
     allowedOrientations: Orientation.All
 
@@ -45,13 +47,15 @@ Dialog {
             generic.wpFound  = waypt.found
 
             var lettrs = waypt.letters;
+            lettersFilled = lettrs.length > 0
             console.log( "Waypt letters: " + JSON.stringify(lettrs) );
             for (var i = 0; i < lettrs.length; ++i) {
                 listModel.append(lettrs[i]);
             }
             console.log( "listModel Letters updated");
             generic.allLetters = Database.getLetters(generic.gcId);
-
+            letterExtract      = TF.lettersFromRaw(txtNote.text)
+            bracketsFormula    = TF.addParentheses(generic.wpForm, "", generic.allLetters)
             generic.wayptDirty = false
         }
     }
@@ -123,7 +127,7 @@ Dialog {
                 margins: 0
             }
 
-            spacing: Theme.paddingLarge
+            spacing: Theme.paddingSmall
 
             TextArea {
                 id: wpcalc
@@ -136,12 +140,31 @@ Dialog {
             }
 
             TextArea {
+                id: txtNote
                 width: parent.width
                 readOnly: true
                 text: generic.wpNote
                 label: qsTr("Description")
                 visible: TF.trimString(generic.wpNote) !== ""
                 color: generic.primaryColor
+            }
+
+            TextArea {
+                width: parent.width
+                readOnly: true
+                text: qsTr("This waypoint has no letters attached. Click button to add them.")
+                visible: letterExtract !== "" && !lettersFilled
+                color: generic.highlightColor
+            }
+
+            Button {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: qsTr("Add letters: " + letterExtract)
+                visible: letterExtract !== "" && !lettersFilled
+                color: generic.primaryColor
+                onClicked: {
+
+                }
             }
 
             Repeater {
@@ -200,6 +223,7 @@ Dialog {
             }
 
             TextArea {
+                id: txtFormula
                 width: parent.width
                 readOnly: true
                 label: qsTr("Original formula")
@@ -237,16 +261,14 @@ Dialog {
                 onClicked: {
                     pageStack.push(Qt.resolvedUrl("WayptAddPage.qml"),
                                    {"wayptid": generic.wpId})
-//                    generic.wayptDirty = true
-//                    generic.multiDirty = true
+                }
+            }
+            MenuItem {
+                text: "Copy to clipboard"
+                onClicked: {
+                    Clipboard.text = wpcalc.text
                 }
             }
         }
-//        PushUpMenu {
-//            MenuItem {
-//                text: qsTr("Refresh")
-//                onClicked: listModel.update()
-//            }
-//        }
     }
 }

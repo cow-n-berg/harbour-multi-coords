@@ -77,7 +77,7 @@ Dialog {
                 label: qsTr("Optional remark")
                 color: generic.primaryColor
                 EnterKey.iconSource: "image://theme/icon-m-enter-close"
-                EnterKey.onClicked: dialog.accept()
+                EnterKey.onClicked: lettRemark.focus = false
             }
 
             TextArea {

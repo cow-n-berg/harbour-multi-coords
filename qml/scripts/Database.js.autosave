@@ -754,7 +754,8 @@ function clearValues(cacheid)
     db.transaction(function(tx) {
         tx.executeSql("\
             UPDATE geo_letters \
-                SET lettervalue = '' \
+                SET lettervalue = '',
+                    remark = '' \
                 WHERE cacheid=? \
             ;", [cacheid]);
     });

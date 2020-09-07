@@ -12,6 +12,10 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Sat Sep 4 2020 Rob Kouwenbergr <sailfish@cow-n-berg.nl> 1.6
+- Added Hidden Waypoints to GPX extracting routine
+- New button for editing formulas
+
 * Fri Sep 4 2020 Rob Kouwenbergr <sailfish@cow-n-berg.nl> 1.5
 - Improved Dark mode. Rework on waypoint show page.
 - Alert when ListView needs to be refreshed.

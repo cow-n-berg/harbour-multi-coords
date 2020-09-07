@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.2
 import Sailfish.Silica 1.0
 import "../scripts/Database.js" as Database
 import "../scripts/TextFunctions.js" as TF
@@ -76,7 +76,7 @@ Dialog {
 
         PageHeader {
             id: pageHeader
-            title: generic.gcCode + (addNewWp ? " - Edit WP " : " - Add WP ")+ "    "
+            title: generic.gcCode + (addNewWp ? " - Add WP " : " - Edit WP ")+ "    "
         }
 
         VerticalScrollDecorator { flickable: wpView }
@@ -162,7 +162,7 @@ Dialog {
                 id: description1
                 width: parent.width
                 height: Screen.height / 6
-                text: qsTr("All information between brackets [] will be evaluated, e.g. [A+1]. Parentheses () are for calculations like [(B+3)/2]. The buttons below may help with editing. The [A] won't replace NSEW in the formula.")
+                text: qsTr("All information between brackets [] will be evaluated, e.g. [A+1]. Parentheses () are for calculations like [(B+3)/2]. The buttons below may help with editing. The [A] button won't replace NSEW in the formula.")
                 label: qsTr("Formula conventions")
                 labelVisible: false
                 color: generic.highlightColor
@@ -285,13 +285,22 @@ Dialog {
             }
 
             ButtonLayout {
+                preferredWidth: Theme.buttonWidthExtraSmall
                 Button {
-                    text: (letterExtract === "" ? qsTr("No letters?") : qsTr("Copy ") + letterExtract) + qsTr(" from Note")
+                    text: letterExtract === "" ? qsTr("No letters?") : qsTr("Add ") + letterExtract
                     enabled: letterExtract !== ""
                     color: generic.primaryColor
                     onClicked: {
                         txtLetters.text = letterExtract
                         txtLetters.focus = true
+                    }
+                }
+                Button {
+                    text: qsTr("Reset")
+                    color: generic.primaryColor
+                    onClicked: {
+                        txtLetters.text = ""
+                        Database.deleteLetters(generic.wpId)
                     }
                 }
             }
@@ -316,7 +325,7 @@ Dialog {
                 placeholderText: label
                 color: errorHighlight ? generic.highlightColor : generic.primaryColor
                 label: qsTr("Letters, space separated, or like ABC")
-//                validator: TF.validateNewLetters( wpLetters.text )
+                validator: RegExpValidator { regExp: /[a-zA-Z ]*/ }
                 EnterKey.iconSource: "image://theme/icon-m-enter-close"
                 EnterKey.onClicked: dialog.accept()
             }

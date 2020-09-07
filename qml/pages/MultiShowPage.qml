@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.2
 import Sailfish.Silica 1.0
 import "../scripts/Database.js" as Database
 import "../scripts/ExternalLinks.js" as ExternalLinks
@@ -168,6 +168,14 @@ Page {
                     Database.deleteCache(generic.gcId)
                     pageStack.pop()
                     generic.cachesDirty = true
+                })
+            }
+            MenuItem {
+                text: qsTr("Clear letter values")
+                onClicked: remorse.execute("Clearing letter values", function() {
+                    console.log("Clear letter values " + generic.gcId)
+                    Database.clearValues(generic.gcId)
+                    generic.multiDirty = true
                 })
             }
             MenuItem {

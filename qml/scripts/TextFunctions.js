@@ -16,7 +16,7 @@
  */
 
 .pragma library
-.import QtQuick 2.0 as QtQuick
+.import QtQuick 2.2 as QtQuick
 
 /*
 *  A truncation function for occasions
@@ -231,7 +231,12 @@ function evalFormula( formstr, letters ) {
             }
             try {
                 var evaluated = eval(str);
-                result += evaluated;
+                if (evaluated === undefined) {
+                    result += "[" + str + "]";
+                }
+                else {
+                    result += evaluated;
+                }
             }
             catch(err) {
                 result += "[" + str + "]";
@@ -252,13 +257,15 @@ function showLetters( letters ) {
     var result = "";
     var checksum = 0;
     for (var j = 0; j < letters.length; j++) {
-        result += letters[j].letter + " = " + letters[j].lettervalue;
-        if (typeof letters[j].remark !== "undefined" && letters[j].remark !== "") {
-            result += ", " +letters[j].remark;
-        }
-        result += "\n";
-        if (letters[j].lettervalue !== "") {
-            checksum += Number(letters[j].lettervalue);
+        if (typeof letters[j].remark !== "undefined") {
+            result += letters[j].letter + " = " + letters[j].lettervalue;
+            if (letters[j].remark !== "") {
+                result += ", " +letters[j].remark;
+            }
+            result += "\n";
+            if (letters[j].lettervalue !== "") {
+                checksum += Number(letters[j].lettervalue);
+            }
         }
     }
     result += "Checksum = " + checksum;
@@ -296,6 +303,65 @@ function lettersResult(txtLetters) {
 }
 
 /*
+*  Function to show analysis for remark entry
+*/
+function remarkValues( remark ) {
+    var regExCapitals = /[A-Z]/g;
+    var regExLetters = /[a-z]/g;
+    var regExNumbers = /\d/g;
+    var valueLetters = 0;
+    var valueNumbers = 0;
+    var countLetters = 0;
+    var countNumbers = 0;
+    var countChars   = remark.length;
+    var crossLetters = 0;
+    var crossNumbers = 0;
+    var strNumbers = "0";
+    var res;
+
+    if (remark !== "" ) {
+        // Extract all capital letters
+        do {
+            res = regExCapitals.exec( remark );
+//            console.log(res);
+            if (res !== null) {
+                countLetters++;
+                valueLetters += res[0].charCodeAt(0) - 64;
+            }
+        } while (res !== null)
+
+        // Extract all letters
+        do {
+            res = regExLetters.exec( remark );
+            if (res !== null) {
+                countLetters++;
+                valueLetters += res[0].charCodeAt(0) - 96;
+            }
+        } while (res !== null)
+
+        crossLetters = valueLetters % 9;
+
+        // Extract all numbers
+        do {
+            res = regExNumbers.exec( remark );
+            if (res !== null) {
+                countNumbers++;
+                valueNumbers += Number(res[0]);
+                strNumbers += res[0];
+            }
+        } while (res !== null)
+
+        crossNumbers = Number(strNumbers) % 9;
+    }
+
+    var str = "Letters: " + countLetters + " Sum: " + valueLetters + " Cross sum: " + crossLetters + "\n";
+    str +=    "Numbers: " + countNumbers + " Sum: " + valueNumbers + " Cross sum: " + crossNumbers + "\n";
+    str +=    "Chars: " + countChars;
+
+    return str;
+}
+
+/*
 *  Function to extract information from raw text
 */
 function coordsByRegEx(rawText, searchLength) {
@@ -315,11 +381,10 @@ function coordsByRegEx(rawText, searchLength) {
     var regExStDesc = /<desc>(.*?)<\/desc>/;
     var regExStSym  = /<sym>(.*?)<\/sym>/;
 
-    // To do: Additional Hidden Waypoints
+    // Additional Hidden Waypoints
     var regExHidden = /Additional Hidden Waypoints(.*)<\/groundspeak:long_description>/;
-    var regExHidCmt = /(..)7JV34\s-\s(.+?)&lt;br\s\/\&gt; \&lt;br \/\&gt;(.+?)\&lt;br \/\&gt;/g
-    // Einde to do
 
+    // Coordinates and formulas in plain text
     var regExCoords = /([NS]\s?[0-9]{1,2}°?\s[0-9]{1,2}\.[0-9]{1,3}\s[EW]\s?[0-9]{1,3}°?\s[0-9]{1,2}\.[0-9]{1,3})/g;
     var regExString = "([NS][^#]{5," + searchLength + "}\\s[EW][^#&,']{5," + searchLength + "})"
     var regExFormul = new RegExp(regExString, "g");
@@ -396,43 +461,48 @@ function coordsByRegEx(rawText, searchLength) {
 
     // Stages in Hidden Waypoints within GPX file
     var hidden = simpleRegEx(rawText, regExHidden);
+    if (hidden !== "") {
+        var gcCode      = result.code.slice(2,8);
+        var strHidCmt   = "(..)" + gcCode + "\s-\s(.+?)&lt;br\s\/\&gt; \&lt;br \/\&gt;(.+?)\&lt;br \/\&gt;";
+        var regExHidCmt = new RegExp(strHidCmt, "g");
 
-    do {
-        res = regExHidCmt.exec(hidden);
-        if (res !== null) {
-            console.log("Hidden waypoint found: "+ JSON.stringify(res));
+        do {
+            res = regExHidCmt.exec(hidden);
+            if (res !== null) {
+                console.log("Hidden waypoint found: "+ JSON.stringify(res));
 
-            if (res[1] === "FN") {
-                 wpnr = waypt;
-                console.log("Final Location, " + wpnr);
+                if (res[1] === "FN") {
+                    wpnr = waypt;
+                    console.log("Final Location, " + wpnr);
+                }
+                else {
+                    nr = parseInt(res[1]);
+                    wpnr = isNaN(nr) ? 0 : nr;
+                }
+
+                wpSym  = res[1];
+                wpDesc = res[2];
+                wpCmt  = res[3];
+                coordinate = simpleRegEx(wpCmt, regExFormul);
+    //            console.log("wpSym " + wpSym + ", wpDesc " + wpDesc + ", coord: " + coordinate + ", wpCmt: " + wpCmt );
+
+                if (coordinate === "") {
+                    var leng = Math.min(40, wpCmt.length + 1);
+                    coordinate = wpCmt.slice(0,leng);
+                }
+
+                coordRe = new RegExp(escapeRegExp(wpCmt));
+                toBeDeleted.push(coordRe);
+
+                note  = wpSym + " - " + wpDesc + " - " + wpCmt
+                arrCoord.push({number: wpnr, coord: coordinate, note: note});
+                console.log("added hidden: " + waypt + ", coord:"  + coordinate + ", nr: " + wpnr + ", note: " + note)
+                waypt = Math.max(wpnr, waypt);
+
+                waypt++;
             }
-            else {
-                nr = parseInt(res[1]);
-                wpnr = isNaN(nr) ? 0 : nr;
-            }
-
-            wpSym  = res[1];
-            wpDesc = res[2];
-            wpCmt  = res[3];
-            coordinate = simpleRegEx(wpCmt, regExFormul);
-//            console.log("wpSym " + wpSym + ", wpDesc " + wpDesc + ", coord: " + coordinate + ", wpCmt: " + wpCmt );
-
-            if (coordinate === "") {
-                var leng = Math.min(40, wpCmt.length + 1);
-                coordinate = wpCmt.slice(0,leng);
-            }
-
-            coordRe = new RegExp(escapeRegExp(wpCmt));
-            toBeDeleted.push(coordRe);
-
-            note  = wpSym + " - " + wpDesc + " - " + wpCmt
-            arrCoord.push({number: wpnr, coord: coordinate, note: note});
-            console.log("added hidden: " + waypt + ", coord:"  + coordinate + ", nr: " + wpnr + ", note: " + note)
-            waypt = Math.max(wpnr, waypt);
-
-            waypt++;
-        }
-    } while (res !== null)
+        } while (res !== null)
+    }
 
     // Remove hidden waypoints from rawtext to prevent doubles
     for (i = 0; i < toBeDeleted.length; i++) {
@@ -489,14 +559,6 @@ function coordsByRegEx(rawText, searchLength) {
     return result
 }
 
-function simpleRegEx(rawText, regEx) {
-    var res = regEx.exec(rawText);
-    if (res !== null) {
-        return res[1];
-    }
-    return ""
-}
-
 function coordLatLon(rawText) {
     var regExLatLon = /<wpt\slat="([^"]*)"\slon="([^"]*)">/;
     var coordinate = "";
@@ -532,21 +594,18 @@ function coordLatLon(rawText) {
     return { coord: coordinate, regex: re}
 }
 
-function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
-}
-
 function lettersFromRaw(rawText) {
     var result = "";
     var regExLetter1 = /(\b[A-Z]+?\b)/g
     var regExLetter2 = /(\b[a-z]\b)/g
     var res;
+    var unwanted = ["WP", "FN"];
 
     rawText = " " + rawText + " ";
     do {
         res = regExLetter1.exec(rawText);
         if (res !== null) {
-            if (res[1] !== "WP" && result.search(res[1]) < 0) {
+            if (res[1] !== "WP" && res[1] !== "FN" && result.search(res[1]) < 0) {
                 result += (result === "" ? "" : " ") + res[1];
             }
         }
@@ -554,7 +613,7 @@ function lettersFromRaw(rawText) {
     do {
         res = regExLetter2.exec(rawText);
         if (res !== null) {
-            if (res[1] !== "WP" && result.search(res[1]) < 0) {
+            if (res[1] !== "WP" && res[1] !== "FN" && result.search(res[1]) < 0) {
                 result += (result === "" ? "" : " ") + res[1];
             }
         }
@@ -570,44 +629,55 @@ function addParentheses(formula, newLetterstr, allLetters) {
     for (var i = 0; i < allLetters.length; i++) {
         var letter = allLetters[i].letter;
         // We won't change N, S, E, W
-        if (reCardinals.exec(letter) === null) {
+        if (letter !== "" && reCardinals.exec(letter) === null) {
             var re = new RegExp(allLetters[i].letter, "g")
             formula = formula.replace(re, "[" + letter + "]");
         }
     }
 
-    // Then, maybe, this waypoint uses new letters
+    // Then, strangely but it happens, this waypoint uses new letters
     // Format of newLetterstr is 'A B C DEF', to be splitted by space
     var arrLett = newLetterstr.split(" ");
-    if (arrLett.length === 0) {
+    if (arrLett.length === 0 && arrLet !== "") {
         arrLett = [newLetterstr];
     }
-
-    for (var j = 0; j < arrLett.length; j++) {
-        letter = arrLett[j];
-        var found = false;
-        for (i = 0; i < allLetters.length; i++) {
-            if (letter === allLetters[i].letter) {
-                found = true;
+    console.log(JSON.stringify(arrLett));
+    if (arrLett.length > 0) {
+        for (var j = 0; j < arrLett.length; j++) {
+            letter = arrLett[j];
+            var found = false;
+            for (i = 0; i < allLetters.length; i++) {
+                if (letter === allLetters[i].letter) {
+                    found = true;
+                }
             }
-        }
-        // We won't replace twice, and we won't change N, S, E, W
-        if (!found && reCardinals.exec(letter) === null) {
-            re = new RegExp(allLetters[i].letter, "g")
-            formula = formula.replace(re, "[" + letter + "]");
+            // We won't replace twice, and we won't change N, S, E, W
+            if (!found && reCardinals.exec(letter) === null) {
+                re = new RegExp(letter, "g")
+                formula = formula.replace(re, "[" + letter + "]");
+            }
         }
     }
 
     // Get rid of double brackets
-
+    formula = formula.replace(/\[\]/g, "");
     formula = formula.replace(/\[\[/g, "[");
     formula = formula.replace(/\]\]/g, "]");
 
     return formula
 }
 
-function validateNewLetters( newLetters ) {
-    var re = /[^a-zA-Z ]/g
-    return re.exec(newLetters) === null
+function simpleRegEx(rawText, regEx) {
+    var res = regEx.exec(rawText);
+    if (res !== null) {
+        return res[1];
+    }
+    return ""
 }
+
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
+
+
 
