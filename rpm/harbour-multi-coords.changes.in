@@ -12,6 +12,9 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Tue Sep 8 2020 Rob Kouwenbergr <sailfish@cow-n-berg.nl> 1.7
+- Cover action for copying; Setting for copying coordinate in two parts
+
 * Mon Sep 7 2020 Rob Kouwenbergr <sailfish@cow-n-berg.nl> 1.6
 - Added Hidden Waypoints to GPX extracting routine
 - New button for editing formulas

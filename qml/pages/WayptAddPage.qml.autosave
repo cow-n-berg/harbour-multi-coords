@@ -9,6 +9,8 @@ Dialog {
     allowedOrientations: Orientation.All
 
     property var wayptid
+    property var callback
+    
     property var addNewWp  : true
     property var wpNumber  : ""
     property var rawText   : ""
@@ -26,11 +28,13 @@ Dialog {
     property var regExSquar : /²/g;
 
     canAccept: txtFormula.text !== "" && txtWpNr.text !== ""
+    
     onAccepted: {
         generic.wayptDirty = true
         generic.multiDirty = true
         rawText = txtRaw.text === "" ? txtFormula.text : txtRaw.text
         Database.addWaypt(generic.gcId, wayptid, txtWpNr.text, txtFormula.text, rawText, txtNote.text, isWP.checked, wpFound, txtLetters.text.trim())
+        dialog.callback(true)
         pageStack.pop()
     }
 

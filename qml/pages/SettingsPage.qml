@@ -14,14 +14,15 @@ Dialog {
             Database.setSetting( "showDialogHints" , generic.showDialogHints  )
             Database.setSetting( "nightCacheMode"  , generic.nightCacheMode   )
             Database.setSetting( "deleteDatabase"  , generic.deleteDatabase   )
+            Database.setSetting( "formulaCopyMode" , generic.formulaCopyMode  )
 
             if (cache1Adding) {
                 Database.addStd1Cache()
-//                generic.cachesDirty = true
+                generic.cachesDirty = true
             }
             if (cache2Adding) {
                 Database.addStd2Cache()
-//                generic.cachesDirty = true
+                generic.cachesDirty = true
             }
         }
     }
@@ -74,6 +75,13 @@ Dialog {
                 checked: generic.coverShowAppName
                 onClicked: generic.coverShowAppName = !generic.coverShowAppName
             }
+            IconTextSwitch {
+                text: qsTr("Copy evaluated formula for geocaching app")
+                description: qsTr("Normal behaviour: entire string, GC-mode: two parts of Lat/Lon minutes")
+                icon.source: "image://theme/icon-m-clipboard"
+                checked: generic.formulaCopyMode
+                onClicked: generic.formulaCopyMode = !generic.formulaCopyMode
+            }
 
             SectionHeader {
                 text: qsTr("Database actions")
@@ -89,7 +97,7 @@ Dialog {
 
             IconTextSwitch {
                 text: qsTr("(Re-)create Multi GC3A7RC")
-                description: qsTr("'where it started' from Seattle. It may only be visible after restarting the app.")
+                description: qsTr("'where it started' from Seattle")
                 icon.source: "image://theme/icon-m-location"
                 checked: cache1Adding
                 onClicked: cache1Adding = !cache1Adding
@@ -97,7 +105,7 @@ Dialog {
 
             IconTextSwitch {
                 text: qsTr("(Re-)create Multi GC83QV1")
-                description: qsTr("'Het Utrechts zonnestelsel...' from The Netherlands. It may only be visible after restarting the app.")
+                description: qsTr("'Het Utrechts zonnestelsel...' from The Netherlands")
                 icon.source: "image://theme/icon-m-location"
                 checked: cache2Adding
                 onClicked: cache2Adding = !cache2Adding

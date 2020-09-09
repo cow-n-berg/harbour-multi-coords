@@ -67,6 +67,23 @@ function coverIconUrl(darkTheme, nightMode) {
     return url
 }
 
+function copyIconUrl(darkTheme, nightMode) {
+    var url;
+    var filename = "../images/icon-cover-copy-";
+    if (nightMode){
+        filename += "white.svg";
+    }
+    else if (darkTheme) {
+        filename += "white.svg";
+    }
+    else {
+        filename += "black.svg";
+    }
+    url = Qt.resolvedUrl(filename)
+//    console.log(url);
+    return url
+}
+
 function foundIconUrl(found) {
     var url;
     var filename = "../images/icon-";
@@ -698,5 +715,22 @@ function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
 
+function copyText( wpCalc, copyFirstPart ) {
+    var regExPartOne = /[NS]\s?[0-9]{1,2}°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?[0-9]{1,3}°?\s[0-9]{1,2}\.[0-9]{1,3}/;
+    var regExPartTwo = /[NS]\s?[0-9]{1,2}°?\s[0-9]{1,2}\.[0-9]{1,3}\s[EW]\s?[0-9]{1,3}°?\s([0-9]{1,2}\.[0-9]{1,3})/;
+    var res;
 
+    if (copyFirstPart) {
+        res = regExPartOne.exec(wpCalc);
+    }
+    else {
+        res = regExPartTwo.exec(wpCalc);
+    }
+
+
+    if (res !== null) {
+        return res[1];
+    }
+    return "00.000"
+}
 

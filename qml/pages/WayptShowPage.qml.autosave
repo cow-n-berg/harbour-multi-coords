@@ -23,6 +23,12 @@ Dialog {
         pageStack.pop()
     }
 
+    function updateAfterDialog(updated) {
+        if (updated) {
+            listModel.update()
+        }
+    }
+    
     ListModel {
         id: listModel
 
@@ -274,7 +280,7 @@ Dialog {
                 text: "Edit waypoint"
                 onClicked: {
                     pageStack.push(Qt.resolvedUrl("WayptAddPage.qml"),
-                                   {"wayptid": generic.wpId})
+                                   {wayptid: generic.wpId, callback: callbackFromDialog})
                 }
             }
         }

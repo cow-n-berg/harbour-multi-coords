@@ -8,7 +8,7 @@ ApplicationWindow
 {
     id: generic
 
-    property string version               : "1.6"
+    property string version               : "1.7"
     property string dbversion             : "1.3"
     property var    dbhandler             : DB.openDatabase(dbversion)
     property bool   debug                 : false
@@ -18,6 +18,7 @@ ApplicationWindow
     property bool showDialogHints         : DB.getSetting( "showDialogHints", true )
     property bool deleteDatabase          : DB.getSetting( "deleteDatabase", false )
     property bool nightCacheMode          : DB.getSetting( "nightCacheMode", false )
+    property bool formulaCopyMode         : DB.getSetting( "formulaCopyMode", false )
 
     property var browserUrl               : "https://coord.info/"
     property var primaryColor             : nightCacheMode ? "firebrick" : Theme.primaryColor

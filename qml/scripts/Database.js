@@ -542,41 +542,28 @@ function addCache(geocache, name, waypts)
             console.log("WP: " + JSON.stringify(waypts[i]));
             var number = waypts[i].number;
             var formula = waypts[i].coord;
-            var note = waypts[i].note === "" ? "-" : waypts[i].note;
+            var note = waypts[i].note // === "" ? "-" : waypts[i].note;
             rs = tx.executeSql("\
                 INSERT OR REPLACE INTO geo_waypts \
                 (cacheid, waypoint, formula, rawtext, note, is_waypoint, found) \
                 VALUES (?,?,?,?,?,1,0);", [cacheId, number, formula, formula, note]);
             var wayptId = rs.insertId;
             console.log(cacheId + " WP " + wayptId);
-
-//            var letters = TF.lettersFromRaw(note)+ " ";
-//            var arrLett = letters.split(" ");
-//            for (i = 0; i < arrLett.length; ++i) {
-//                console.log("WP: " + JSON.stringify(arrLett[i]));
-//                if (arrLett[i]) {
-//                    rs = tx.executeSql("\
-//                        INSERT OR REPLACE INTO geo_letters \
-//                        (cacheid, wayptid, letter) \
-//                        VALUES (?,?,?);", [cacheId, wayptId, arrLett[i]]);
-//                    var lettId = rs.insertId;
-//                    console.log(cacheId + " Letter " + lettId);
-//                }
-//            }
         }
 
     } );
     return 1;
 }
 
-function addWaypt(cacheid, wpid, number, formula, rawtext, note, is_waypoint, letters)
+function addWaypt(cacheid, wpid, number, formula, rawtext, note, is_waypoint, is_found, letters)
 {
     var db = openDatabase();
     var rs, i, j;
     var wayptId = wpid || "";
 
     var nr = parseInt(number);
-    var iswp = is_waypoint ? 1 : 0;
+    var iswp  = is_waypoint ? 1 : 0;
+    var found = is_found    ? 1 : 0;
     var letterstr = "";
     var currLett = [];
 
@@ -584,8 +571,8 @@ function addWaypt(cacheid, wpid, number, formula, rawtext, note, is_waypoint, le
         // Save waypoint
         rs = tx.executeSql("\
             INSERT OR REPLACE INTO geo_waypts \
-            (cacheid, wayptid, waypoint, formula, rawtext, note, is_waypoint) \
-            VALUES (?,?,?,?,?,?,?);", [cacheid, wayptId, nr, formula, rawtext, note, iswp]);
+            (cacheid, wayptid, waypoint, formula, rawtext, note, is_waypoint, found) \
+            VALUES (?,?,?,?,?,?,?,?);", [cacheid, wayptId, nr, formula, rawtext, note, iswp, found]);
         wayptId = rs.insertId;
         console.log("Waypoint inserted, id=" + wayptId);
 

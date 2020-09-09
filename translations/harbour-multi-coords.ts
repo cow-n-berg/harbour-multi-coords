@@ -51,10 +51,6 @@
 <context>
     <name>CachesPage</name>
     <message>
-        <source>All Geocaches</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>View in browser</source>
         <translation type="unfinished"></translation>
     </message>
@@ -76,6 +72,37 @@
     </message>
     <message>
         <source>Show Contents DB in Console</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Geocaches</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Found</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CoverPage</name>
+    <message>
+        <source>Formula copied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lat copied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lon copied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No formula yet</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -234,15 +261,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&apos;where it started&apos; from Seattle. It may only be visible after restarting the app.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>(Re-)create Multi GC83QV1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&apos;Het Utrechts zonnestelsel...&apos; from The Netherlands. It may only be visible after restarting the app.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -271,6 +290,22 @@
     </message>
     <message>
         <source>Database actions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy evaluated formula for geocaching app</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Normal behaviour: entire string, GC-mode: two parts of Lat/Lon minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&apos;where it started&apos; from Seattle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&apos;Het Utrechts zonnestelsel...&apos; from The Netherlands</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

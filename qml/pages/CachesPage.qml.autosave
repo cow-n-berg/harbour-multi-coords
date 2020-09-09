@@ -86,6 +86,8 @@ Page {
             }
         }
 
+        VerticalScrollDecorator {}
+
         ViewPlaceholder {
             id: placeh
             enabled: listModel.count === 0
@@ -185,6 +187,11 @@ Page {
 
         PullDownMenu {
             MenuItem {
+                text: qsTr("Show Contents DB in Console")
+                enabled: generic.debug
+                onClicked: Database.showAllData()
+            }
+            MenuItem {
                 text: qsTr("About")
                 onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
             }
@@ -197,20 +204,5 @@ Page {
                 onClicked: pageStack.push(Qt.resolvedUrl("MultiAddPage.qml"))
             }
         }
-        PushUpMenu  {
-            enabled: generic.debug
-//            MenuItem {
-//                text: qsTr("Refresh")
-//                onClicked: listModel.update()
-//            }
-            MenuItem {
-                text: qsTr("Show Contents DB in Console")
-                enabled: generic.debug
-                onClicked: Database.showAllData()
-            }
-        }
-
-        VerticalScrollDecorator {}
-
     }
 }

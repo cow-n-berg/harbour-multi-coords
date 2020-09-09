@@ -5,9 +5,19 @@ import "../scripts/TextFunctions.js" as TF
 CoverBackground {
     id: coverPage
 
-    property var gccode: generic.gcCode
-    property var gcname: generic.gcName
-    property var wpnumb: generic.wpNumber
+    property var gccode        : generic.gcCode
+    property var gcname        : generic.gcName
+    property var wpnumb        : generic.wpNumber
+    property var copyFirstPart : true
+
+    Timer {
+        id: coverTimer
+        interval: 5000
+        running: false
+        onTriggered: {
+            coverLabel.text = TF.coverText(gccode, gcname, wpnumb, generic.coverShowAppName)
+        }
+    }
 
     Image {
         id: backgroundImage
@@ -19,11 +29,8 @@ CoverBackground {
     Item {
         anchors.fill: parent
         Label {
-            anchors {
-                centerIn: parent
-            }
-
-            id: code
+            id: coverLabel
+            anchors.centerIn: parent
             text: TF.coverText(gccode, gcname, wpnumb, generic.coverShowAppName)
             color: generic.primaryColor
         }
@@ -37,6 +44,25 @@ CoverBackground {
                     pageStack.push(Qt.resolvedUrl("MultiAddPage.qml"))
                     generic.activate();
                 }
+            }
+        }
+        CoverAction {
+            iconSource: TF.copyIconUrl(Theme.colorScheme === Theme.LightOnDark, generic.nightCacheMode)
+            onTriggered: {
+                if (wpnumb === undefined) {
+                    coverLabel.text = qsTr("No formula yet")
+                }
+                else
+                    if (generic.formulaCopyMode) {
+                        Clipboard.text = TF.copyText( generic.wpCalc, copyFirstPart )
+                        coverLabel.text = copyFirstPart ? qsTr("Lat copied") : qsTr("Lon copied")
+                        copyFirstPart = !copyFirstPart
+                    }
+                    else {
+                        Clipboard.text = generic.wpCalc
+                        coverLabel.text = qsTr("Formula copied")
+                    }
+                coverTimer.start()
             }
         }
     }
