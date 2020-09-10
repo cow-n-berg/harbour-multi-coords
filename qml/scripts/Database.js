@@ -466,7 +466,7 @@ function addStd1Cache()
             rs = tx.executeSql("\
                     INSERT OR REPLACE INTO geo_waypts \
                     (cacheid, waypoint, formula, rawtext, note, is_waypoint, found) \
-                    VALUES (?,?,?,?,?,?);", [cacheId, defaultWpts[i].waypt, defaultWpts[i].formula, defaultWpts[i].formula, defaultWpts[i].note, defaultWpts[i].is_waypt, defaultWpts[i].found]);
+                    VALUES (?,?,?,?,?,?,?);", [cacheId, defaultWpts[i].waypt, defaultWpts[i].formula, defaultWpts[i].formula, defaultWpts[i].note, defaultWpts[i].is_waypt, defaultWpts[i].found]);
             var wayptId = rs.insertId;
             for (var j = 0; j < lt.length; ++j) {
                 tx.executeSql("\
@@ -513,7 +513,7 @@ function addStd2Cache()
             rs = tx.executeSql("\
                     INSERT OR REPLACE INTO geo_waypts \
                     (cacheid, waypoint, formula, rawtext, note, is_waypoint, found) \
-                    VALUES (?,?,?,?,?,?);", [cacheId, defaultWpts[i].waypt, defaultWpts[i].formula, defaultWpts[i].formula, defaultWpts[i].note, defaultWpts[i].is_waypt, defaultWpts[i].found]);
+                    VALUES (?,?,?,?,?,?,?);", [cacheId, defaultWpts[i].waypt, defaultWpts[i].formula, defaultWpts[i].formula, defaultWpts[i].note, defaultWpts[i].is_waypt, defaultWpts[i].found]);
             var wayptId = rs.insertId;
             for (var j = 0; j < lt.length; ++j) {
                 tx.executeSql("\

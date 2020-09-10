@@ -4,7 +4,9 @@ import "../scripts/Database.js" as Database
 import "../scripts/TextFunctions.js" as TF
 
 Dialog {
-    id: page
+    id: dialog
+
+    property var callback
 
     property var coords
     property var showSearchLength : false
@@ -13,18 +15,22 @@ Dialog {
     allowedOrientations: Orientation.All
 
     canAccept: txtCode.text !== "" && txtName.text !== ""
+
     onAccepted: {
         var resCoords = [];
         var numberItems = listModel.count;
         for (var i = 0; i < numberItems; ++i) {
-            var wpnr = i + offsetSlider.value;
+            var wpnr = i + Number(offset.value);
             var coord = listModel.get(i).coord;
             var note = listModel.get(i).note;
             resCoords.push({coord: coord, number: wpnr, note: note});
         }
-        generic.cachesDirty = true
         Database.addCache(txtCode.text, txtName.text, resCoords)
-        pageStack.pop()
+        dialog.callback(true)
+    }
+
+    onRejected: {
+        dialog.callback(false)
     }
 
     ListModel {
@@ -75,7 +81,7 @@ Dialog {
                 margins: 0
             }
 
-            spacing: Theme.paddingMedium
+//            spacing: Theme.paddingMedium
 
             SectionHeader {
                 text: qsTr("Raw text")
@@ -196,52 +202,30 @@ Dialog {
                 visible: generic.showDialogHints
             }
 
-//            Row {
-//            Label {
-//                id: offset
-//                width: parent.width
-//                text: qsTr("WP offset value: ") + offsetSlider
-//                color: generic.primaryColor
-//            }
+            ComboBox {
+                id: offset
+                label: "Offset for waypoint numbers"
+                currentIndex: 1
 
-//            IconButton {
-//                id: upOffset
-//                icon.source: "image://theme/icon-m-up"
-//                icon.width: Theme.iconSizeMedium
-//                icon.height: Theme.iconSizeMedium
-//                anchors {
-//                    top: offset.top
-//                    right: downOffset.left
-//                }
-//                onClicked: {
-//                    offsetSlider++
-//                }
-//            }
-//            IconButton {
-//                id: downOffset
-//                icon.source: "image://theme/icon-m-down"
-//                icon.width: Theme.iconSizeMedium
-//                icon.height: Theme.iconSizeMedium
-//                anchors {
-//                    top: offset.top
-//                    right: row.right
-//                }
-//                onClicked: {
-//                    offsetSlider--
-//                }
-//            }
-//            }
-
-            Slider {
-                id: offsetSlider
-                value: 0
-                minimumValue: -2
-                maximumValue: +1
-                stepSize: 1
-                width: parent.width
-                valueText: value
-                label: qsTr("Offset for waypoint numbers")
+                menu: ContextMenu {
+                    MenuItem { text: "+1" }
+                    MenuItem { text: "0" }
+                    MenuItem { text: "-1" }
+                    MenuItem { text: "-2" }
+                }
+                description: "Align WP numbering with geocache description."
             }
+
+//            Slider {
+//                id: offsetSlider
+//                value: 0
+//                minimumValue: -2
+//                maximumValue: +1
+//                stepSize: 1
+//                width: parent.width
+//                valueText: value
+//                label: qsTr("Offset for waypoint numbers")
+//            }
 
             TextArea {
                 id: description3
@@ -273,11 +257,11 @@ Dialog {
                         id: row
                         width: column.width
                         height: Theme.itemSizeLarge
-                        spacing: Theme.paddingLarge
+//                        spacing: Theme.paddingLarge
 
                         TextArea {
                             id: wayptFormula
-                            label: qsTr("WP ") + (index + (offsetSlider.value)) + qsTr(", orig. ") + number
+                            label: qsTr("WP ") + (index + Number(offset.value)) + qsTr(", orig. ") + number
 //                            label: qsTr("WP ") + (index + offsetSlider) + qsTr(", orig. ") + number
                             text: coord
                             width: parent.width - removeIcon.width * 3
@@ -291,10 +275,10 @@ Dialog {
                             icon.width: Theme.iconSizeMedium
                             icon.height: Theme.iconSizeMedium
                             icon.color: generic.primaryColor
-                            anchors {
-                                top: wayptFormula.top
-                                right: removeIcon.left
-                            }
+//                            anchors {
+//                                top: wayptFormula.top
+//                                right: removeIcon.left
+//                            }
                             enabled: index > 0
                             onClicked: {
                                 listModel.move(index, index - 1, 1);
@@ -306,10 +290,10 @@ Dialog {
                             icon.width: Theme.iconSizeMedium
                             icon.height: Theme.iconSizeMedium
                             icon.color: generic.primaryColor
-                            anchors {
-                                top: wayptFormula.top
-                                right: downIcon.left
-                            }
+//                            anchors {
+//                                top: wayptFormula.top
+//                                right: downIcon.left
+//                            }
                             onClicked: {
                                 listModel.remove(index);
                             }
@@ -320,10 +304,10 @@ Dialog {
                             icon.width: Theme.iconSizeMedium
                             icon.height: Theme.iconSizeMedium
                             icon.color: generic.primaryColor
-                            anchors {
-                                top: wayptFormula.top
-                                right: row.right
-                            }
+//                            anchors {
+//                                top: wayptFormula.top
+//                                right: row.right
+//                            }
                             enabled: index < listModel.count - 1
                             onClicked: {
                                 listModel.move(index, index + 1, 1);

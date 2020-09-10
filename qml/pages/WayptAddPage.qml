@@ -9,6 +9,8 @@ Dialog {
     allowedOrientations: Orientation.All
 
     property var wayptid
+    property var callback
+
     property var addNewWp  : true
     property var wpNumber  : ""
     property var rawText   : ""
@@ -26,12 +28,15 @@ Dialog {
     property var regExSquar : /²/g;
 
     canAccept: txtFormula.text !== "" && txtWpNr.text !== ""
+
     onAccepted: {
-        generic.wayptDirty = true
-        generic.multiDirty = true
         rawText = txtRaw.text === "" ? txtFormula.text : txtRaw.text
         Database.addWaypt(generic.gcId, wayptid, txtWpNr.text, txtFormula.text, rawText, txtNote.text, isWP.checked, wpFound, txtLetters.text.trim())
-        pageStack.pop()
+        dialog.callback(true)
+    }
+
+    onRejected: {
+        dialog.callback(false)
     }
 
     function getThisWaypt(wayptid) {
@@ -174,43 +179,43 @@ Dialog {
                 visible: generic.showDialogHints
             }
 
-//            Row {
-//                id: iconButtons
-//                spacing: 0
-//                anchors.horizontalCenter: parent.horizontalCenter
-//                IconButton {
-//                    icon.source: Qt.resolvedUrl("../images/icon-m-left.svg")
-//                    onClicked: {
-//                        var pos = txtFormula.cursorPosition
-//                        if (pos > 0) { txtFormula.cursorPosition-- }
-//                        txtFormula.focus = true
-//                    }
-//                }
-//                IconButton {
-//                    icon.source: Qt.resolvedUrl("../images/icon-m-right.svg")
-//                    onClicked: {
-//                        var pos = txtFormula.cursorPosition
-//                        if (pos < txtFormula.text.length) { txtFormula.cursorPosition++ }
-//                        txtFormula.forceActiveFocus()
-//                    }
-//                }
-//                IconButton {
-//                    icon.source: Qt.resolvedUrl("../images/icon-bracket-left.svg")
-//                }
-//                IconButton {
-//                    icon.source: Qt.resolvedUrl("../images/icon-bracket-right.svg")
-//                }
-//                IconButton {
-//                    icon.source: Qt.resolvedUrl("../images/icon-parenthesis-left.svg")
-//                }
-//                IconButton {
-//                    icon.source: Qt.resolvedUrl("../images/icon-parenthesis-right.svg")
-//                }
-//                IconButton {
-//                    icon.source: Qt.resolvedUrl("../images/icon-m-backspace.svg")
-//                }
+            ButtonLayout {
+                id: iconButtons
+                spacing: 0
+                anchors.horizontalCenter: parent.horizontalCenter
+                IconButton {
+                    icon.source: Qt.resolvedUrl("../images/icon-m-left.svg")
+                    onClicked: {
+                        var pos = txtFormula.cursorPosition
+                        if (pos > 0) { txtFormula.cursorPosition-- }
+                        txtFormula.focus = true
+                    }
+                }
+                IconButton {
+                    icon.source: Qt.resolvedUrl("../images/icon-m-right.svg")
+                    onClicked: {
+                        var pos = txtFormula.cursorPosition
+                        if (pos < txtFormula.text.length) { txtFormula.cursorPosition++ }
+                        txtFormula.forceActiveFocus()
+                    }
+                }
+                IconButton {
+                    icon.source: Qt.resolvedUrl("../images/icon-bracket-left.svg")
+                }
+                IconButton {
+                    icon.source: Qt.resolvedUrl("../images/icon-bracket-right.svg")
+                }
+                IconButton {
+                    icon.source: Qt.resolvedUrl("../images/icon-parenthesis-left.svg")
+                }
+                IconButton {
+                    icon.source: Qt.resolvedUrl("../images/icon-parenthesis-right.svg")
+                }
+                IconButton {
+                    icon.source: Qt.resolvedUrl("../images/icon-m-backspace.svg")
+                }
 
-//            }
+            }
 
             TextArea {
                 id: txtFormula
@@ -304,6 +309,7 @@ Dialog {
                     onClicked: {
                         txtLetters.text = ""
                         Database.deleteLetters(generic.wpId)
+                        dialog.callback(true)
                     }
                 }
             }

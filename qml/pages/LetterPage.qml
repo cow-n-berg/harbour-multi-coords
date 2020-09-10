@@ -7,6 +7,8 @@ Dialog {
     id: dialog
 
     property var    letterid
+    property var    callback
+
     property string lettervalue
     property string letterremark
     property string letter
@@ -19,6 +21,20 @@ Dialog {
             lettervalue  = letters[0].lettervalue
             letterremark = letters[0].remark
         }
+    }
+
+    onAccepted: {
+        lettervalue = lettValue.text.valueOf()
+//            console.log("letter value: " + lettervalue)
+        letterremark = lettRemark.text.valueOf()
+//            console.log("letter remark: " + letterremark)
+        Database.setLetter(generic.gcId, generic.wpId, letterid, letter, lettervalue, letterremark)
+        generic.allLetters = Database.getLetters(generic.gcId)
+        dialog.callback(true)
+    }
+
+    onRejected: {
+        dialog.callback(false)
     }
 
     Component.onCompleted: getThisLetter(letterid);
@@ -90,18 +106,6 @@ Dialog {
                 color: generic.secondaryColor
                 visible: lettRemark.text !== ""
             }
-        }
-    }
-
-    onDone: {
-        if (result == DialogResult.Accepted) {
-            generic.wayptDirty = true
-            lettervalue = lettValue.text.valueOf()
-//            console.log("letter value: " + lettervalue)
-            letterremark = lettRemark.text.valueOf()
-//            console.log("letter remark: " + letterremark)
-            Database.setLetter(generic.gcId, generic.wpId, letterid, letter, lettervalue, letterremark)
-            generic.allLetters = Database.getLetters(generic.gcId)
         }
     }
 }

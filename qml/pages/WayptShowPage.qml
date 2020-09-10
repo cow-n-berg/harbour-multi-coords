@@ -6,6 +6,8 @@ import "../scripts/TextFunctions.js" as TF
 Dialog {
     id: dialog
 
+    property var callback
+
     property bool lettersFilled   : true
     property var  letterExtract   : ""
     property var  bracketsFormula : ""
@@ -17,10 +19,18 @@ Dialog {
         Database.setWayptFound(generic.gcId, generic.wpId, generic.wpFound)
         if (!generic.wpIsWp) {
             Database.setCacheFound(generic.gcId, generic.wpFound)
-            generic.cachesDirty = true
         }
-        generic.multiDirty = true
-        pageStack.pop()
+        dialog.callback(true)
+    }
+
+    onRejected: {
+        dialog.callback(false)
+    }
+
+    function updateAfterDialog(updated) {
+        if (updated) {
+            listModel.update()
+        }
     }
 
     ListModel {
@@ -48,7 +58,6 @@ Dialog {
             generic.wpCalc      = TF.evalFormula(generic.wpForm, generic.allLetters)
             letterExtract      = TF.lettersFromRaw(txtNote.text)
             bracketsFormula    = TF.addParentheses(generic.wpForm, "", generic.allLetters)
-            generic.wayptDirty = false
         }
     }
 
@@ -72,28 +81,6 @@ Dialog {
         }
         contentHeight: column.height + Theme.itemSizeMedium
         quickScroll : true
-
-        Rectangle {
-            visible: generic.wayptDirty
-            anchors {
-                fill: pageHeader
-                centerIn: pageHeader
-            }
-            color: generic.highlightBackgroundColor
-            opacity: 1.0
-            Label {
-                anchors.centerIn: parent
-                text: qsTr("Click to refresh")
-                color: generic.primaryColor
-                font.pixelSize: Theme.fontSizeHuge
-                font.bold: true
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: listModel.update()
-                enabled: generic.wayptDirty
-            }
-        }
 
         PageHeader {
             id: pageHeader
@@ -210,7 +197,7 @@ Dialog {
                             onClicked: {
                                 generic.lettEdit  = letter
                                 pageStack.push(Qt.resolvedUrl("LetterPage.qml"),
-                                               {"letterid": letterid})
+                                               {letterid: letterid, callback: updateAfterDialog})
                             }
                         }
                     }
@@ -266,7 +253,7 @@ Dialog {
                 onClicked: remorse.execute("Clearing waypoint", function() {
                     console.log("Remove waypt id " + generic.wpId)
                     Database.deleteWaypt(generic.wpId, generic.gcId)
-                    generic.multiDirty = true
+                    dialog.callback(true)
                     pageStack.pop()
                 })
             }
@@ -274,7 +261,7 @@ Dialog {
                 text: "Edit waypoint"
                 onClicked: {
                     pageStack.push(Qt.resolvedUrl("WayptAddPage.qml"),
-                                   {"wayptid": generic.wpId})
+                                   {wayptid: generic.wpId, callback: updateAfterDialog})
                 }
             }
         }

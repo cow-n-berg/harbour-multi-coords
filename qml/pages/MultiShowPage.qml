@@ -5,11 +5,17 @@ import "../scripts/ExternalLinks.js" as ExternalLinks
 import "../scripts/TextFunctions.js" as TF
 
 Page {
-    id: wayptsPage
+    id: page
 
     allowedOrientations: Orientation.All
 
-    property var smallPrint : false
+    property var callback
+
+    function updateAfterDialog(updated) {
+        if (updated) {
+            listModel.update()
+        }
+    }
 
     ListModel {
         id: listModel
@@ -25,8 +31,6 @@ Page {
 //                console.log( JSON.stringify(waypts[i]));
             }
 //            console.log( "listModel MultiShow updated");
-            generic.multiDirty = false
-            smallPrint = listModel.count > 11
         }
     }
 
@@ -51,30 +55,6 @@ Page {
 
         VerticalScrollDecorator {}
 
-        Rectangle {
-            visible: generic.multiDirty
-            anchors {
-                top: parent.top
-
-            }
-            width: parent.width
-            height: Theme.itemSizeExtraLarge
-            color: generic.highlightBackgroundColor
-            opacity: 1.0
-            Label {
-                anchors.centerIn: parent
-                text: qsTr("Click to refresh")
-                color: generic.primaryColor
-                font.pixelSize: Theme.fontSizeHuge
-                font.bold: true
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: listModel.update()
-                enabled: generic.multiDirty
-            }
-        }
-
         Column {
             id: column
             width: parent.width
@@ -91,7 +71,6 @@ Page {
 
                 width: parent.width
                 itemHeight: Theme.itemSizeExtraLarge + Theme.paddingMedium
-
 
                 ViewPlaceholder {
                     id: placeh
@@ -132,7 +111,8 @@ Page {
                             generic.wpIsWp   = is_waypoint
                             generic.wpFound  = found
                             console.log("Clicked WP " + index)
-                            pageStack.push(Qt.resolvedUrl("WayptShowPage.qml"))
+                            pageStack.push(Qt.resolvedUrl("WayptShowPage.qml"),
+                                           {callback: updateAfterDialog})
                         }
                     }
                 }
@@ -147,8 +127,8 @@ Page {
                 onClicked: remorse.execute("Clearing geocache", function() {
                     console.log("Remove geocache id " + generic.gcId)
                     Database.deleteCache(generic.gcId)
+                    page.callback(true)
                     pageStack.pop()
-                    generic.cachesDirty = true
                 })
             }
             MenuItem {
@@ -156,7 +136,6 @@ Page {
                 onClicked: remorse.execute("Clearing letter values", function() {
                     console.log("Clear letter values " + generic.gcId)
                     Database.clearValues(generic.gcId)
-                    generic.multiDirty = true
                 })
             }
             MenuItem {
@@ -170,7 +149,7 @@ Page {
                 text: "Add waypoint"
                 onClicked: {
                     onClicked: pageStack.push(Qt.resolvedUrl("WayptAddPage.qml"),
-                                              {"wayptid": undefined})
+                                              {wayptid: undefined, callback: updateAfterDialog})
                 }
             }
         }
@@ -199,7 +178,7 @@ Page {
 //                            onClicked: remorse.execute("Clearing waypoint", function() {
 //                                console.log("Remove waypoint " + index + ", id " + wayptid)
 //                                Database.deleteWaypt(wayptid, cacheid)
-//                                generic.multiDirty = true
+//                                page.callback(true)
 //                            })
 //                        }
 //                    }

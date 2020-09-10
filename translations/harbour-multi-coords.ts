@@ -67,10 +67,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Click to refresh</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Show Contents DB in Console</source>
         <translation type="unfinished"></translation>
     </message>
@@ -211,10 +207,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Offset for waypoint numbers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Paste the entire Geocache description - or the content of a GPX file! - in the next text area. Use the button to extract possible coordinates and formulas. Use press-and-hold to remove options. Formulas may be too long, you can edit them later. Use TinyEdit for GPX downloads, or WlanKeyboard.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -227,10 +219,6 @@
     </message>
     <message>
         <source>View in browser</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Click to refresh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -455,10 +443,6 @@
     </message>
     <message>
         <source>. Click to change</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Click to refresh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

@@ -40,11 +40,6 @@ ApplicationWindow
     property var allLetters
     property var lettEdit
 
-    // Work-around for refreshing pages
-    property bool cachesDirty : false
-    property bool multiDirty  : false
-    property bool wayptDirty  : false
-
     Component.onCompleted: { DB.openDatabase() }
 
     initialPage: Component { CachesPage { } }

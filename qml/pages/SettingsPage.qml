@@ -4,27 +4,32 @@ import "../scripts/Database.js" as Database
 import "../scripts/TextFunctions.js" as TF
 
 Dialog {
+    id: dialog
+
+    property var callback
 
     property var cache1Adding : false
     property var cache2Adding : false
 
-    onDone: {
-        if (result == DialogResult.Accepted) {
-            Database.setSetting( "coverShowAppName", generic.coverShowAppName )
-            Database.setSetting( "showDialogHints" , generic.showDialogHints  )
-            Database.setSetting( "nightCacheMode"  , generic.nightCacheMode   )
-            Database.setSetting( "deleteDatabase"  , generic.deleteDatabase   )
-            Database.setSetting( "formulaCopyMode" , generic.formulaCopyMode  )
+    onAccepted: {
+        Database.setSetting( "coverShowAppName", generic.coverShowAppName )
+        Database.setSetting( "showDialogHints" , generic.showDialogHints  )
+        Database.setSetting( "nightCacheMode"  , generic.nightCacheMode   )
+        Database.setSetting( "deleteDatabase"  , generic.deleteDatabase   )
+        Database.setSetting( "formulaCopyMode" , generic.formulaCopyMode  )
 
-            if (cache1Adding) {
-                Database.addStd1Cache()
-                generic.cachesDirty = true
-            }
-            if (cache2Adding) {
-                Database.addStd2Cache()
-                generic.cachesDirty = true
-            }
+        if (cache1Adding) {
+            Database.addStd1Cache()
         }
+        if (cache2Adding) {
+            Database.addStd2Cache()
+        }
+
+        dialog.callback(cache1Adding || cache2Adding)
+    }
+
+    onRejected: {
+        dialog.callback(false)
     }
 
     SilicaFlickable {

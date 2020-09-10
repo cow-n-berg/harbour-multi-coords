@@ -16,6 +16,12 @@ Page {
     property var numberOfCaches : 0
     property var numberOfFinds  : 0
 
+    function updateAfterDialog(updated) {
+        if (updated) {
+            listModel.update()
+        }
+    }
+
     ListModel {
         id: listModel
 
@@ -31,7 +37,6 @@ Page {
             }
             console.log( "listModel Caches updated");
             console.log(JSON.stringify(listModel.get(0)));
-            generic.cachesDirty = false;
             numberOfCaches = caches.length;
         }
     }
@@ -62,29 +67,7 @@ Page {
             title: ( numberOfCaches ? numberOfCaches : qsTr("No")) + " " + qsTr("Geocaches") + ( numberOfFinds ? ", " + numberOfFinds + " " + qsTr("Found") : "")
         }
 
-        Rectangle {
-            visible: generic.cachesDirty
-            anchors {
-                top: parent.top
-
-            }
-            width: parent.width
-            height: Theme.itemSizeExtraLarge
-            color: generic.highlightBackgroundColor
-            opacity: 1.0
-            Label {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: qsTr("Click to refresh")
-                color: generic.primaryColor
-                font.pixelSize: Theme.fontSizeHuge
-                font.bold: true
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: listModel.update()
-                enabled: generic.cachesDirty
-            }
-        }
+        VerticalScrollDecorator {}
 
         ViewPlaceholder {
             id: placeh
@@ -118,7 +101,8 @@ Page {
                 generic.gcCode = geocache
                 generic.gcId   = cacheid
 
-                pageStack.push(Qt.resolvedUrl("MultiShowPage.qml"))
+                pageStack.push(Qt.resolvedUrl("MultiShowPage.qml"),
+                               {callback: updateAfterDialog})
             }
 //            onPressAndHold: {
 //            }
@@ -167,7 +151,6 @@ Page {
 //                        text: qsTr("Edit")
 //                        onClicked: {
 //                            console.log("Edit " + index + ", id " + listModel[model.index].cacheid)
-//                            generic.cachesDirty = true
 //                        }
 //                    }
 //                    MenuItem {
@@ -175,7 +158,7 @@ Page {
 //                        onClicked: remorse.execute("Clearing geocache", function() {
 //                            console.log("Remove geocache " + codeGC.text)
 ////                            Database.deleteCache(codeGC.text)
-//                            generic.cachesDirty = true
+//                            dialog.callback(true)
 //                        })
 //                    }
 
@@ -185,32 +168,25 @@ Page {
 
         PullDownMenu {
             MenuItem {
+                text: qsTr("Show Contents DB in Console")
+                enabled: generic.debug
+                visible: generic.debug
+                onClicked: Database.showAllData()
+            }
+            MenuItem {
                 text: qsTr("About")
                 onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
             }
             MenuItem {
                 text: qsTr("Settings")
-                onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
+                onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"),
+                                          {callback: updateAfterDialog})
             }
             MenuItem {
                 text: qsTr("Add Geocache Multi")
-                onClicked: pageStack.push(Qt.resolvedUrl("MultiAddPage.qml"))
+                onClicked: pageStack.push(Qt.resolvedUrl("MultiAddPage.qml"),
+                                          {callback: updateAfterDialog})
             }
         }
-        PushUpMenu  {
-            enabled: generic.debug
-//            MenuItem {
-//                text: qsTr("Refresh")
-//                onClicked: listModel.update()
-//            }
-            MenuItem {
-                text: qsTr("Show Contents DB in Console")
-                enabled: generic.debug
-                onClicked: Database.showAllData()
-            }
-        }
-
-        VerticalScrollDecorator {}
-
     }
 }
