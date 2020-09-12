@@ -174,6 +174,10 @@ Page {
                 onClicked: Database.showAllData()
             }
             MenuItem {
+                text: qsTr("Refresh page")
+                onClicked: { listModel.update() }
+            }
+            MenuItem {
                 text: qsTr("About")
                 onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
             }

@@ -235,28 +235,49 @@ function getGeocaches()
     return caches;
 }
 
-function getWaypts(cacheid)
+function getWaypts(cacheid, hideFound)
 {
     var waypts = [];
     var db = openDatabase();
-    db.transaction(function(tx) {
-        var rs = tx.executeSql("\
-            SELECT cacheid, \
-                wayptid, \
-                waypoint, \
-                formula, \
-                note, \
-                is_waypoint, \
-                found \
-                FROM geo_waypts \
-                WHERE cacheid=? \
-                ORDER BY cacheid, waypoint \
-            ;", [cacheid]);
-        for (var i = 0; i < rs.rows.length; ++i) {
-            waypts.push(rs.rows.item(i));
-        }
-    });
-
+    if (hideFound) {
+        db.transaction(function(tx) {
+            var rs = tx.executeSql("\
+                SELECT cacheid, \
+                    wayptid, \
+                    waypoint, \
+                    formula, \
+                    note, \
+                    is_waypoint, \
+                    found \
+                    FROM geo_waypts \
+                    WHERE cacheid=? \
+                      AND found=0\
+                    ORDER BY cacheid, waypoint \
+                ;", [cacheid]);
+            for (var i = 0; i < rs.rows.length; ++i) {
+                waypts.push(rs.rows.item(i));
+            }
+        });
+    }
+    else {
+        db.transaction(function(tx) {
+            var rs = tx.executeSql("\
+                SELECT cacheid, \
+                    wayptid, \
+                    waypoint, \
+                    formula, \
+                    note, \
+                    is_waypoint, \
+                    found \
+                    FROM geo_waypts \
+                    WHERE cacheid=? \
+                    ORDER BY cacheid, waypoint \
+                ;", [cacheid]);
+            for (var i = 0; i < rs.rows.length; ++i) {
+                waypts.push(rs.rows.item(i));
+            }
+        });
+    }
     return waypts;
 }
 

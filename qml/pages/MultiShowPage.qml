@@ -11,6 +11,8 @@ Page {
 
     property var callback
 
+    property bool hideFound: false
+
     function updateAfterDialog(updated) {
         if (updated) {
             listModel.update()
@@ -25,7 +27,7 @@ Page {
             generic.allLetters = Database.getLetters(generic.gcId)
 //            console.log( JSON.stringify(generic.allLetters));
             listModel.clear();
-            var waypts = Database.getWaypts(generic.gcId);
+            var waypts = Database.getWaypts(generic.gcId, hideFound);
             for (var i = 0; i < waypts.length; ++i) {
                 listModel.append(waypts[i]);
 //                console.log( JSON.stringify(waypts[i]));
@@ -136,7 +138,24 @@ Page {
                 onClicked: remorse.execute("Clearing letter values", function() {
                     console.log("Clear letter values " + generic.gcId)
                     Database.clearValues(generic.gcId)
+                    listModel.update()
                 })
+            }
+            MenuItem {
+                text: qsTr("Add waypoint")
+                onClicked: {
+                    onClicked: pageStack.push(Qt.resolvedUrl("WayptAddPage.qml"),
+                                              {wayptid: undefined, callback: updateAfterDialog})
+                }
+            }
+        }
+        PushUpMenu {
+            MenuItem {
+                text: hideFound ? qsTr("Unhide found waypoints") : qsTr("Hide found waypoints")
+                onClicked: {
+                    hideFound = !hideFound
+                    listModel.update()
+                }
             }
             MenuItem {
                 text: qsTr("View in browser")
@@ -145,21 +164,7 @@ Page {
                     ExternalLinks.browse(generic.browserUrl + generic.gcCode)
                 }
             }
-            MenuItem {
-                text: "Add waypoint"
-                onClicked: {
-                    onClicked: pageStack.push(Qt.resolvedUrl("WayptAddPage.qml"),
-                                              {wayptid: undefined, callback: updateAfterDialog})
-                }
-            }
         }
-//        PushUpMenu {
-//            MenuItem {
-//                text: qsTr("Refresh")
-//                onClicked: listModel.update()
-//            }
-//        }
-
     }
 }
 

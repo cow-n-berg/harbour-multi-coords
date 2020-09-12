@@ -324,8 +324,8 @@ function lettersResult(txtLetters) {
 */
 function remarkValues( remark ) {
     var regExCapitals = /[A-Z]/g;
-    var regExLetters = /[a-z]/g;
     var regExNumbers = /\d/g;
+    var firstValue   = 0;
     var valueLetters = 0;
     var valueNumbers = 0;
     var countLetters = 0;
@@ -337,22 +337,14 @@ function remarkValues( remark ) {
     var res;
 
     if (remark !== "" ) {
-        // Extract all capital letters
+        // Extract all letters
         do {
-            res = regExCapitals.exec( remark );
+            res = regExCapitals.exec( remark.toUpperCase() );
 //            console.log(res);
             if (res !== null) {
                 countLetters++;
                 valueLetters += res[0].charCodeAt(0) - 64;
-            }
-        } while (res !== null)
-
-        // Extract all letters
-        do {
-            res = regExLetters.exec( remark );
-            if (res !== null) {
-                countLetters++;
-                valueLetters += res[0].charCodeAt(0) - 96;
+                firstValue = firstValue === 0 ? res[0].charCodeAt(0) - 64 : firstValue;
             }
         } while (res !== null)
 
@@ -379,7 +371,7 @@ function remarkValues( remark ) {
         crossNumbers = 9
     }
 
-    var str = "Letters: " + countLetters + ", sum: " + valueLetters + ", cross sum: " + crossLetters + "\n";
+    var str = "Letters: " + countLetters + ", sum: " + valueLetters + ", cross sum: " + crossLetters + ", first letter: " + firstValue + "\n";
     str +=    "Numbers: " + countNumbers + ", sum: " + valueNumbers + ", cross sum: " + crossNumbers + "\n";
     str +=    "Chars: " + countChars;
 

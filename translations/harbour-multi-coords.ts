@@ -225,6 +225,18 @@
         <source>Clear letter values</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Add waypoint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unhide found waypoints</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide found waypoints</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsPage</name>
