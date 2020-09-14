@@ -17,6 +17,7 @@ Dialog {
         Database.setSetting( "nightCacheMode"  , generic.nightCacheMode   )
         Database.setSetting( "deleteDatabase"  , generic.deleteDatabase   )
         Database.setSetting( "formulaCopyMode" , generic.formulaCopyMode  )
+        Database.setSetting( "pentagonDistance", generic.pentagonDistance  )
 
         if (cache1Adding) {
             Database.addStd1Cache()
@@ -86,6 +87,13 @@ Dialog {
                 icon.source: "image://theme/icon-m-clipboard"
                 checked: generic.formulaCopyMode
                 onClicked: generic.formulaCopyMode = !generic.formulaCopyMode
+            }
+            IconTextSwitch {
+                text: qsTr("Show Pentagon calculation in menu")
+                description: qsTr("Specifically for GC8Y39T 🎄 La Arbaro")
+                icon.source: Qt.resolvedUrl("../images/icon-pentagon.svg")
+                checked: generic.pentagonDistance
+                onClicked: generic.pentagonDistance = !generic.pentagonDistance
             }
 
             SectionHeader {

@@ -18,6 +18,7 @@ DISTFILES += qml/harbour-multi-coords.qml \
     qml/Database.js \
     qml/cover/CoverPage.qml \
     qml/pages/CachesPage.qml \
+    qml/pages/HetWoud.qml \
     qml/pages/LetterPage.qml \
     qml/pages/MultiAddPage.qml \
     qml/pages/AboutPage.qml \
@@ -25,6 +26,7 @@ DISTFILES += qml/harbour-multi-coords.qml \
     qml/pages/SettingsPage.qml \
     qml/pages/WayptAddPage.qml \
     qml/pages/WayptShowPage.qml \
+    qml/scripts/Calculations.js \
     qml/scripts/TextFunctions.js \
     rpm/harbour-multi-coords.changes.in \
     rpm/harbour-multi-coords.changes.run.in \

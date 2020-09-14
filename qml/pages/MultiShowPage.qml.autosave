@@ -18,6 +18,7 @@ Page {
     function updateAfterDialog(updated) {
         if (updated) {
             listModel.update()
+            page.callback(true)
         }
     }
 

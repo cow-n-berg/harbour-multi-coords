@@ -82,6 +82,10 @@
         <source>Found</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Refresh page</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CoverPage</name>
@@ -106,6 +110,17 @@
     <name>Database</name>
     <message>
         <source>, requires: &apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>HetWoud</name>
+    <message>
+        <source>Clear waypoints</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Circumference (meter)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -237,6 +252,10 @@
         <source>Hide found waypoints</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Calculate pentagon</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsPage</name>
@@ -306,6 +325,14 @@
     </message>
     <message>
         <source>&apos;Het Utrechts zonnestelsel...&apos; from The Netherlands</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Pentagon calculation in menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Specifically for GC8Y39T 🎄 La Arbaro</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
