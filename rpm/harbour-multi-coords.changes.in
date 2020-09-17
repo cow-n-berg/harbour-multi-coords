@@ -12,34 +12,45 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
-* Tue Sep 8 2020 Rob Kouwenbergr <sailfish@cow-n-berg.nl> 1.7
-- Cover action for copying; Setting for copying coordinate in two parts
+* Thu Sep 17 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 1.9
+- Different sorting of geocaches: 1. active (only 1), 2. found, 3. name
+- Upgrade database to support Active geocache
 
-* Mon Sep 7 2020 Rob Kouwenbergr <sailfish@cow-n-berg.nl> 1.6
+* Sat Sep 12 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 1.8
+- Specific tool added for geocache GC8Y39T La Arbora, Hilversum
+  Calculates disttance around a pentagon, based on Dutch coordinate system Rijksdriehoek
+  Thought of pushing it to a separate branch, but decided to keep it
+- Option to hide found waypoints
+
+* Tue Sep 8 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 1.7
+- Cover action for copying; Setting for copying coordinate in two parts
+- Refreshing of view has been solved now
+
+* Mon Sep 7 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 1.6
 - Added Hidden Waypoints to GPX extracting routine
 - New button for editing formulas
 - Copy calculated formula to Clipboard
 - Added cross sums of waypoint Note
 - Rework of Multi show page
 
-* Fri Sep 4 2020 Rob Kouwenbergr <sailfish@cow-n-berg.nl> 1.5
+* Fri Sep 4 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 1.5
 - Improved Dark mode. Rework on waypoint show page.
 - Alert when ListView needs to be refreshed.
 - Add geocache: slider properly implemented.
 - Lots of small improvements and bugfixes.
 
-* Tue Sep 1 2020 Rob Kouwenbergr <sailfish@cow-n-berg.nl> 1.4
+* Tue Sep 1 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 1.4
 - Introducing Dark mode. You need to create an Ambience yourself to support it
   Just take a dark photo, and choose red (left hand side) as highlight
   Then again, not all Silica elements can't be tweaked (or else: let me know!)
 - Optimised formula search, with optional search length
 - Changed layout of Add/Edit pages
 
-* Sun Aug 30 2020 Rob Kouwenbergr <sailfish@cow-n-berg.nl> 1.2-1
+* Sun Aug 30 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 1.2-1
 - Deleting and adding waypoint actually works now
 - Cover action added: new geocache
 
-* Sun Aug 30 2020 Rob Kouwenbergr <sailfish@cow-n-berg.nl> 1.0-1
+* Sun Aug 30 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 1.0-1
 - First operational version
 - Refreshing ListViews is a problem, a push-up menu provides a manual option
 

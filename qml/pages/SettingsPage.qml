@@ -90,7 +90,7 @@ Dialog {
             }
             IconTextSwitch {
                 text: qsTr("Show Pentagon calculation in menu")
-                description: qsTr("Specifically for GC8Y39T 🎄 La Arbaro")
+                description: qsTr("Specifically for GC8Y39T 🎄 La Arbaro,\nwill work only in The Netherlands")
                 icon.source: Qt.resolvedUrl("../images/icon-pentagon.svg")
                 checked: generic.pentagonDistance
                 onClicked: generic.pentagonDistance = !generic.pentagonDistance

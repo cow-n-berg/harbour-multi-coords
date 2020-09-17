@@ -82,10 +82,6 @@
         <source>Found</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Refresh page</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>CoverPage</name>
@@ -114,13 +110,13 @@
     </message>
 </context>
 <context>
-    <name>HetWoud</name>
+    <name>LaArboro</name>
     <message>
-        <source>Clear waypoints</source>
+        <source>Circumference (meter)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Circumference (meter)</source>
+        <source>Clear waypoints</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -332,7 +328,8 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Specifically for GC8Y39T 🎄 La Arbaro</source>
+        <source>Specifically for GC8Y39T 🎄 La Arbaro,
+will work only in The Netherlands</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

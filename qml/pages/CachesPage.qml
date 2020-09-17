@@ -19,6 +19,7 @@ Page {
     function updateAfterDialog(updated) {
         if (updated) {
             listModel.update()
+            listView.scrollToTop()
         }
     }
 
@@ -52,7 +53,7 @@ Page {
     }
 
     SilicaListView {
-        id: gcListView
+        id: listView
         model: listModel
 
         anchors {
@@ -173,10 +174,10 @@ Page {
                 visible: generic.debug
                 onClicked: Database.showAllData()
             }
-            MenuItem {
-                text: qsTr("Refresh page")
-                onClicked: { listModel.update() }
-            }
+//            MenuItem {
+//                text: qsTr("Refresh page")
+//                onClicked: { listModel.update() }
+//            }
             MenuItem {
                 text: qsTr("About")
                 onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))

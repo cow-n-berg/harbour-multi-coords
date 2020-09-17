@@ -100,12 +100,19 @@ function initializeDatabase()
                 geocache TEXT UNIQUE, \
                 name TEXT NOT NULL, \
                 found INTEGER DEFAULT 0, \
-                updatd DATETIME DEFAULT CURRENT_TIMESTAMP \
+                updatd DATETIME DEFAULT CURRENT_TIMESTAMP, \
+                active INTEGER DEFAULT 0 \
             );");
         tx.executeSql("\
             CREATE INDEX IF NOT EXISTS found ON geocaches ( \
                 found, \
                 updatd \
+            );");
+        tx.executeSql("\
+            CREATE INDEX active ON geocaches ( \
+                active, \
+                found, \
+                name \
             );");
 
         /*
@@ -175,6 +182,7 @@ function upgradeDatabase( dbversion )
                 rs = tx.executeSql("ALTER TABLE geo_letters ADD COLUMN remark TEXT DEFAULT ''");
                 console.log(rs);
                 console.log("Tables altered 1.0");
+                db.version = "1.0";
             }
             if (db.version < "1.2") {
                 /*
@@ -192,21 +200,30 @@ function upgradeDatabase( dbversion )
                         wayptid, \
                         letter \
                     );");
+                db.version = "1.2";
                 console.log("Tables altered 1.2");
             }
-            // Version 1.3 never really made it
-//            if (db.version < "1.4") {
-//                /*
-//                 * Enables split-ups with geo_letters.
-//                 */
-//                rs = tx.executeSql("ALTER TABLE geo_letters DROP COLUMN IF EXISTS splitup");
-//                console.log(rs);
-//                console.log("Tables altered " + dbversion);
-//            }
+            // Version 1.3 and 1.4 got lost in upgrade problems
+            if (db.version < "1.5") {
+                /*
+                 * Adds new column to geocaches.
+                 */
+                rs = tx.executeSql("ALTER TABLE geocaches ADD COLUMN active INTEGER DEFAULT 0");
+                console.log(rs);
+                rs = tx.executeSql("\
+                    CREATE INDEX active ON geocaches ( \
+                        active, \
+                        found, \
+                        name \
+                    );");
+                console.log(rs);
+                db.version = "1.5";
+                rs = tx.executeSql('INSERT OR REPLACE INTO settings VALUES (?,?);', ["databaseVersion",15]);
+                console.log("Tables altered " + db.version);
+            }
             /*
              * Upgrade complete.
              */
-            db.version = dbversion;
         });
     }
 }
@@ -225,7 +242,7 @@ function getGeocaches()
                 name, \
                 found \
                 FROM geocaches \
-                ORDER BY found ASC, updatd DESC \
+                ORDER BY active DESC, found ASC, name ASC \
             ;");
         for (var i = 0; i < rs.rows.length; ++i) {
             caches.push(rs.rows.item(i));
@@ -239,6 +256,18 @@ function getWaypts(cacheid, hideFound)
 {
     var waypts = [];
     var db = openDatabase();
+
+    db.transaction(function(tx) {
+        tx.executeSql('\
+                UPDATE geocaches \
+                SET active = 0 \
+                WHERE active = 1;');
+        tx.executeSql('\
+            UPDATE geocaches \
+            SET active = 1 \
+            WHERE cacheid = ?;', [cacheid]);
+    });
+
     if (hideFound) {
         db.transaction(function(tx) {
             var rs = tx.executeSql("\
@@ -249,10 +278,10 @@ function getWaypts(cacheid, hideFound)
                     note, \
                     is_waypoint, \
                     found \
-                    FROM geo_waypts \
-                    WHERE cacheid=? \
-                      AND found=0\
-                    ORDER BY cacheid, waypoint \
+                FROM geo_waypts \
+                WHERE cacheid=? \
+                  AND found=0\
+                ORDER BY cacheid, waypoint \
                 ;", [cacheid]);
             for (var i = 0; i < rs.rows.length; ++i) {
                 waypts.push(rs.rows.item(i));
@@ -553,21 +582,33 @@ function addCache(geocache, name, waypts)
     var rs;
     console.log(JSON.stringify(waypts))
     db.transaction(function(tx) {
+        tx.executeSql('\
+                UPDATE geocaches \
+                SET active = 0 \
+                WHERE active = 1;');
         rs = tx.executeSql('\
                 INSERT OR REPLACE INTO geocaches \
-                (geocache, name, found) \
-                VALUES (?,?,0);', [geocache,name]);
+                (geocache, name, found, active) \
+                VALUES (?,?,0,1);', [geocache,name]);
         var cacheId = rs.insertId;
         console.log("Geocache inserted, id=" + cacheId);
         for (var i = 0; i < waypts.length; ++i) {
             console.log("WP: " + JSON.stringify(waypts[i]));
             var number = waypts[i].number;
             var formula = waypts[i].coord;
-            var note = waypts[i].note // === "" ? "-" : waypts[i].note;
-            rs = tx.executeSql("\
-                INSERT OR REPLACE INTO geo_waypts \
-                (cacheid, waypoint, formula, rawtext, note, is_waypoint, found) \
-                VALUES (?,?,?,?,?,1,0);", [cacheId, number, formula, formula, note]);
+            var note = waypts[i].note;
+            if (note === "") {
+                rs = tx.executeSql("\
+                    INSERT OR REPLACE INTO geo_waypts \
+                    (cacheid, waypoint, formula, rawtext, note, is_waypoint, found) \
+                    VALUES (?,?,?,?,'',1,0);", [cacheId, number, formula, formula]);
+            }
+            else {
+                rs = tx.executeSql("\
+                    INSERT OR REPLACE INTO geo_waypts \
+                    (cacheid, waypoint, formula, rawtext, note, is_waypoint, found) \
+                    VALUES (?,?,?,?,?,1,0);", [cacheId, number, formula, formula, note]);
+                }
             var wayptId = rs.insertId;
             console.log(cacheId + " WP " + wayptId);
         }
@@ -665,7 +706,8 @@ function setCacheFound(cacheid, found)
         rs = tx.executeSql('\
             UPDATE geocaches \
             SET found = ?, \
-                updatd = CURRENT_TIMESTAMP \
+                updatd = CURRENT_TIMESTAMP, \
+                active = 1 \
             WHERE cacheid = ?;', [sqlFound,cacheid]);
     } )
 }

@@ -21,20 +21,27 @@ Page {
         }
     }
 
+    Timer {
+        id: callbackTimer
+        interval: 500
+        running: false
+        onTriggered: {
+            page.callback(true)
+        }
+    }
+
     ListModel {
         id: listModel
 
         function update()
         {
             generic.allLetters = Database.getLetters(generic.gcId)
-//            console.log( JSON.stringify(generic.allLetters));
             listModel.clear();
             waypts = Database.getWaypts(generic.gcId, hideFound);
             for (var i = 0; i < waypts.length; ++i) {
                 listModel.append(waypts[i]);
-//                console.log( JSON.stringify(waypts[i]));
             }
-//            console.log( "listModel MultiShow updated");
+            callbackTimer.start()
         }
     }
 
@@ -74,7 +81,7 @@ Page {
                 model: listModel
 
                 width: parent.width
-                itemHeight: Theme.itemSizeExtraLarge + Theme.paddingMedium
+                itemHeight: Theme.itemSizeExtraLarge + Theme.paddingSmall
 
                 ViewPlaceholder {
                     id: placeh
@@ -85,11 +92,8 @@ Page {
 
                 delegate: BackgroundItem {
                     id: listItem
-//                    menu: contextMenu
 
                     width: parent.width
-
-//                  ListView.onRemove: animateRemoval(listItem)
 
                     Icon {
                         id: iconContainer
@@ -144,16 +148,17 @@ Page {
                 })
             }
             MenuItem {
+                text: qsTr("Calculate pentagon")
+                visible: generic.gcCode === "GC8Y39T"
+                onClicked:  {
+                    onClicked: pageStack.push(Qt.resolvedUrl("HetWoud.qml"))
+                }
+            }
+            MenuItem {
                 text: qsTr("Add waypoint")
                 onClicked: {
                     onClicked: pageStack.push(Qt.resolvedUrl("WayptAddPage.qml"),
                                               {wayptid: undefined, callback: updateAfterDialog})
-                }
-            }
-            MenuItem {
-                text: qsTr("Calculate pentagon")
-                onClicked:  {
-                    onClicked: pageStack.push(Qt.resolvedUrl("HetWoud.qml"))
                 }
             }
         }
@@ -166,6 +171,13 @@ Page {
                 }
             }
             MenuItem {
+                text: qsTr("Calculate pentagon")
+                visible: generic.pentagonDistance
+                onClicked:  {
+                    onClicked: pageStack.push(Qt.resolvedUrl("LaArboro.qml"))
+                }
+            }
+            MenuItem {
                 text: qsTr("View in browser")
                 onClicked:  {
                     console.log("Browser " + generic.browserUrl + generic.gcCode + ", id " + generic.gcId)
@@ -175,24 +187,3 @@ Page {
         }
     }
 }
-
-//                Component {
-//                    id: contextMenu
-//                    ContextMenu {
-//                        MenuItem {
-//                            text: qsTr("Edit waypoint")
-//                            visible: false
-//                            onClicked: {
-//                                console.log("Edit " + index + ", id " + cacheid)
-//                            }
-//                        }
-//                        MenuItem {
-//                            text: qsTr("Delete waypoint")
-//                            onClicked: remorse.execute("Clearing waypoint", function() {
-//                                console.log("Remove waypoint " + index + ", id " + wayptid)
-//                                Database.deleteWaypt(wayptid, cacheid)
-//                                page.callback(true)
-//                            })
-//                        }
-//                    }
-//                }

@@ -47,7 +47,7 @@ Page {
 
                 Image {
                     id: coverImage
-                    source: Qt.resolvedUrl("../images/harbour-cover-image.png")
+                    source: Qt.resolvedUrl("../images/harbour-about-image.png")
                     fillMode: Image.PreserveAspectFit
                     smooth: true
                     clip: true

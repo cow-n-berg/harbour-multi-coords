@@ -67,6 +67,7 @@ Dialog {
                 width: parent.width
                 height: Screen.height / 4
                 readOnly: true
+                visible: generic.wpNote !== ""
                 labelVisible: false
                 text: generic.wpNote
                 color: generic.secondaryColor
