@@ -148,10 +148,10 @@ Page {
                 })
             }
             MenuItem {
-                text: qsTr("Calculate pentagon")
+                text: qsTr("Calculations")
                 visible: generic.gcCode === "GC8Y39T"
                 onClicked:  {
-                    onClicked: pageStack.push(Qt.resolvedUrl("HetWoud.qml"))
+                    onClicked: pageStack.push(Qt.resolvedUrl("Calculations.qml"))
                 }
             }
             MenuItem {
@@ -171,10 +171,10 @@ Page {
                 }
             }
             MenuItem {
-                text: qsTr("Calculate pentagon")
-                visible: generic.pentagonDistance
+                text: qsTr("Calculations")
+                visible: generic.calculationMenu
                 onClicked:  {
-                    onClicked: pageStack.push(Qt.resolvedUrl("LaArboro.qml"))
+                    onClicked: pageStack.push(Qt.resolvedUrl("Calculations.qml"))
                 }
             }
             MenuItem {

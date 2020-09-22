@@ -84,6 +84,101 @@
     </message>
 </context>
 <context>
+    <name>Calculations</name>
+    <message>
+        <source>Available calculations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Waypoint projection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intersect lines using 4 WP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pentagon distance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Degrees</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance (meter)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New coordinate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intersect lines using 4 WPs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intersection coordinate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear waypoints</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RD XY to WGS coordinate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WGS Coordinate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear RD XY</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Circumference (meter)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add waypoint to multi</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Waypoint distance, angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intersect line and circle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intersect two circles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pentagon circumference</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance, angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>CoverPage</name>
     <message>
         <source>Formula copied</source>
@@ -106,17 +201,6 @@
     <name>Database</name>
     <message>
         <source>, requires: &apos;</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>LaArboro</name>
-    <message>
-        <source>Circumference (meter)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Clear waypoints</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -249,7 +333,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Calculate pentagon</source>
+        <source>Calculations</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -324,11 +408,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Show Pentagon calculation in menu</source>
+        <source>Show Calculations in menu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Specifically for GC8Y39T 🎄 La Arbaro,
+        <source>Depending on Rijksdriehoek system,
 will work only in The Netherlands</source>
         <translation type="unfinished"></translation>
     </message>
@@ -443,11 +527,11 @@ will work only in The Netherlands</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>All information between brackets [] will be evaluated, e.g. [A+1]. Parentheses () are for calculations like [(B+3)/2]. The buttons below may help with editing. The [A] button won&apos;t replace NSEW in the formula.</source>
+        <source>Add </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Add </source>
+        <source>All information between brackets [] will be evaluated, e.g. [A+1]. Parentheses () are for calculations like [(B+3)/2]. Use squares like A*A, instead of A^2 or A². The buttons below may help with editing. The [A] button won&apos;t replace NSEW in the formula.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

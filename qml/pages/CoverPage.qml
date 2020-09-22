@@ -8,7 +8,7 @@ CoverBackground {
     property var gccode        : generic.gcCode
     property var gcname        : generic.gcName
     property var wpnumb        : generic.wpNumber
-    property var copyFirstPart : true
+    property var copyTriState : true
 
     Timer {
         id: coverTimer
@@ -54,9 +54,9 @@ CoverBackground {
                 }
                 else
                     if (generic.formulaCopyMode) {
-                        Clipboard.text = TF.copyText( generic.wpCalc, copyFirstPart )
-                        coverLabel.text = copyFirstPart ? qsTr("Lat copied") : qsTr("Lon copied")
-                        copyFirstPart = !copyFirstPart
+                        Clipboard.text = TF.copyText( generic.wpCalc, copyTriState )
+                        coverLabel.text = copyTriState === 0 ? qsTr("Formula copied") : ( copyTriState === 1 ? qsTr("Lat copied") : qsTr("Lon copied") )
+                        copyTriState === 2 ? 0 : copyTriState++
                     }
                     else {
                         Clipboard.text = generic.wpCalc

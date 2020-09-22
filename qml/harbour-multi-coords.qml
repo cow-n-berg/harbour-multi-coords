@@ -19,7 +19,7 @@ ApplicationWindow
     property bool deleteDatabase          : DB.getSetting( "deleteDatabase", false )
     property bool nightCacheMode          : DB.getSetting( "nightCacheMode", false )
     property bool formulaCopyMode         : DB.getSetting( "formulaCopyMode", false )
-    property bool pentagonDistance        : DB.getSetting( "pentagonDistance", false )
+    property bool calculationMenu        : DB.getSetting( "calculationMenu", false )
 
     property var browserUrl               : "https://coord.info/"
     property var primaryColor             : nightCacheMode ? "firebrick" : Theme.primaryColor

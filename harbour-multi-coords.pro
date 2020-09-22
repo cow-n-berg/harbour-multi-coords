@@ -18,7 +18,7 @@ DISTFILES += qml/harbour-multi-coords.qml \
     qml/Database.js \
     qml/cover/CoverPage.qml \
     qml/pages/CachesPage.qml \
-    qml/pages/LaArboro.qml \
+    qml/pages/Calculations.qml \
     qml/pages/LetterPage.qml \
     qml/pages/MultiAddPage.qml \
     qml/pages/AboutPage.qml \

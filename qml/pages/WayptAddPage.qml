@@ -25,7 +25,6 @@ Dialog {
     property var regExPar2  : /\)/g;
     property var regExTimes : /x/g;
     property var regExDivid : /÷/g;
-    property var regExSquar : /²/g;
 
     canAccept: txtFormula.text !== "" && txtWpNr.text !== ""
 
@@ -170,7 +169,7 @@ Dialog {
                 id: description1
                 width: parent.width
                 height: Screen.height / 6
-                text: qsTr("All information between brackets [] will be evaluated, e.g. [A+1]. Parentheses () are for calculations like [(B+3)/2]. The buttons below may help with editing. The [A] button won't replace NSEW in the formula.")
+                text: qsTr("All information between brackets [] will be evaluated, e.g. [A+1]. Parentheses () are for calculations like [(B+3)/2]. Use squares like A*A, instead of A^2 or A². The buttons below may help with editing. The [A] button won't replace NSEW in the formula.")
                 label: qsTr("Formula conventions")
                 labelVisible: false
                 color: generic.highlightColor
@@ -255,12 +254,11 @@ Dialog {
                     }
                 }
                 Button {
-                    text: "x÷² » */^"
+                    text: "x÷ » */"
                     color: generic.primaryColor
                     onClicked: {
                         txtFormula.text = txtFormula.text.replace(regExTimes, '*')
                         txtFormula.text = txtFormula.text.replace(regExDivid, '/')
-                        txtFormula.text = txtFormula.text.replace(regExSquar, '^2')
                     }
                 }
                 Button {
