@@ -136,7 +136,7 @@ function intersection2( wp1, degrees1, wp2, degrees2, waypts ) {
     return str
 }
 
-function intersection3( wp1, degrees1, wp2, radius, waypts ) {
+function intersection3( wp1, degrees1, wp2, radius2, waypts ) {
     var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var dist = 0;
     var str;
@@ -169,12 +169,76 @@ function intersection3( wp1, degrees1, wp2, radius, waypts ) {
     lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
     var xy2 = wgs2rd(lat, lon);
 
-    var c = -xy2.x;
-    var d = -xy2.y;
-    var r = parseFloat(radius);
+    var c = xy2.x;
+    var d = xy2.y;
+    var r = parseFloat(radius2);
 
     var k = 1 + Math.pow(b, 2);
-    var l = 2 * ( b * (a - d) - c )
+    var l = 2 * ( a * b - c - b * d )
+    var m = Math.pow(a, 2) + Math.pow(c, 2) + Math.pow(d, 2) - Math.pow(r, 2) - 2 * a * d
+
+    var sqrt1 = Math.pow(l, 2) - 4 * k * m
+
+    if ( sqrt1 > 0 ) {
+        var rdx1 = ( -l - Math.sqrt( sqrt1 ) ) / (2 * k);
+        var rdy1 = a + b * rdx1;
+        var coord1 = rd2wgs(rdx1, rdy1);
+        str = "1. " + coord1;
+
+        var rdx2 = ( -l + Math.sqrt( sqrt1 ) ) / (2 * k);
+        var rdy2 = a + b * rdx2;
+        var coord2 = rd2wgs(rdx2, rdy2);
+        str += "\n2. " + coord2;
+
+        result.possible = true;
+        result.str = str;
+        result.coord1 = coord1;
+        result.coord2 = coord2;
+    }
+
+    return result
+}
+
+function intersection4( wp1, radius1, wp2, radius2, waypts ) {
+    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
+    var dist = 0;
+    var str;
+    var result = { possible: false, str: "No intersection possible", coord1: undefined, coord2: undefined }
+
+    // Intersection of two circles, defined by WP1 and a radius, and WP2 and a radius
+
+    // Circle WP1
+    var wp = parseInt( wp1 );
+    var formula = waypts[wp].formula;
+    var res = regExLatLon.exec(formula);
+
+    var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
+    var lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
+    var xy1 = wgs2rd(lat, lon);
+
+    var c = xy1.x;
+    var d = xy1.y;
+    var r = parseFloat(radius1);
+
+    // Circle WP2
+    wp = parseInt( wp2 );
+    formula = waypts[wp].formula;
+    res = regExLatLon.exec(formula);
+
+    lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
+    lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
+    var xy2 = wgs2rd(lat, lon);
+
+    var e = xy2.x;
+    var f = xy2.y;
+    var s = parseFloat(radius2);
+
+    // Find line y = a + b * x, on which intersections will be
+    var a = (Math.pow(c, 2) + Math.pow(d, 2) - Math.pow(e, 2) - Math.pow(f, 2) - Math.pow(r, 2) + Math.pow(s, 2)) / ( 2 * (d - f));
+    var b = ( e - c )/( d - f );
+
+    var k = 1 + Math.pow(b, 2);
+    var l = 2 * ( a * b - c - b * d )
     var m = Math.pow(a, 2) + Math.pow(c, 2) + Math.pow(d, 2) - Math.pow(r, 2) - 2 * a * d
 
     var sqrt1 = Math.pow(l, 2) - 4 * k * m
@@ -377,7 +441,7 @@ function wgs2rd(lat, lon) {
     rdx = (rdx + rdxBase);
     rdy = (rdy + rdyBase);
 
-    console.log( "X: " + rdx + ", Y:" + rdy);
+    console.log( "X: " + rdx.toFixed(0) + ", Y:" + rdy.toFixed(0));
 
     return { x: rdx, y: rdy }
 

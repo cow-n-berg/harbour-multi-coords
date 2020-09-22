@@ -151,7 +151,8 @@ Page {
                 text: qsTr("Calculations")
                 visible: generic.gcCode === "GC8Y39T"
                 onClicked:  {
-                    onClicked: pageStack.push(Qt.resolvedUrl("Calculations.qml"))
+                    onClicked: pageStack.push(Qt.resolvedUrl("Calculations.qml"),
+                                              {callback: updateAfterDialog})
                 }
             }
             MenuItem {

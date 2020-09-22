@@ -86,10 +86,6 @@
 <context>
     <name>Calculations</name>
     <message>
-        <source>Available calculations</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Waypoint projection</source>
         <translation type="unfinished"></translation>
     </message>
@@ -146,15 +142,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Waypoint distance, angle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Intersect line and circle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Intersect two circles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -174,7 +162,55 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Distance, angle</source>
+        <source>Line distance, angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intersect lines 2 WPs, angles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WP1: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Angle (°)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WP2: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intersect circle and line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Radius (meter)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intersection coordinates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line WP1: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Circle WP2: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intersect two circles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intersect circles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Circle WP1: </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
