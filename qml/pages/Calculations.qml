@@ -17,6 +17,7 @@ Page {
     property var intersect2 : ""
     property var intersect3
     property var intersect4
+    property var circle
     property var wgsCoord   : ""
     property var distance   : 0
 
@@ -25,6 +26,7 @@ Page {
     property var interText2 : "Intersection of lines WPs " + wp31.text + ", " + deg31.text + "° and " + wp32.text + ", " + deg32.text + "°"
     property var interText3 : "Intersection of line WP " + wp41.text + ", " + deg41.text + "° and circle " + wp42.text + ", radius " + radius42.text + " m"
     property var interText4 : "Intersection of circles " + wp51.text + ", radius " + radius51.text + " m and circle " + wp52.text + ", " + radius52.text + " m"
+    property var centreTxt  : "Circle centre WPs " + wp71.text + ", " + wp72.text + ", " + wp73.text + ", radius (m): " + ( circle === undefined ? "" : circle.radius )
     property var wgsText    : "Conversion of RD X" + x.text + ", Y: " + y.text
 
     Timer {
@@ -128,6 +130,17 @@ Page {
                 color: generic.primaryColor
                 onClicked: {
                     wp51.focus = true
+               }
+            }
+
+            Button {
+                height: Theme.itemSizeLarge
+                preferredWidth: Theme.buttonWidthLarge
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: qsTr("Circle through 3 WPs")
+                color: generic.primaryColor
+                onClicked: {
+                    wp71.focus = true
                }
             }
 
@@ -599,12 +612,13 @@ Page {
                 Button {
                     text: qsTr("Add")
                     color: generic.primaryColor
+                    enabled: intersect3 !== undefined
                     onClicked: {
                         if (intersect3.possible) {
                             indicator.running = true
                             addTimer.start()
                             Database.addWaypt(generic.gcId, "", waypts.length, intersect3.coord1, intersect3.coord1, interText3, true, false, "")
-                            Database.addWaypt(generic.gcId, "", waypts.length, intersect3.coord2, intersect3.coord2, interText3, true, false, "")
+                            Database.addWaypt(generic.gcId, "", waypts.length + 1, intersect3.coord2, intersect3.coord2, interText3, true, false, "")
                             waypts = Database.getWaypts(generic.gcId, false);
                             page.callback(true)
                         }
@@ -614,6 +628,7 @@ Page {
                 Button {
                     text: qsTr("Copy")
                     color: generic.primaryColor
+                    enabled: intersect3 !== undefined
                     onClicked: {
                         Clipboard.text = intersect3 === undefined ? "" : intersect3.str
                    }
@@ -709,12 +724,13 @@ Page {
                 Button {
                     text: qsTr("Add")
                     color: generic.primaryColor
+                    enabled: intersect4 !== undefined
                     onClicked: {
                         if (intersect4.possible) {
                             indicator.running = true
                             addTimer.start()
                             Database.addWaypt(generic.gcId, "", waypts.length, intersect4.coord1, intersect4.coord1, interText4, true, false, "")
-                            Database.addWaypt(generic.gcId, "", waypts.length, intersect4.coord2, intersect4.coord2, interText4, true, false, "")
+                            Database.addWaypt(generic.gcId, "", waypts.length + 1, intersect4.coord2, intersect4.coord2, interText4, true, false, "")
                             waypts = Database.getWaypts(generic.gcId, false);
                             page.callback(true)
                         }
@@ -743,7 +759,102 @@ Page {
                 }
             }
 
+            Separator {
+                width: parent.width
+                color: generic.highlightColor
+            }
 
+            SectionHeader {
+                text: qsTr("Circle through 3 WPs")
+            }
+
+            TextField {
+                id: wp71
+                width: parent.width
+                label: Calc.showFormula( wp71.text, waypts)
+                placeholderText: "Enter WP number"
+                color: generic.primaryColor
+                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                EnterKey.enabled: text.length > 0
+                EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                EnterKey.onClicked: wp72.focus = true
+            }
+
+            TextField {
+                id: wp72
+                width: parent.width
+                label: Calc.showFormula( wp72.text, waypts) //qsTr("WP2")
+                placeholderText: "Enter WP number"
+                color: generic.primaryColor
+                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                EnterKey.enabled: text.length > 0
+                EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                EnterKey.onClicked: wp73.focus = true
+            }
+
+            TextField {
+                id: wp73
+                width: parent.width
+                label: Calc.showFormula( wp73.text, waypts) //qsTr("WP3")
+                placeholderText: "Enter WP number"
+                color: generic.primaryColor
+                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                EnterKey.enabled: text.length > 0
+                EnterKey.iconSource: "image://theme/icon-m-enter-close"
+                EnterKey.onClicked: {
+                    circle = Calc.circle( wp71.text, wp72.text, wp73.text, waypts )
+                    wp73.focus = false
+                }
+            }
+
+            TextArea {
+                id: circleCentre
+                width: parent.width
+                text:  circle === undefined ? "" : ( circle.centre + ", " + circle.radius + " m" )
+                label: qsTr("Circle centre and radius (meter)")
+                placeholderText: label
+                color: generic.highlightColor
+                readOnly: true
+            }
+
+            ButtonLayout {
+                preferredWidth: Theme.buttonWidthExtraSmall
+
+                Button {
+                    text: qsTr("Add")
+                    color: generic.primaryColor
+                    enabled: circle !== undefined
+                    onClicked: {
+                        if (circle.possible) {
+                            indicator.running = true
+                            addTimer.start()
+                            Database.addWaypt(generic.gcId, "", waypts.length, circle.centre, circle.centre, centreTxt, true, false, "")
+                            waypts = Database.getWaypts(generic.gcId, false);
+                            page.callback(true)
+                        }
+                   }
+                }
+
+                Button {
+                    text: qsTr("Copy")
+                    color: generic.primaryColor
+                    onClicked: {
+                        Clipboard.text = circle === undefined ? "" : circle.centre
+                   }
+                }
+
+                Button {
+                    text: qsTr("Clear")
+                    color: generic.primaryColor
+                    onClicked: {
+                        wp71.text = ""
+                        wp72.text = ""
+                        wp73.text = ""
+                        circle = undefined
+                        wp71.focus = true
+                   }
+                }
+            }
 
             Separator {
                 width: parent.width
@@ -791,29 +902,39 @@ Page {
                 readOnly: true
             }
 
-            Button {
-                height: Theme.itemSizeLarge
-                preferredWidth: Theme.buttonWidthLarge
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: qsTr("Add waypoint to multi")
-                color: generic.primaryColor
-                onClicked: {
-                    Database.addWaypt(generic.gcId, "", waypts.length, wgsCoord, wgsCoord, rdText1, true, false, "")
-               }
-            }
+            ButtonLayout {
+                preferredWidth: Theme.buttonWidthExtraSmall
 
-            Button {
-                height: Theme.itemSizeLarge
-                preferredWidth: Theme.buttonWidthLarge
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: qsTr("Clear RD XY")
-                color: generic.primaryColor
-                onClicked: {
-                    x.text = ""
-                    y.text = ""
-                    wgsCoord = ""
-                    x.focus = true
-               }
+                Button {
+                    text: qsTr("Add")
+                    color: generic.primaryColor
+                    onClicked: {
+                        indicator.running = true
+                        addTimer.start()
+                        Database.addWaypt(generic.gcId, "", waypts.length, wgsCoord, wgsCoord, rdText1, true, false, "")
+                        waypts = Database.getWaypts(generic.gcId, false);
+                        page.callback(true)
+                   }
+                }
+
+                Button {
+                    text: qsTr("Copy")
+                    color: generic.primaryColor
+                    onClicked: {
+                        Clipboard.text = wgsCoord
+                   }
+                }
+
+                Button {
+                    text: qsTr("Clear")
+                    color: generic.primaryColor
+                    onClicked: {
+                        x.text = ""
+                        y.text = ""
+                        wgsCoord = ""
+                        x.focus = true
+                    }
+                }
             }
 
             Separator {
@@ -895,6 +1016,7 @@ Page {
                 width: parent.width
                 text: distance
                 label: qsTr("Circumference (meter)")
+                placeholderText: label
                 color: generic.highlightColor
                 readOnly: true
             }

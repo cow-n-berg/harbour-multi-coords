@@ -14,6 +14,8 @@ Page {
     property bool hideFound: false
 
     property var waypts
+    property var formulaTemplate: ""
+    property var maxWpNumber    : 0
 
     function updateAfterDialog(updated) {
         if (updated) {
@@ -36,10 +38,15 @@ Page {
         function update()
         {
             generic.allLetters = Database.getLetters(generic.gcId)
-            listModel.clear();
-            waypts = Database.getWaypts(generic.gcId, hideFound);
+            listModel.clear()
+            waypts = Database.getWaypts(generic.gcId, hideFound)
+            if (waypts.length > 0) {
+                formulaTemplate = TF.formulaTemplate(waypts[0].formula)
+            }
+            maxWpNumber = 0
             for (var i = 0; i < waypts.length; ++i) {
-                listModel.append(waypts[i]);
+                listModel.append(waypts[i])
+                maxWpNumber = Math.max(maxWpNumber, waypts[i].waypoint)
             }
             callbackTimer.start()
         }
@@ -159,7 +166,7 @@ Page {
                 text: qsTr("Add waypoint")
                 onClicked: {
                     onClicked: pageStack.push(Qt.resolvedUrl("WayptAddPage.qml"),
-                                              {wayptid: undefined, callback: updateAfterDialog})
+                                              {wayptid: undefined, callback: updateAfterDialog, template: formulaTemplate, maxNumber: maxWpNumber})
                 }
             }
         }

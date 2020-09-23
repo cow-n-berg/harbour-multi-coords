@@ -33,7 +33,7 @@ function projectWp( wp1, degrees, distance, waypts ) {
 function intersection1( wp1, wp2, wp3, wp4, waypts ) {
     var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var dist = 0;
-    var str = "";
+    var str = "No intersection";
 
     // Intersection of two lines, from WP1 to WP2 and from WP3 to WP4
 
@@ -81,10 +81,12 @@ function intersection1( wp1, wp2, wp3, wp4, waypts ) {
     var b2 = xy2.x === xy1.x ? Math.pow(10,10) : (xy2.y - xy1.y) / (xy2.x - xy1.x);
     var a2 = xy1.y - b2 * xy1.x;
 
-    var rdx = (a1 - a2) / (b2 - b1);
-    var rdy = a1 + b1 * rdx;
+    if ( b1 !== b2 ) {
+        var rdx = (a1 - a2) / (b2 - b1);
+        var rdy = a1 + b1 * rdx;
 
-    str = rd2wgs(rdx, rdy);
+        str = rd2wgs(rdx, rdy);
+    }
 
     return str
 }
@@ -92,7 +94,7 @@ function intersection1( wp1, wp2, wp3, wp4, waypts ) {
 function intersection2( wp1, degrees1, wp2, degrees2, waypts ) {
     var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var dist = 0;
-    var str = "";
+    var str = "No intersection";
 
     // Intersection of two lines, from WP1 at an angle, and from WP2 at another angle
 
@@ -128,10 +130,12 @@ function intersection2( wp1, degrees1, wp2, degrees2, waypts ) {
     var b2 = deg2 === 0 ? Math.pow(10,10) : 1 / Math.tan(rad2);
     var a2 = xy2.y - b2 * xy2.x;
 
-    var rdx = (a1 - a2) / (b2 - b1);
-    var rdy = a1 + b1 * rdx;
+    if ( b1 !== b2 ) {
+        var rdx = (a1 - a2) / (b2 - b1);
+        var rdy = a1 + b1 * rdx;
 
-    str = rd2wgs(rdx, rdy);
+        str = rd2wgs(rdx, rdy);
+    }
 
     return str
 }
@@ -379,6 +383,60 @@ function distAngle( wp1, wp2, waypts ) {
     str += deg.toFixed(1) + "°";
 
     return str
+}
+
+function circle( wp1, wp2, wp3, waypts ) {
+    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
+    var dist = 0;
+    var circl = { possible: false, centre: "No circle possible", radius: undefined };
+
+    // Intersection of two lines, from WP1 to WP2 and from WP3 to WP4
+
+    // WP1
+    var wp = parseInt( wp1 );
+    var formula = waypts[wp].formula;
+    var res = regExLatLon.exec(formula);
+
+    var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
+    var lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
+    var xy1 = wgs2rd(lat, lon);
+
+    // WP2
+    wp = parseInt( wp2 );
+    formula = waypts[wp].formula;
+    res = regExLatLon.exec(formula);
+
+    lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
+    lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
+    var xy2 = wgs2rd(lat, lon);
+
+    // Perpendicular in between WP 1 and 2: y = a1 + b1 * x
+    var b1 = xy2.y === xy1.y ? Math.pow(10,10) : (xy1.x - xy2.x) / (xy2.y - xy1.y);
+    var a1 = (xy1.y + xy2.y - b1 * (xy1.x + xy2.x)) / 2;
+
+    // WP3
+    wp = parseInt( wp3 );
+    formula = waypts[wp].formula;
+    res = regExLatLon.exec(formula);
+
+    lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
+    lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
+    xy1 = wgs2rd(lat, lon);
+
+    // Perpendicular in between WP 3 and 2: y = a2 + b2 * x
+    var b2 = xy2.y === xy1.y ? Math.pow(10,10) : (xy1.x - xy2.x) / (xy2.y - xy1.y);
+    var a2 = (xy1.y + xy2.y - b2 * (xy1.x + xy2.x)) / 2;
+
+    if ( b1 !== b2 ) {
+        var rdx = (a1 - a2) / (b2 - b1);
+        var rdy = a1 + b1 * rdx;
+
+        circl.possible = true;
+        circl.centre = rd2wgs(rdx, rdy);
+        circl.radius = Math.sqrt( Math.pow(rdx - xy1.x, 2) + Math.pow(rdy - xy1.y, 2) ).toFixed(1);
+    }
+
+    return circl
 }
 
 function wgs2rd(lat, lon) {

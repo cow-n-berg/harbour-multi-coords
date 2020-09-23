@@ -10,6 +10,8 @@ Dialog {
 
     property var wayptid
     property var callback
+    property var template
+    property var maxNumber
 
     property var addNewWp  : true
     property var wpNumber  : ""
@@ -41,9 +43,9 @@ Dialog {
     function getThisWaypt(wayptid) {
         if (wayptid === undefined) {
             addNewWp  = true
-            wpNumber  = ""
+            wpNumber  = maxNumber + 1
             rawText   = ""
-            formula   = ""
+            formula   = template
             wpNote    = ""
             wpIsWp    = true
             wpFound   = false

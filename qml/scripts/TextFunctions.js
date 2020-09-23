@@ -726,3 +726,13 @@ function copyText( wpCalc, copyFirstPart ) {
     return "00.000"
 }
 
+function formulaTemplate( formula ) {
+    var regEx = /([NS]\s?[0-9]{1,2}°?\s[0-9]{1,2}\.)[0-9]{1,3}(\s[EW]\s?[0-9]{1,3}°?\s[0-9]{1,2}\.)[0-9]{1,3}/;
+    var res = regEx.exec(formula);
+
+    if (res !== null) {
+        return res[1] + res[2];
+    }
+    return ""
+}
+

@@ -130,15 +130,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clear RD XY</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Circumference (meter)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Add waypoint to multi</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -211,6 +203,14 @@
     </message>
     <message>
         <source>Circle WP1: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Circle through 3 WPs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Circle centre and radius (meter)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
