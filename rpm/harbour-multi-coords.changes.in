@@ -12,8 +12,9 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
-* Wed Sep 23 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.1
+* Thu Sep 24 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.1
 - Small improvement to "Add Waypoint"
+- Polished the Calculations page, added calculation "Circle through 3 WPs"
 
 * Tue Sep 22 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.0
 - Many waypoint calculations added, for now only in The Netherlands

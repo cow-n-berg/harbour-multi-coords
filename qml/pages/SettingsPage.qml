@@ -58,6 +58,7 @@ Dialog {
 
             SectionHeader {
                 text: qsTr("General settings")
+                color: generic.highlightColor
             }
 
             IconTextSwitch {
@@ -98,6 +99,7 @@ Dialog {
 
             SectionHeader {
                 text: qsTr("Database actions")
+                color: generic.highlightColor
             }
 
             IconTextSwitch {

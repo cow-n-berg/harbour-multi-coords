@@ -118,10 +118,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clear waypoints</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>RD XY to WGS coordinate</source>
         <translation type="unfinished"></translation>
     </message>
@@ -139,18 +135,6 @@
     </message>
     <message>
         <source>Pentagon circumference</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Add</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Clear</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

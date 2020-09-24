@@ -125,6 +125,7 @@ Dialog {
                 text: wpNumber
                 label: qsTr("Waypoint number")
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -144,6 +145,7 @@ Dialog {
                 width: parent.width
                 text: wpNote
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 label: qsTr("Note")
                 color: generic.primaryColor
                 EnterKey.enabled: text.length > 0
@@ -165,6 +167,7 @@ Dialog {
 
             SectionHeader {
                 text: qsTr("Formula editing")
+                color: generic.highlightColor
             }
 
             TextArea {
@@ -180,49 +183,13 @@ Dialog {
                 visible: generic.showDialogHints
             }
 
-//            ButtonLayout {
-//                id: iconButtons
-//                anchors.horizontalCenter: parent.horizontalCenter
-//                IconButton {
-//                    icon.source: Qt.resolvedUrl("../images/icon-m-left.svg")
-//                    onClicked: {
-//                        var pos = txtFormula.cursorPosition
-//                        if (pos > 0) { txtFormula.cursorPosition-- }
-//                        txtFormula.focus = true
-//                    }
-//                }
-//                IconButton {
-//                    icon.source: Qt.resolvedUrl("../images/icon-m-right.svg")
-//                    onClicked: {
-//                        var pos = txtFormula.cursorPosition
-//                        if (pos < txtFormula.text.length) { txtFormula.cursorPosition++ }
-//                        txtFormula.forceActiveFocus()
-//                    }
-//                }
-//                IconButton {
-//                    icon.source: Qt.resolvedUrl("../images/icon-bracket-left.svg")
-//                }
-//                IconButton {
-//                    icon.source: Qt.resolvedUrl("../images/icon-bracket-right.svg")
-//                }
-//                IconButton {
-//                    icon.source: Qt.resolvedUrl("../images/icon-parenthesis-left.svg")
-//                }
-//                IconButton {
-//                    icon.source: Qt.resolvedUrl("../images/icon-parenthesis-right.svg")
-//                }
-//                IconButton {
-//                    icon.source: Qt.resolvedUrl("../images/icon-m-backspace.svg")
-//                }
-
-//            }
-
             TextArea {
                 id: txtFormula
                 width: parent.width
                 label: qsTr("Formula to be processed")
                 text: formula
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 font.pixelSize: Theme.fontSizeLarge
                 color: generic.primaryColor
                 EnterKey.enabled: text.length > 0
@@ -281,6 +248,7 @@ Dialog {
                 label: qsTr("Imported raw text")
                 text: rawText
                 placeholderText: qsTr("No raw text has been imported")
+                placeholderColor: generic.secondaryColor
                 font.pixelSize: Theme.fontSizeExtraSmall
                 color: generic.secondaryColor
                 visible: text !== ""
@@ -331,6 +299,7 @@ Dialog {
                 width: parent.width
                 text: wpLetters
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: errorHighlight ? generic.highlightColor : generic.primaryColor
                 label: qsTr("Letters, space separated, or like ABC")
                 validator: RegExpValidator { regExp: /[a-zA-Z ]*/ }

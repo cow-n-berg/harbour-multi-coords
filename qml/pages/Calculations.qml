@@ -166,13 +166,9 @@ Page {
                }
             }
 
-            Separator {
-                width: parent.width
-                color: generic.highlightColor
-            }
-
             SectionHeader {
                 text: qsTr("Waypoint projection")
+                color: generic.highlightColor
             }
 
             TextField {
@@ -180,6 +176,7 @@ Page {
                 width: parent.width
                 label: Calc.showFormula( wp11.text, waypts)
                 placeholderText: "Enter WP number"
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -192,6 +189,7 @@ Page {
                 width: parent.width
                 label: qsTr("Degrees")
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -204,6 +202,7 @@ Page {
                 width: parent.width
                 label: qsTr("Distance (meter)")
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -220,16 +219,18 @@ Page {
                 text: projCoord
                 label: qsTr("New coordinate")
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.highlightColor
                 readOnly: true
             }
 
-            ButtonLayout {
-                preferredWidth: Theme.buttonWidthExtraSmall
-
-                Button {
-                    text: qsTr("Add")
-                    color: generic.primaryColor
+            Row {
+                spacing: Theme.itemSizeSmall
+                anchors.horizontalCenter: parent.horizontalCenter
+                IconButton {
+                    icon.source: "image://theme/icon-l-new"
+                    icon.color: generic.primaryColor
+                    enabled: newCoord.text !== ""
                     onClicked: {
                         indicator.running = true
                         addTimer.start()
@@ -238,18 +239,16 @@ Page {
                         page.callback(true)
                    }
                 }
-
-                Button {
-                    text: qsTr("Copy")
-                    color: generic.primaryColor
+                IconButton {
+                    icon.source: "image://theme/icon-l-clipboard"
+                    icon.color: generic.primaryColor
                     onClicked: {
                         Clipboard.text = projCoord
                    }
                 }
-
-                Button {
-                    text: qsTr("Clear")
-                    color: generic.primaryColor
+                IconButton {
+                    icon.color: generic.primaryColor
+                    icon.source: "image://theme/icon-l-dismiss"
                     onClicked: {
                         wp11.text = ""
                         deg1.text = ""
@@ -260,13 +259,9 @@ Page {
                 }
             }
 
-            Separator {
-                width: parent.width
-                color: generic.highlightColor
-            }
-
             SectionHeader {
                 text: qsTr("Line distance, angle")
+                color: generic.highlightColor
             }
 
             TextField {
@@ -274,6 +269,7 @@ Page {
                 width: parent.width
                 label: Calc.showFormula( wp61.text, waypts)
                 placeholderText: "Enter WP number"
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -286,6 +282,7 @@ Page {
                 width: parent.width
                 label: Calc.showFormula( wp62.text, waypts)
                 placeholderText: "Enter WP number"
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -303,16 +300,18 @@ Page {
                 text: distAngle
                 label: qsTr("Line distance, angle")
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.highlightColor
                 readOnly: true
             }
 
-            ButtonLayout {
-                preferredWidth: Theme.buttonWidthExtraSmall
+            Row {
+                spacing: Theme.itemSizeSmall
+                anchors.horizontalCenter: parent.horizontalCenter
 
-                Button {
-                    text: qsTr("Clear")
-                    color: generic.primaryColor
+                IconButton {
+                    icon.color: generic.primaryColor
+                    icon.source: "image://theme/icon-l-dismiss"
                     onClicked: {
                         wp61.text = ""
                         wp62.text = ""
@@ -322,13 +321,9 @@ Page {
                 }
             }
 
-            Separator {
-                width: parent.width
-                color: generic.highlightColor
-            }
-
             SectionHeader {
                 text: qsTr("Intersect lines using 4 WPs")
+                color: generic.highlightColor
             }
 
             TextField {
@@ -336,6 +331,7 @@ Page {
                 width: parent.width
                 label: "Line 1, from " + Calc.showFormula( wp21.text, waypts)
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -348,6 +344,7 @@ Page {
                 width: parent.width
                 label: "Line 1, to " + Calc.showFormula( wp22.text, waypts) //qsTr("WP2")
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -360,6 +357,7 @@ Page {
                 width: parent.width
                 label: "Line 2, from " + Calc.showFormula( wp23.text, waypts)
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -372,6 +370,7 @@ Page {
                 width: parent.width
                 label: "Line 2, to " + Calc.showFormula( wp24.text, waypts) //qsTr("WP2")
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -388,16 +387,19 @@ Page {
                 text: intersect1
                 label: qsTr("Intersection coordinate")
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.highlightColor
                 readOnly: true
             }
 
-            ButtonLayout {
-                preferredWidth: Theme.buttonWidthExtraSmall
+            Row {
+                spacing: Theme.itemSizeSmall
+                anchors.horizontalCenter: parent.horizontalCenter
 
-                Button {
-                    text: qsTr("Add")
-                    color: generic.primaryColor
+                IconButton {
+                    icon.source: "image://theme/icon-l-new"
+                    icon.color: generic.primaryColor
+                    enabled: inters1.text !== ""
                     onClicked: {
                         indicator.running = true
                         addTimer.start()
@@ -407,17 +409,17 @@ Page {
                    }
                 }
 
-                Button {
-                    text: qsTr("Copy")
-                    color: generic.primaryColor
+                IconButton {
+                    icon.source: "image://theme/icon-l-clipboard"
+                    icon.color: generic.primaryColor
                     onClicked: {
                         Clipboard.text = intersect1
                    }
                 }
 
-                Button {
-                    text: qsTr("Clear")
-                    color: generic.primaryColor
+                IconButton {
+                    icon.color: generic.primaryColor
+                    icon.source: "image://theme/icon-l-dismiss"
                     onClicked: {
                         wp21.text = ""
                         wp22.text = ""
@@ -429,13 +431,9 @@ Page {
                 }
             }
 
-            Separator {
-                width: parent.width
-                color: generic.highlightColor
-            }
-
             SectionHeader {
                 text: qsTr("Intersect lines 2 WPs, angles")
+                color: generic.highlightColor
             }
 
             TextField {
@@ -443,6 +441,7 @@ Page {
                 width: parent.width
                 label: qsTr("WP1: ") + Calc.showFormula( wp31.text, waypts)
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -455,6 +454,7 @@ Page {
                 width: parent.width
                 label: qsTr("Angle (°)")
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -467,6 +467,7 @@ Page {
                 width: parent.width
                 label: qsTr("WP2: ") + Calc.showFormula( wp32.text, waypts)
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -479,6 +480,7 @@ Page {
                 width: parent.width
                 label: qsTr("Angle (°)")
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -495,16 +497,19 @@ Page {
                 text: intersect2
                 label: qsTr("Intersection coordinate")
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.highlightColor
                 readOnly: true
             }
 
-            ButtonLayout {
-                preferredWidth: Theme.buttonWidthExtraSmall
+            Row {
+                spacing: Theme.itemSizeSmall
+                anchors.horizontalCenter: parent.horizontalCenter
 
-                Button {
-                    text: qsTr("Add")
-                    color: generic.primaryColor
+                IconButton {
+                    icon.source: "image://theme/icon-l-new"
+                    icon.color: generic.primaryColor
+                    enabled: inters2.text !== ""
                     onClicked: {
                         indicator.running = true
                         addTimer.start()
@@ -514,17 +519,17 @@ Page {
                    }
                 }
 
-                Button {
-                    text: qsTr("Copy")
-                    color: generic.primaryColor
+                IconButton {
+                    icon.source: "image://theme/icon-l-clipboard"
+                    icon.color: generic.primaryColor
                     onClicked: {
                         Clipboard.text = intersect2
                    }
                 }
 
-                Button {
-                    text: qsTr("Clear")
-                    color: generic.primaryColor
+                IconButton {
+                    icon.color: generic.primaryColor
+                    icon.source: "image://theme/icon-l-dismiss"
                     onClicked: {
                         wp31.text = ""
                         deg31.text = ""
@@ -536,13 +541,9 @@ Page {
                 }
             }
 
-            Separator {
-                width: parent.width
-                color: generic.highlightColor
-            }
-
             SectionHeader {
                 text: qsTr("Intersect circle and line")
+                color: generic.highlightColor
             }
 
             TextField {
@@ -550,6 +551,7 @@ Page {
                 width: parent.width
                 label: qsTr("Line WP1: ") + Calc.showFormula( wp41.text, waypts)
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -562,6 +564,7 @@ Page {
                 width: parent.width
                 label: qsTr("Angle (°)")
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -574,6 +577,7 @@ Page {
                 width: parent.width
                 label: qsTr("Circle WP2: ") + Calc.showFormula( wp42.text, waypts)
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -586,6 +590,7 @@ Page {
                 width: parent.width
                 label: qsTr("Radius (meter)")
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -602,16 +607,18 @@ Page {
                 text: intersect3 === undefined ? "" : intersect3.str
                 label: qsTr("Intersection coordinates")
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.highlightColor
                 readOnly: true
             }
 
-            ButtonLayout {
-                preferredWidth: Theme.buttonWidthExtraSmall
+            Row {
+                spacing: Theme.itemSizeSmall
+                anchors.horizontalCenter: parent.horizontalCenter
 
-                Button {
-                    text: qsTr("Add")
-                    color: generic.primaryColor
+                IconButton {
+                    icon.source: "image://theme/icon-l-new"
+                    icon.color: generic.primaryColor
                     enabled: intersect3 !== undefined
                     onClicked: {
                         if (intersect3.possible) {
@@ -625,18 +632,17 @@ Page {
                    }
                 }
 
-                Button {
-                    text: qsTr("Copy")
-                    color: generic.primaryColor
-                    enabled: intersect3 !== undefined
+                IconButton {
+                    icon.source: "image://theme/icon-l-clipboard"
+                    icon.color: generic.primaryColor
                     onClicked: {
                         Clipboard.text = intersect3 === undefined ? "" : intersect3.str
                    }
                 }
 
-                Button {
-                    text: qsTr("Clear")
-                    color: generic.primaryColor
+                IconButton {
+                    icon.color: generic.primaryColor
+                    icon.source: "image://theme/icon-l-dismiss"
                     onClicked: {
                         wp41.text = ""
                         deg41.text = ""
@@ -648,13 +654,9 @@ Page {
                 }
             }
 
-            Separator {
-                width: parent.width
-                color: generic.highlightColor
-            }
-
             SectionHeader {
                 text: qsTr("Intersect circles")
+                color: generic.highlightColor
             }
 
             TextField {
@@ -662,6 +664,7 @@ Page {
                 width: parent.width
                 label: qsTr("Circle WP1: ") + Calc.showFormula( wp41.text, waypts)
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -674,6 +677,7 @@ Page {
                 width: parent.width
                 label: qsTr("Radius (meter)")
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -686,6 +690,7 @@ Page {
                 width: parent.width
                 label: qsTr("Circle WP2: ") + Calc.showFormula( wp42.text, waypts)
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -698,6 +703,7 @@ Page {
                 width: parent.width
                 label: qsTr("Radius (meter)")
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -714,16 +720,18 @@ Page {
                 text: intersect4 === undefined ? "" : intersect4.str
                 label: qsTr("Intersection coordinates")
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.highlightColor
                 readOnly: true
             }
 
-            ButtonLayout {
-                preferredWidth: Theme.buttonWidthExtraSmall
+            Row {
+                spacing: Theme.itemSizeSmall
+                anchors.horizontalCenter: parent.horizontalCenter
 
-                Button {
-                    text: qsTr("Add")
-                    color: generic.primaryColor
+                IconButton {
+                    icon.source: "image://theme/icon-l-new"
+                    icon.color: generic.primaryColor
                     enabled: intersect4 !== undefined
                     onClicked: {
                         if (intersect4.possible) {
@@ -737,17 +745,17 @@ Page {
                     }
                 }
 
-                Button {
-                    text: qsTr("Copy")
-                    color: generic.primaryColor
+                IconButton {
+                    icon.source: "image://theme/icon-l-clipboard"
+                    icon.color: generic.primaryColor
                     onClicked: {
                         Clipboard.text = intersect4 === undefined ? "" : intersect4.str
                    }
                 }
 
-                Button {
-                    text: qsTr("Clear")
-                    color: generic.primaryColor
+                IconButton {
+                    icon.color: generic.primaryColor
+                    icon.source: "image://theme/icon-l-dismiss"
                     onClicked: {
                         wp51.text = ""
                         radius51.text = ""
@@ -759,13 +767,9 @@ Page {
                 }
             }
 
-            Separator {
-                width: parent.width
-                color: generic.highlightColor
-            }
-
             SectionHeader {
                 text: qsTr("Circle through 3 WPs")
+                color: generic.highlightColor
             }
 
             TextField {
@@ -773,6 +777,7 @@ Page {
                 width: parent.width
                 label: Calc.showFormula( wp71.text, waypts)
                 placeholderText: "Enter WP number"
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -785,6 +790,7 @@ Page {
                 width: parent.width
                 label: Calc.showFormula( wp72.text, waypts) //qsTr("WP2")
                 placeholderText: "Enter WP number"
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -797,6 +803,7 @@ Page {
                 width: parent.width
                 label: Calc.showFormula( wp73.text, waypts) //qsTr("WP3")
                 placeholderText: "Enter WP number"
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -813,16 +820,18 @@ Page {
                 text:  circle === undefined ? "" : ( circle.centre + ", " + circle.radius + " m" )
                 label: qsTr("Circle centre and radius (meter)")
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.highlightColor
                 readOnly: true
             }
 
-            ButtonLayout {
-                preferredWidth: Theme.buttonWidthExtraSmall
+            Row {
+                spacing: Theme.itemSizeSmall
+                anchors.horizontalCenter: parent.horizontalCenter
 
-                Button {
-                    text: qsTr("Add")
-                    color: generic.primaryColor
+                IconButton {
+                    icon.source: "image://theme/icon-l-new"
+                    icon.color: generic.primaryColor
                     enabled: circle !== undefined
                     onClicked: {
                         if (circle.possible) {
@@ -835,17 +844,17 @@ Page {
                    }
                 }
 
-                Button {
-                    text: qsTr("Copy")
-                    color: generic.primaryColor
+                IconButton {
+                    icon.source: "image://theme/icon-l-clipboard"
+                    icon.color: generic.primaryColor
                     onClicked: {
                         Clipboard.text = circle === undefined ? "" : circle.centre
                    }
                 }
 
-                Button {
-                    text: qsTr("Clear")
-                    color: generic.primaryColor
+                IconButton {
+                    icon.color: generic.primaryColor
+                    icon.source: "image://theme/icon-l-dismiss"
                     onClicked: {
                         wp71.text = ""
                         wp72.text = ""
@@ -856,13 +865,9 @@ Page {
                 }
             }
 
-            Separator {
-                width: parent.width
-                color: generic.highlightColor
-            }
-
             SectionHeader {
                 text: qsTr("RD XY to WGS coordinate")
+                color: generic.highlightColor
             }
 
             TextField {
@@ -870,6 +875,7 @@ Page {
                 width: parent.width
                 label: "X (Dutch RD)"
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -882,6 +888,7 @@ Page {
                 width: parent.width
                 label: "Y (Dutch RD)"
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -898,16 +905,19 @@ Page {
                 text: wgsCoord
                 label: qsTr("WGS Coordinate")
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.highlightColor
                 readOnly: true
             }
 
-            ButtonLayout {
-                preferredWidth: Theme.buttonWidthExtraSmall
+            Row {
+                spacing: Theme.itemSizeSmall
+                anchors.horizontalCenter: parent.horizontalCenter
 
-                Button {
-                    text: qsTr("Add")
-                    color: generic.primaryColor
+                IconButton {
+                    icon.source: "image://theme/icon-l-new"
+                    icon.color: generic.primaryColor
+                    enabled: wgs.text !== ""
                     onClicked: {
                         indicator.running = true
                         addTimer.start()
@@ -917,17 +927,17 @@ Page {
                    }
                 }
 
-                Button {
-                    text: qsTr("Copy")
-                    color: generic.primaryColor
+                IconButton {
+                    icon.source: "image://theme/icon-l-clipboard"
+                    icon.color: generic.primaryColor
                     onClicked: {
                         Clipboard.text = wgsCoord
                    }
                 }
 
-                Button {
-                    text: qsTr("Clear")
-                    color: generic.primaryColor
+                IconButton {
+                    icon.color: generic.primaryColor
+                    icon.source: "image://theme/icon-l-dismiss"
                     onClicked: {
                         x.text = ""
                         y.text = ""
@@ -937,13 +947,9 @@ Page {
                 }
             }
 
-            Separator {
-                width: parent.width
-                color: generic.highlightColor
-            }
-
             SectionHeader {
                 text: qsTr("Pentagon distance")
+                color: generic.highlightColor
             }
 
             TextField {
@@ -951,6 +957,7 @@ Page {
                 width: parent.width
                 label: Calc.showFormula( wp1.text, waypts)
                 placeholderText: "Enter WP number"
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -963,6 +970,7 @@ Page {
                 width: parent.width
                 label: Calc.showFormula( wp2.text, waypts) //qsTr("WP2")
                 placeholderText: "Enter WP number"
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -975,6 +983,7 @@ Page {
                 width: parent.width
                 label: Calc.showFormula( wp3.text, waypts) //qsTr("WP3")
                 placeholderText: "Enter WP number"
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -987,6 +996,7 @@ Page {
                 width: parent.width
                 label: Calc.showFormula( wp4.text, waypts) //qsTr("WP4")
                 placeholderText: "Enter WP number"
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -1001,6 +1011,7 @@ Page {
                 width: parent.width
                 label: Calc.showFormula( wp5.text, waypts) //qsTr("WP5")
                 placeholderText: "Enter WP number"
+                placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
@@ -1017,26 +1028,28 @@ Page {
                 text: distance
                 label: qsTr("Circumference (meter)")
                 placeholderText: label
+                placeholderColor: generic.secondaryColor
                 color: generic.highlightColor
                 readOnly: true
             }
 
-            Button {
-                height: Theme.itemSizeLarge
-                preferredWidth: Theme.buttonWidthLarge
+            Row {
+                spacing: Theme.itemSizeSmall
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: qsTr("Clear waypoints")
-                color: generic.primaryColor
-                onClicked: {
-                    wp1.text = ""
-                    wp2.text = ""
-                    wp3.text = ""
-                    wp4.text = ""
-                    wp5.text = ""
-                    wp1.focus = true
-               }
-            }
 
+                IconButton {
+                    icon.color: generic.primaryColor
+                    icon.source: "image://theme/icon-l-dismiss"
+                    onClicked: {
+                        wp1.text = ""
+                        wp2.text = ""
+                        wp3.text = ""
+                        wp4.text = ""
+                        wp5.text = ""
+                        wp1.focus = true
+                    }
+                }
+            }
         }
     }
 }
