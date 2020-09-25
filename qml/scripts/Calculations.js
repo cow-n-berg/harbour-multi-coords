@@ -7,14 +7,14 @@ function showFormula( wp1, waypts ) {
     }
     else {
         var wp = parseInt( wp1 );
-        return waypts[wp].formula;
+        return waypts[wp].calculated;
     }
 }
 
 function projectWp( wp1, degrees, distance, waypts, rd ) {
     var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var wp = parseInt( wp1 );
-    var formula = waypts[wp].formula;
+    var formula = waypts[wp].calculated;
     var res = regExLatLon.exec(formula);
 
     var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
@@ -39,7 +39,7 @@ function intersection1( wp1, wp2, wp3, wp4, waypts, rd ) {
 
     // WP1
     var wp = parseInt( wp1 );
-    var formula = waypts[wp].formula;
+    var formula = waypts[wp].calculated;
     var res = regExLatLon.exec(formula);
 
     var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
@@ -48,7 +48,7 @@ function intersection1( wp1, wp2, wp3, wp4, waypts, rd ) {
 
     // WP2
     wp = parseInt( wp2 );
-    formula = waypts[wp].formula;
+    formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
@@ -61,7 +61,7 @@ function intersection1( wp1, wp2, wp3, wp4, waypts, rd ) {
 
     // WP3
     wp = parseInt( wp3 );
-    formula = waypts[wp].formula;
+    formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
@@ -70,7 +70,7 @@ function intersection1( wp1, wp2, wp3, wp4, waypts, rd ) {
 
     // WP4
     wp = parseInt( wp4 );
-    formula = waypts[wp].formula;
+    formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
@@ -100,7 +100,7 @@ function intersection2( wp1, degrees1, wp2, degrees2, waypts, rd ) {
 
     // WP1
     var wp = parseInt( wp1 );
-    var formula = waypts[wp].formula;
+    var formula = waypts[wp].calculated;
     var res = regExLatLon.exec(formula);
 
     var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
@@ -116,7 +116,7 @@ function intersection2( wp1, degrees1, wp2, degrees2, waypts, rd ) {
 
     // WP2
     wp = parseInt( wp2 );
-    formula = waypts[wp].formula;
+    formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
@@ -151,7 +151,7 @@ function intersection3( wp1, degrees1, wp2, radius2, waypts, rd ) {
 
     // WP1
     var wp = parseInt( wp1 );
-    var formula = waypts[wp].formula;
+    var formula = waypts[wp].calculated;
     var res = regExLatLon.exec(formula);
 
     var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
@@ -167,7 +167,7 @@ function intersection3( wp1, degrees1, wp2, radius2, waypts, rd ) {
 
     // WP2
     wp = parseInt( wp2 );
-    formula = waypts[wp].formula;
+    formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
@@ -214,7 +214,7 @@ function intersection4( wp1, radius1, wp2, radius2, waypts, rd ) {
 
     // Circle WP1
     var wp = parseInt( wp1 );
-    var formula = waypts[wp].formula;
+    var formula = waypts[wp].calculated;
     var res = regExLatLon.exec(formula);
 
     var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
@@ -227,7 +227,7 @@ function intersection4( wp1, radius1, wp2, radius2, waypts, rd ) {
 
     // Circle WP2
     wp = parseInt( wp2 );
-    formula = waypts[wp].formula;
+    formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
@@ -277,7 +277,7 @@ function distance( wp1, wp2, wp3, wp4, wp5, waypts, rd ) {
 
     // WP1
     var wp = parseInt( wp1 );
-    var formula = waypts[wp].formula;
+    var formula = waypts[wp].calculated;
     var res = regExLatLon.exec(formula);
 
     var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
@@ -290,7 +290,7 @@ function distance( wp1, wp2, wp3, wp4, wp5, waypts, rd ) {
 
     // WP2
     wp = parseInt( wp2 );
-    formula = waypts[wp].formula;
+    formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
@@ -302,7 +302,7 @@ function distance( wp1, wp2, wp3, wp4, wp5, waypts, rd ) {
 
     // WP3
     wp = parseInt( wp3 );
-    formula = waypts[wp].formula;
+    formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
@@ -314,7 +314,7 @@ function distance( wp1, wp2, wp3, wp4, wp5, waypts, rd ) {
 
     // WP4
     wp = parseInt( wp4 );
-    formula = waypts[wp].formula;
+    formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
@@ -326,7 +326,7 @@ function distance( wp1, wp2, wp3, wp4, wp5, waypts, rd ) {
 
     // WP5
     wp = parseInt( wp5 );
-    formula = waypts[wp].formula;
+    formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
@@ -358,7 +358,7 @@ function distAngle( wp1, wp2, waypts, rd ) {
 
     // WP1
     var wp = parseInt( wp1 );
-    var formula = waypts[wp].formula;
+    var formula = waypts[wp].calculated;
     var res = regExLatLon.exec(formula);
 
     var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
@@ -368,7 +368,7 @@ function distAngle( wp1, wp2, waypts, rd ) {
 
     // WP2
     wp = parseInt( wp2 );
-    formula = waypts[wp].formula;
+    formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
@@ -395,7 +395,7 @@ function circle( wp1, wp2, wp3, waypts, rd ) {
 
     // WP1
     var wp = parseInt( wp1 );
-    var formula = waypts[wp].formula;
+    var formula = waypts[wp].calculated;
     var res = regExLatLon.exec(formula);
 
     var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
@@ -404,7 +404,7 @@ function circle( wp1, wp2, wp3, waypts, rd ) {
 
     // WP2
     wp = parseInt( wp2 );
-    formula = waypts[wp].formula;
+    formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
@@ -417,7 +417,7 @@ function circle( wp1, wp2, wp3, waypts, rd ) {
 
     // WP3
     wp = parseInt( wp3 );
-    formula = waypts[wp].formula;
+    formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
@@ -468,7 +468,7 @@ function xy2wgs( x, y, rd, xy ) {
 function coord2utm( wp1, waypts ) {
     var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var wp = parseInt( wp1 );
-    var formula = waypts[wp].formula;
+    var formula = waypts[wp].calculated;
     var res = regExLatLon.exec(formula);
 
     var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;

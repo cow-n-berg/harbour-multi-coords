@@ -2,6 +2,7 @@ import QtQuick 2.2
 import Sailfish.Silica 1.0
 import "../scripts/Database.js" as Database
 import "../scripts/Calculations.js" as Calc
+import "../scripts/TextFunctions.js" as TF
 
 Page {
     id: page
@@ -10,7 +11,7 @@ Page {
 
     property var callback
 
-    property var waypts     : Database.getWaypts(generic.gcId, false);
+    property var waypts
     property var projCoord  : ""
     property var distAngle  : ""
     property var intersect1 : ""
@@ -31,6 +32,13 @@ Page {
     property var rdText     : "Conversion of RD X: " + x.text + ", Y: " + y.text
     property var utmText    : "Conversion of UTM " + zone.text + letter.text.toUpperCase() + " E " + easting.text + " N " + northing.text
 
+    function populate() {
+        waypts = Database.getWaypts(generic.gcId, false);
+        for (var i = 0; i < waypts.length; ++i) {
+            waypts[i].calculated = TF.evalFormula(waypts[i].formula, generic.allLetters)
+        }
+    }
+
     Timer {
         id: addTimer
         interval: 500
@@ -46,6 +54,8 @@ Page {
          anchors.centerIn: parent
          running: false
     }
+
+    Component.onCompleted: populate()
 
     SilicaFlickable {
         id: flick
@@ -193,7 +203,7 @@ Page {
                 placeholderText: "Enter WP number"
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: deg1.focus = true
@@ -286,7 +296,7 @@ Page {
                 placeholderText: "Enter WP number"
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: wp62.focus = true
@@ -299,7 +309,7 @@ Page {
                 placeholderText: "Enter WP number"
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-close"
                 EnterKey.onClicked:
@@ -348,7 +358,7 @@ Page {
                 placeholderText: label
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: wp22.focus = true
@@ -361,7 +371,7 @@ Page {
                 placeholderText: label
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: wp23.focus = true
@@ -374,7 +384,7 @@ Page {
                 placeholderText: label
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: wp24.focus = true
@@ -387,7 +397,7 @@ Page {
                 placeholderText: label
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-close"
                 EnterKey.onClicked: {
@@ -458,7 +468,7 @@ Page {
                 placeholderText: label
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: deg31.focus = true
@@ -484,7 +494,7 @@ Page {
                 placeholderText: label
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: deg32.focus = true
@@ -568,7 +578,7 @@ Page {
                 placeholderText: label
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: deg41.focus = true
@@ -594,7 +604,7 @@ Page {
                 placeholderText: label
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: radius42.focus = true
@@ -681,7 +691,7 @@ Page {
                 placeholderText: label
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: radius51.focus = true
@@ -707,7 +717,7 @@ Page {
                 placeholderText: label
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: radius52.focus = true
@@ -794,7 +804,7 @@ Page {
                 placeholderText: "Enter WP number"
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: wp72.focus = true
@@ -807,7 +817,7 @@ Page {
                 placeholderText: "Enter WP number"
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: wp73.focus = true
@@ -820,7 +830,7 @@ Page {
                 placeholderText: "Enter WP number"
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-close"
                 EnterKey.onClicked: {
@@ -892,7 +902,7 @@ Page {
                 placeholderText: label
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: y.focus = true
@@ -905,7 +915,7 @@ Page {
                 placeholderText: label
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-close"
                 EnterKey.onClicked: {
@@ -974,7 +984,7 @@ Page {
                 placeholderText: label
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: letter.focus = true
@@ -999,7 +1009,7 @@ Page {
                 placeholderText: label
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: northing.focus = true
@@ -1012,7 +1022,7 @@ Page {
                 placeholderText: label
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-close"
                 EnterKey.onClicked: {
@@ -1083,7 +1093,7 @@ Page {
                 placeholderText: "Enter WP number"
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: wp2.focus = true
@@ -1096,7 +1106,7 @@ Page {
                 placeholderText: "Enter WP number"
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: wp3.focus = true
@@ -1109,7 +1119,7 @@ Page {
                 placeholderText: "Enter WP number"
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: wp4.focus = true
@@ -1122,7 +1132,7 @@ Page {
                 placeholderText: "Enter WP number"
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: {
@@ -1137,7 +1147,7 @@ Page {
                 placeholderText: "Enter WP number"
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                inputMethodHints: Qt.ImhDigitsOnly
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: {
