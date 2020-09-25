@@ -231,8 +231,7 @@ function upgradeDatabase( dbversion )
 /*
  * All records.
  */
-function getGeocaches()
-{
+function getGeocaches() {
     var caches = [];
     var db = openDatabase();
     db.transaction(function(tx) {
@@ -252,8 +251,7 @@ function getGeocaches()
     return caches;
 }
 
-function getWaypts(cacheid, hideFound)
-{
+function getWaypts(cacheid, hideFound) {
     var waypts = [];
     var db = openDatabase();
 
@@ -310,8 +308,7 @@ function getWaypts(cacheid, hideFound)
     return waypts;
 }
 
-function getLetters(cacheid)
-{
+function getLetters(cacheid) {
     var letters = [];
     var db = openDatabase();
     db.transaction(function(tx) {
@@ -329,8 +326,7 @@ function getLetters(cacheid)
     return letters;
 }
 
-function getLettersWP(wayptid)
-{
+function getLettersWP(wayptid) {
     var letters = [];
     var db = openDatabase();
     db.transaction(function(tx) {
@@ -348,8 +344,7 @@ function getLettersWP(wayptid)
     return letters;
 }
 
-function getOneWaypt(wayptid)
-{
+function getOneWaypt(wayptid) {
     var waypt
     var db = openDatabase();
     var letters = []
@@ -394,8 +389,7 @@ function getOneWaypt(wayptid)
 
 }
 
-function getOneLetter(letterid)
-{
+function getOneLetter(letterid) {
     var letters = [];
     var db = openDatabase();
     db.transaction(function(tx) {
@@ -488,8 +482,7 @@ function showCacheLetters( cacheid ) {
 /*
  * Adds a new geocache.
  */
-function addStd1Cache()
-{
+function addStd1Cache() {
     var geocache = 'GC3A7RC';
     var name = 'where it started';
     var found = false;
@@ -529,8 +522,7 @@ function addStd1Cache()
     return 1
 }
 
-function addStd2Cache()
-{
+function addStd2Cache() {
     var geocache = 'GC83QV1';
     var name = 'Het Utrechts zonnestelsel (op zoek naar Pluto)';
     var found = false;
@@ -594,20 +586,21 @@ function addCache(geocache, name, waypts)
         console.log("Geocache inserted, id=" + cacheId);
         for (var i = 0; i < waypts.length; ++i) {
             console.log("WP: " + JSON.stringify(waypts[i]));
-            var number = waypts[i].number;
+            var number  = waypts[i].number;
             var formula = waypts[i].coord;
-            var note = waypts[i].note;
+            var note    = waypts[i].note;
+            var raw     = waypts[i].raw;
             if (note === "") {
                 rs = tx.executeSql("\
                     INSERT OR REPLACE INTO geo_waypts \
                     (cacheid, waypoint, formula, rawtext, note, is_waypoint, found) \
-                    VALUES (?,?,?,?,'',1,0);", [cacheId, number, formula, formula]);
+                    VALUES (?,?,?,?,'',1,0);", [cacheId, number, formula, raw]);
             }
             else {
                 rs = tx.executeSql("\
                     INSERT OR REPLACE INTO geo_waypts \
                     (cacheid, waypoint, formula, rawtext, note, is_waypoint, found) \
-                    VALUES (?,?,?,?,?,1,0);", [cacheId, number, formula, formula, note]);
+                    VALUES (?,?,?,?,?,1,0);", [cacheId, number, formula, raw, note]);
                 }
             var wayptId = rs.insertId;
             console.log(cacheId + " WP " + wayptId);

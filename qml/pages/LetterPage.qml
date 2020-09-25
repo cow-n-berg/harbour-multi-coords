@@ -9,25 +9,21 @@ Dialog {
     property var    letterid
     property var    callback
 
-    property string lettervalue
-    property string letterremark
     property string letter
 
     function getThisLetter() {
         var letters = Database.getOneLetter(letterid)
         console.log("This letter: " + JSON.stringify(letters))
         if (letters.length > 0) {
-            letter       = letters[0].letter
-            lettervalue  = letters[0].lettervalue
-            letterremark = letters[0].remark
+            letter          = letters[0].letter
+            lettValue.text  = letters[0].lettervalue
+            lettRemark.text = letters[0].remark
         }
     }
 
     onAccepted: {
-        lettervalue = lettValue.text.valueOf()
-//            console.log("letter value: " + lettervalue)
-        letterremark = lettRemark.text.valueOf()
-//            console.log("letter remark: " + letterremark)
+        var lettervalue = lettValue.text.valueOf()
+        var letterremark = lettRemark.text
         Database.setLetter(generic.gcId, generic.wpId, letterid, letter, lettervalue, letterremark)
         generic.allLetters = Database.getLetters(generic.gcId)
         dialog.callback(true)
@@ -66,18 +62,18 @@ Dialog {
             TextArea {
                 width: parent.width
                 height: Screen.height / 4
+                text: generic.wpNote
+                color: generic.secondaryColor
                 readOnly: true
                 visible: generic.wpNote !== ""
                 labelVisible: false
-                text: generic.wpNote
-                color: generic.secondaryColor
             }
 
             TextField {
                 id: lettValue
                 width: parent.width
-                text: lettervalue
                 label: qsTr("Value for: ") + letter
+                placeholderText: label
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 focus: true
@@ -89,9 +85,8 @@ Dialog {
             TextField {
                 id: lettRemark
                 width: parent.width
-                text: letterremark
-                placeholderText: label
                 label: qsTr("Optional remark")
+                placeholderText: label
                 color: generic.primaryColor
                 EnterKey.iconSource: "image://theme/icon-m-enter-close"
                 EnterKey.onClicked: lettRemark.focus = false

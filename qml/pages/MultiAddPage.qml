@@ -20,10 +20,11 @@ Dialog {
         var resCoords = [];
         var numberItems = listModel.count;
         for (var i = 0; i < numberItems; ++i) {
-            var wpnr = i + Number(offset.value);
+            var wpnr  = i + Number(offset.value);
             var coord = listModel.get(i).coord;
-            var note = listModel.get(i).note;
-            resCoords.push({coord: coord, number: wpnr, note: note});
+            var note  = listModel.get(i).note;
+            var raw   = listModel.get(i).raw;
+            resCoords.push({coord: coord, number: wpnr, note: note, raw: raw});
         }
         Database.addCache(txtCode.text, txtName.text, resCoords)
         dialog.callback(true)

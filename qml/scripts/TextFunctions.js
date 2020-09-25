@@ -406,11 +406,6 @@ function coordsByRegEx(rawText, searchLength) {
     var regExString = "([NS][^#]{5," + searchLength + "}\\s[EW][^#&,']{5," + searchLength + "})"
     var regExFormul = new RegExp(regExString, "g");
     // Should be like /([NS][^#]{5,40}\s[EW][^#&,']{5,40})/g
-    var regExCleanUp= /([NS].*\s)([^.]*\..*)(\s[EW].*°?\s)([^.]*\..*)/
-    // Resulting in 4 groups; group 2 and 4 to clean up
-    var regExDivid = /÷/g;
-    var regExSpace = /\s/g;
-    var regExComma = /,/g;
 
     var result = {code: '', name: '', coords: undefined };
     var arrCoord = [];
@@ -418,6 +413,7 @@ function coordsByRegEx(rawText, searchLength) {
     var waypt = 0;
     var res;
     var coordinate;
+    var raw;
     var note;
     var toBeDeleted = [];
 
@@ -466,7 +462,7 @@ function coordsByRegEx(rawText, searchLength) {
                 }
 
                 note  = wpSym + " - " + wpDesc + " - " + wpCmt
-                arrCoord.push({number: wpnr, coord: coordinate, note: note});
+                arrCoord.push({number: wpnr, coord: coordinate, note: note, raw: coordinate});
                 console.log("added coord: " + waypt + ", coord:"  + coordinate + ", nr: " + wpnr + ", note: " + note)
                 waypt = Math.max(wpnr, waypt);
             }
@@ -519,7 +515,7 @@ function coordsByRegEx(rawText, searchLength) {
                 // Clean up coordinate here
 
                 note  = wpSym + " - " + wpDesc + " - " + wpCmt
-                arrCoord.push({number: wpnr, coord: coordinate, note: note});
+                arrCoord.push({number: wpnr, coord: coordinate, note: note, raw: coordinate});
                 console.log("added hidden: " + waypt + ", coord:"  + coordinate + ", nr: " + wpnr + ", note: " + note)
                 waypt = Math.max(wpnr, waypt);
 
@@ -546,7 +542,7 @@ function coordsByRegEx(rawText, searchLength) {
             coordRe = new RegExp(coordinate, 'g');
             rawText = rawText.replace(coordRe, "#");
 
-            arrCoord.push({number: waypt, coord: coordinate, note: note});
+            arrCoord.push({number: waypt, coord: coordinate, note: note, raw: coordinate});
             waypt++;
         }
     } while (res !== null)
@@ -558,7 +554,7 @@ function coordsByRegEx(rawText, searchLength) {
             console.log("Formula found: " + res[1]);
             coordinate = res[1];
             // Clean up here
-            arrCoord.push({number: waypt, coord: coordinate, note: note});
+            arrCoord.push({number: waypt, coord: coordinate, note: note, raw: coordinate});
             waypt++;
         }
     } while (res !== null)
@@ -580,6 +576,109 @@ function coordsByRegEx(rawText, searchLength) {
 
     result.coords = sortCoord;
     console.log(JSON.stringify(result));
+
+    return result
+}
+
+function cleanUpFormula(formula) {
+    var regExCleanUp= /([NS])\s?(.*)\s+([^.]*\..*)\s([EW])\s?(.*)\s+([^.]*\..*)/
+    var regExDivid  = /÷/g;
+    var regExDegree = /°/g;
+    var regExSecond = /'/g;
+    var regExNonDig = /[^0-9.]/;
+    var regExSpace  = /\s/g;
+    var regExComma  = /,/g;
+    var north, east;
+    var parts = [];
+    var part;
+
+    console.log(formula);
+
+    // The least to clean up is the dividing symbol
+    formula = formula.replace(regExDivid, "/");
+    var result = formula;
+
+    formula = formula.replace(regExDegree, " ");
+    formula = formula.replace(regExSecond, " ");
+
+    var res = regExCleanUp.exec(formula);
+    // Resulting in 6 groups; group 2, 3, 5, 6 to clean up
+
+    if (res !== null) {
+        north = res[1];
+        parts.push(res[2]);
+        parts.push(res[3]);
+        east = res[4];
+        parts.push(res[5]);
+        parts.push(res[6]);
+
+        for ( var i = 0; i < 4; i++ ) {
+            part = parts[i];
+            console.log("part of formula is: " + part);
+
+            if (part.search(regExNonDig) >= 0) {
+                part.replace(regExSpace, "");
+                // Now split the parts in subparts
+                var subs = [];
+                var sub = "";
+                var level = 0;
+                var start;
+                var j = 0;
+                do {
+                    if ( level === 0 ) {
+                        if (part.charAt(j) === "(" ) {
+                            subs.push(sub);
+                            sub = part.charAt(j);
+                            level++;
+                        }
+                        else if (part.charAt(j) === ".") {
+                            subs.push(sub);
+                            subs.push(part.charAt(j));
+                            sub = "";
+                        }
+                        else {
+                            sub += part.charAt(j);
+                        }
+                    }
+                    else {
+                        if (part.charAt(j) === "(" ) {
+                            sub += part.charAt(j);
+                            level++;
+                        }
+                        else if (part.charAt(j) === ")" ) {
+                            sub += part.charAt(j);
+                            level--;
+                            if (level === 0) {
+                                subs.push(sub);
+                                sub = "";
+                            }
+                        }
+                        else {
+                            sub += part.charAt(j);
+                        }
+                    }
+                    j++;
+                } while ( j < part.length );
+                subs.push(sub);
+
+                // Glue the subparts together again, if needed using brackets
+                part = "";
+                for (sub of subs) {
+                    if (sub.search(regExNonDig) >= 0) {
+                        part += "[" + sub + "]";
+                    }
+                    else {
+                        part += sub;
+                    }
+                }
+            }
+            parts[i] = part;
+        }
+
+        // Glue parts together again into a cleaned up formula
+        result = north + " " + part[0] + "° " + parts[1] + " " + east + " " + part[2] + "° " + parts[3];
+        console.log(result);
+    }
 
     return result
 }
