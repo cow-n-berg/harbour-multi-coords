@@ -18,6 +18,7 @@
 - Introduced UTM for calculations and display.
   UTM / WGS conversion is OK for North, but not for East/West! Usable for calculations though.
   Waypoint calculations available for given coordinates, and for solved formulas.
+  "Add multi" removed from cover because Geocache list was not refreshing
 
 * Tue Sep 22 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.0
 - Many waypoint calculations added, for now only in The Netherlands

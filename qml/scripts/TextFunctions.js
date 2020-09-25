@@ -268,7 +268,7 @@ function evalFormula( formstr, letters ) {
 }
 
 /*
-*  Function to show all letters and values
+*  Function to show all letters and values for the geocache
 */
 function showLetters( letters ) {
     var result = "";
@@ -290,7 +290,7 @@ function showLetters( letters ) {
 }
 
 /*
-*  Function to show all letters and values
+*  Function to show all letters and values for this waypoint
 */
 function reqWpLetters( letters, wayptid ) {
     var result = "";
@@ -406,6 +406,11 @@ function coordsByRegEx(rawText, searchLength) {
     var regExString = "([NS][^#]{5," + searchLength + "}\\s[EW][^#&,']{5," + searchLength + "})"
     var regExFormul = new RegExp(regExString, "g");
     // Should be like /([NS][^#]{5,40}\s[EW][^#&,']{5,40})/g
+    var regExCleanUp= /([NS].*\s)([^.]*\..*)(\s[EW].*°?\s)([^.]*\..*)/
+    // Resulting in 4 groups; group 2 and 4 to clean up
+    var regExDivid = /÷/g;
+    var regExSpace = /\s/g;
+    var regExComma = /,/g;
 
     var result = {code: '', name: '', coords: undefined };
     var arrCoord = [];
@@ -511,6 +516,8 @@ function coordsByRegEx(rawText, searchLength) {
                 coordRe = new RegExp(escapeRegExp(wpCmt));
                 toBeDeleted.push(coordRe);
 
+                // Clean up coordinate here
+
                 note  = wpSym + " - " + wpDesc + " - " + wpCmt
                 arrCoord.push({number: wpnr, coord: coordinate, note: note});
                 console.log("added hidden: " + waypt + ", coord:"  + coordinate + ", nr: " + wpnr + ", note: " + note)
@@ -550,6 +557,7 @@ function coordsByRegEx(rawText, searchLength) {
         if (res !== null) {
             console.log("Formula found: " + res[1]);
             coordinate = res[1];
+            // Clean up here
             arrCoord.push({number: waypt, coord: coordinate, note: note});
             waypt++;
         }
@@ -727,7 +735,7 @@ function copyText( wpCalc, copyFirstPart ) {
 }
 
 function formulaTemplate( formula ) {
-    var regEx = /([NS]\s?[0-9]{1,2}°?\s[0-9]{1,2}\.)[0-9]{1,3}(\s[EW]\s?[0-9]{1,3}°?\s[0-9]{1,2}\.)[0-9]{1,3}/;
+    var regEx = /([NS]\s?[0-9]{1,2}°?\s[0-9]{1,2}\.)[0-9]{1,3}\D*?(\s[EW]\s?[0-9]{1,3}°?\s[0-9]{1,2}\.)[0-9]{1,3}/;
     var res = regEx.exec(formula);
 
     if (res !== null) {

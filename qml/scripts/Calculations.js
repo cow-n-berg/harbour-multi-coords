@@ -12,7 +12,7 @@ function showFormula( wp1, waypts ) {
 }
 
 function projectWp( wp1, degrees, distance, waypts, rd ) {
-    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
+    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\D*?\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var wp = parseInt( wp1 );
     var formula = waypts[wp].calculated;
     var res = regExLatLon.exec(formula);
@@ -31,7 +31,7 @@ function projectWp( wp1, degrees, distance, waypts, rd ) {
 }
 
 function intersection1( wp1, wp2, wp3, wp4, waypts, rd ) {
-    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
+    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\D*?\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var dist = 0;
     var str = "No intersection";
 
@@ -92,7 +92,7 @@ function intersection1( wp1, wp2, wp3, wp4, waypts, rd ) {
 }
 
 function intersection2( wp1, degrees1, wp2, degrees2, waypts, rd ) {
-    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
+    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\D*?\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var dist = 0;
     var str = "No intersection";
 
@@ -142,7 +142,7 @@ function intersection2( wp1, degrees1, wp2, degrees2, waypts, rd ) {
 }
 
 function intersection3( wp1, degrees1, wp2, radius2, waypts, rd ) {
-    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
+    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\D*?\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var dist = 0;
     var str;
     var result = { possible: false, str: "No intersection possible", coord1: undefined, coord2: undefined }
@@ -205,7 +205,7 @@ function intersection3( wp1, degrees1, wp2, radius2, waypts, rd ) {
 }
 
 function intersection4( wp1, radius1, wp2, radius2, waypts, rd ) {
-    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
+    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\D*?\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var dist = 0;
     var str;
     var result = { possible: false, str: "No intersection possible", coord1: undefined, coord2: undefined }
@@ -269,7 +269,7 @@ function intersection4( wp1, radius1, wp2, radius2, waypts, rd ) {
 }
 
 function distance( wp1, wp2, wp3, wp4, wp5, waypts, rd ) {
-    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
+    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\D*?\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var dist = 0;
     var str = "";
     var rdXY = [];
@@ -351,7 +351,7 @@ function distance( wp1, wp2, wp3, wp4, wp5, waypts, rd ) {
 }
 
 function distAngle( wp1, wp2, waypts, rd ) {
-    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
+    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\D*?\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var dist = 0;
     var str = "Distance: ";
     var rdXY = [];
@@ -387,7 +387,7 @@ function distAngle( wp1, wp2, waypts, rd ) {
 }
 
 function circle( wp1, wp2, wp3, waypts, rd ) {
-    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
+    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\D*?\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var dist = 0;
     var circl = { possible: false, centre: "No circle possible", radius: undefined };
 
@@ -466,7 +466,7 @@ function xy2wgs( x, y, rd, xy ) {
 }
 
 function coord2utm( wp1, waypts ) {
-    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
+    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\D*?\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var wp = parseInt( wp1 );
     var formula = waypts[wp].calculated;
     var res = regExLatLon.exec(formula);
@@ -478,7 +478,7 @@ function coord2utm( wp1, waypts ) {
 }
 
 function showUtmRd( coord, rd ){
-    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
+    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\D*?\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var res = regExLatLon.exec(coord);
 
     var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;

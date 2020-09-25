@@ -23,7 +23,7 @@ Page {
     property var wgsCoord2  : ""
     property var distance   : 0
 
-    property var projText   : "Projection of WP" + wp11.text + ", " + deg1.text + "° and " + dist1.text + " m"
+    property var projText   : "Projection of WP " + wp11.text + ": " + deg1.text + "° and " + dist1.text + " m"
     property var interText1 : "Intersection of lines WPs " + wp21.text + "-" + wp22.text + " and " + wp23.text + "-" + wp24.text
     property var interText2 : "Intersection of lines WPs " + wp31.text + ", " + deg31.text + "° and " + wp32.text + ", " + deg32.text + "°"
     property var interText3 : "Intersection of line WP " + wp41.text + ", " + deg41.text + "° and circle " + wp42.text + ", radius " + radius42.text + " m"
@@ -174,7 +174,6 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: qsTr("UTM to WGS coordinate")
                 color: generic.primaryColor
-                visible: generic.xySystemIsRd
                 onClicked: {
                     zone.focus = true
                }
@@ -919,7 +918,7 @@ Page {
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-close"
                 EnterKey.onClicked: {
-                    wgsCoord1 = Calc.rd2wgs(x.text, y.text)
+                    wgsCoord1 = Calc.rd2wgs(x.text, y.text).str
                     focus = false
                 }
             }

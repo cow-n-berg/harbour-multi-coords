@@ -27,6 +27,7 @@ Dialog {
     property var regExPar2  : /\)/g;
     property var regExTimes : /x/g;
     property var regExDivid : /÷/g;
+    property var regExComma : /,/g;
 
     canAccept: txtFormula.text !== "" && txtWpNr.text !== ""
 
@@ -223,11 +224,12 @@ Dialog {
                     }
                 }
                 Button {
-                    text: "x÷ » */"
+                    text: "x÷, » */"
                     color: generic.primaryColor
                     onClicked: {
                         txtFormula.text = txtFormula.text.replace(regExTimes, '*')
                         txtFormula.text = txtFormula.text.replace(regExDivid, '/')
+                        txtFormula.text = txtFormula.text.replace(regExComma, '')
                     }
                 }
                 Button {
