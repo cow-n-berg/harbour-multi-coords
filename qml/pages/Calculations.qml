@@ -18,7 +18,8 @@ Page {
     property var intersect3
     property var intersect4
     property var circle
-    property var wgsCoord   : ""
+    property var wgsCoord1  : ""
+    property var wgsCoord2  : ""
     property var distance   : 0
 
     property var projText   : "Projection of WP" + wp11.text + ", " + deg1.text + "° and " + dist1.text + " m"
@@ -27,7 +28,8 @@ Page {
     property var interText3 : "Intersection of line WP " + wp41.text + ", " + deg41.text + "° and circle " + wp42.text + ", radius " + radius42.text + " m"
     property var interText4 : "Intersection of circles " + wp51.text + ", radius " + radius51.text + " m and circle " + wp52.text + ", " + radius52.text + " m"
     property var centreTxt  : "Circle centre WPs " + wp71.text + ", " + wp72.text + ", " + wp73.text + ", radius (m): " + ( circle === undefined ? "" : circle.radius )
-    property var wgsText    : "Conversion of RD X" + x.text + ", Y: " + y.text
+    property var rdText     : "Conversion of RD X: " + x.text + ", Y: " + y.text
+    property var utmText    : "Conversion of UTM " + zone.text + letter.text.toUpperCase() + " E " + easting.text + " N " + northing.text
 
     Timer {
         id: addTimer
@@ -150,8 +152,21 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: qsTr("RD XY to WGS coordinate")
                 color: generic.primaryColor
+                visible: generic.xySystemIsRd
                 onClicked: {
                     x.focus = true
+               }
+            }
+
+            Button {
+                height: Theme.itemSizeLarge
+                preferredWidth: Theme.buttonWidthLarge
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: qsTr("UTM to WGS coordinate")
+                color: generic.primaryColor
+                visible: generic.xySystemIsRd
+                onClicked: {
+                    zone.focus = true
                }
             }
 
@@ -208,7 +223,7 @@ Page {
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-close"
                 EnterKey.onClicked: {
-                    projCoord = Calc.projectWp(wp11.text, deg1.text, dist1.text, waypts)
+                    projCoord = Calc.projectWp(wp11.text, deg1.text, dist1.text, waypts, generic.xySystemIsRd)
                     dist1.focus = false
                 }
             }
@@ -289,7 +304,7 @@ Page {
                 EnterKey.iconSource: "image://theme/icon-m-enter-close"
                 EnterKey.onClicked:
                 {
-                    distAngle = Calc.distAngle(wp61.text, wp62.text, waypts)
+                    distAngle = Calc.distAngle(wp61.text, wp62.text, waypts, generic.xySystemIsRd)
                     wp62.focus = false
                 }
             }
@@ -342,7 +357,7 @@ Page {
             TextField {
                 id: wp22
                 width: parent.width
-                label: "Line 1, to " + Calc.showFormula( wp22.text, waypts) //qsTr("WP2")
+                label: "Line 1, to " + Calc.showFormula( wp22.text, waypts)
                 placeholderText: label
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
@@ -368,15 +383,15 @@ Page {
             TextField {
                 id: wp24
                 width: parent.width
-                label: "Line 2, to " + Calc.showFormula( wp24.text, waypts) //qsTr("WP2")
+                label: "Line 2, to " + Calc.showFormula( wp24.text, waypts)
                 placeholderText: label
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
-                EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                EnterKey.iconSource: "image://theme/icon-m-enter-close"
                 EnterKey.onClicked: {
-                    intersect1 = Calc.intersection1( wp21.text, wp22.text, wp23.text, wp24.text, waypts )
+                    intersect1 = Calc.intersection1( wp21.text, wp22.text, wp23.text, wp24.text, waypts, generic.xySystemIsRd )
                     wp24.focus = false
                 }
             }
@@ -486,7 +501,7 @@ Page {
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-close"
                 EnterKey.onClicked: {
-                    intersect2 = Calc.intersection2( wp31.text, deg31.text, wp32.text, deg32.text, waypts )
+                    intersect2 = Calc.intersection2( wp31.text, deg31.text, wp32.text, deg32.text, waypts, generic.xySystemIsRd )
                     deg32.focus = false
                 }
             }
@@ -596,7 +611,7 @@ Page {
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-close"
                 EnterKey.onClicked: {
-                    intersect3 = Calc.intersection3( wp41.text, deg41.text, wp42.text, radius42.text, waypts )
+                    intersect3 = Calc.intersection3( wp41.text, deg41.text, wp42.text, radius42.text, waypts, generic.xySystemIsRd )
                     radius42.focus = false
                 }
             }
@@ -709,7 +724,7 @@ Page {
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-close"
                 EnterKey.onClicked: {
-                    intersect4 = Calc.intersection4( wp51.text, radius51.text, wp52.text, radius52.text, waypts )
+                    intersect4 = Calc.intersection4( wp51.text, radius51.text, wp52.text, radius52.text, waypts, generic.xySystemIsRd )
                     radius52.focus = false
                 }
             }
@@ -788,7 +803,7 @@ Page {
             TextField {
                 id: wp72
                 width: parent.width
-                label: Calc.showFormula( wp72.text, waypts) //qsTr("WP2")
+                label: Calc.showFormula( wp72.text, waypts)
                 placeholderText: "Enter WP number"
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
@@ -801,7 +816,7 @@ Page {
             TextField {
                 id: wp73
                 width: parent.width
-                label: Calc.showFormula( wp73.text, waypts) //qsTr("WP3")
+                label: Calc.showFormula( wp73.text, waypts)
                 placeholderText: "Enter WP number"
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
@@ -809,7 +824,7 @@ Page {
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-close"
                 EnterKey.onClicked: {
-                    circle = Calc.circle( wp71.text, wp72.text, wp73.text, waypts )
+                    circle = Calc.circle( wp71.text, wp72.text, wp73.text, waypts, generic.xySystemIsRd )
                     wp73.focus = false
                 }
             }
@@ -892,9 +907,9 @@ Page {
                 color: generic.primaryColor
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 EnterKey.enabled: text.length > 0
-                EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                EnterKey.iconSource: "image://theme/icon-m-enter-close"
                 EnterKey.onClicked: {
-                    wgsCoord = Calc.rd2wgs(x.text, y.text)
+                    wgsCoord1 = Calc.rd2wgs(x.text, y.text)
                     focus = false
                 }
             }
@@ -902,7 +917,7 @@ Page {
             TextField {
                 id: wgs
                 width: parent.width
-                text: wgsCoord
+                text: wgsCoord1
                 label: qsTr("WGS Coordinate")
                 placeholderText: label
                 placeholderColor: generic.secondaryColor
@@ -921,7 +936,7 @@ Page {
                     onClicked: {
                         indicator.running = true
                         addTimer.start()
-                        Database.addWaypt(generic.gcId, "", waypts.length, wgsCoord, wgsCoord, rdText1, true, false, "")
+                        Database.addWaypt(generic.gcId, "", waypts.length, wgsCoord1, wgsCoord1, rdText, true, false, "")
                         waypts = Database.getWaypts(generic.gcId, false);
                         page.callback(true)
                    }
@@ -931,7 +946,7 @@ Page {
                     icon.source: "image://theme/icon-l-clipboard"
                     icon.color: generic.primaryColor
                     onClicked: {
-                        Clipboard.text = wgsCoord
+                        Clipboard.text = wgsCoord1
                    }
                 }
 
@@ -941,8 +956,117 @@ Page {
                     onClicked: {
                         x.text = ""
                         y.text = ""
-                        wgsCoord = ""
+                        wgsCoord1 = ""
                         x.focus = true
+                    }
+                }
+            }
+
+            SectionHeader {
+                text: qsTr("UTM to WGS coordinate")
+                color: generic.highlightColor
+            }
+
+            TextField {
+                id: zone
+                width: parent.width
+                label: "Zone"
+                placeholderText: label
+                placeholderColor: generic.secondaryColor
+                color: generic.primaryColor
+                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                EnterKey.enabled: text.length > 0
+                EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                EnterKey.onClicked: letter.focus = true
+            }
+
+            TextField {
+                id: letter
+                width: parent.width
+                label: "Letter"
+                placeholderText: label
+                placeholderColor: generic.secondaryColor
+                color: generic.primaryColor
+                EnterKey.enabled: text.length === 1
+                EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                EnterKey.onClicked: easting.focus = true
+            }
+
+            TextField {
+                id: easting
+                width: parent.width
+                label: "Easting"
+                placeholderText: label
+                placeholderColor: generic.secondaryColor
+                color: generic.primaryColor
+                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                EnterKey.enabled: text.length > 0
+                EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                EnterKey.onClicked: northing.focus = true
+            }
+
+            TextField {
+                id: northing
+                width: parent.width
+                label: "Northing"
+                placeholderText: label
+                placeholderColor: generic.secondaryColor
+                color: generic.primaryColor
+                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                EnterKey.enabled: text.length > 0
+                EnterKey.iconSource: "image://theme/icon-m-enter-close"
+                EnterKey.onClicked: {
+                    wgsCoord2 = Calc.utm2wgs(zone.text + letter.text + " E " + easting.text + " N " + northing.text).str
+                    focus = false
+                }
+            }
+
+            TextField {
+                id: wgs2
+                width: parent.width
+                text: wgsCoord2
+                label: qsTr("WGS Coordinate")
+                placeholderText: label
+                placeholderColor: generic.secondaryColor
+                color: generic.highlightColor
+                readOnly: true
+            }
+
+            Row {
+                spacing: Theme.itemSizeSmall
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                IconButton {
+                    icon.source: "image://theme/icon-l-new"
+                    icon.color: generic.primaryColor
+                    enabled: wgs2.text !== ""
+                    onClicked: {
+                        indicator.running = true
+                        addTimer.start()
+                        Database.addWaypt(generic.gcId, "", waypts.length, wgsCoord2, wgsCoord2, utmText, true, false, "")
+                        waypts = Database.getWaypts(generic.gcId, false);
+                        page.callback(true)
+                   }
+                }
+
+                IconButton {
+                    icon.source: "image://theme/icon-l-clipboard"
+                    icon.color: generic.primaryColor
+                    onClicked: {
+                        Clipboard.text = wgsCoord2
+                   }
+                }
+
+                IconButton {
+                    icon.color: generic.primaryColor
+                    icon.source: "image://theme/icon-l-dismiss"
+                    onClicked: {
+                        zone.text = ""
+                        letter.text = ""
+                        northing.text = ""
+                        easting.text = ""
+                        wgsCoord2 = ""
+                        zone.focus = true
                     }
                 }
             }
@@ -968,7 +1092,7 @@ Page {
             TextField {
                 id: wp2
                 width: parent.width
-                label: Calc.showFormula( wp2.text, waypts) //qsTr("WP2")
+                label: Calc.showFormula( wp2.text, waypts)
                 placeholderText: "Enter WP number"
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
@@ -981,7 +1105,7 @@ Page {
             TextField {
                 id: wp3
                 width: parent.width
-                label: Calc.showFormula( wp3.text, waypts) //qsTr("WP3")
+                label: Calc.showFormula( wp3.text, waypts)
                 placeholderText: "Enter WP number"
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
@@ -994,7 +1118,7 @@ Page {
             TextField {
                 id: wp4
                 width: parent.width
-                label: Calc.showFormula( wp4.text, waypts) //qsTr("WP4")
+                label: Calc.showFormula( wp4.text, waypts)
                 placeholderText: "Enter WP number"
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
@@ -1009,7 +1133,7 @@ Page {
             TextField {
                 id: wp5
                 width: parent.width
-                label: Calc.showFormula( wp5.text, waypts) //qsTr("WP5")
+                label: Calc.showFormula( wp5.text, waypts)
                 placeholderText: "Enter WP number"
                 placeholderColor: generic.secondaryColor
                 color: generic.primaryColor
@@ -1017,7 +1141,7 @@ Page {
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: {
-                    distance = Calc.distance( wp1.text, wp2.text, wp3.text, wp4.text, wp5.text, waypts )
+                    distance = Calc.distance( wp1.text, wp2.text, wp3.text, wp4.text, wp5.text, waypts, generic.xySystemIsRd )
                     wp5.focus = false
                 }
             }

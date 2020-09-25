@@ -17,7 +17,8 @@ Dialog {
         Database.setSetting( "nightCacheMode"  , generic.nightCacheMode   )
         Database.setSetting( "deleteDatabase"  , generic.deleteDatabase   )
         Database.setSetting( "formulaCopyMode" , generic.formulaCopyMode  )
-        Database.setSetting( "calculationMenu", generic.calculationMenu  )
+        Database.setSetting( "calculationMenu" , generic.calculationMenu  )
+        Database.setSetting( "xySystemIsRd"    , generic.xySystemIsRd     )
 
         if (cache1Adding) {
             Database.addStd1Cache()
@@ -84,17 +85,24 @@ Dialog {
             }
             IconTextSwitch {
                 text: qsTr("Copy evaluated formula for geocaching app")
-                description: qsTr("Normal behaviour: entire string, GC-mode: two parts of Lat/Lon minutes")
+                description: qsTr("Normal behaviour: entire string, GC-mode: three parts of entire/Lat/Lon minutes")
                 icon.source: "image://theme/icon-m-clipboard"
                 checked: generic.formulaCopyMode
                 onClicked: generic.formulaCopyMode = !generic.formulaCopyMode
             }
             IconTextSwitch {
                 text: qsTr("Show Calculations in menu")
-                description: qsTr("Depending on Rijksdriehoek system,\nwill work only in The Netherlands")
+                description: qsTr("Cartesian system used: either UTM or Dutch RD")
                 icon.source: Qt.resolvedUrl("../images/icon-pentagon.svg")
                 checked: generic.calculationMenu
                 onClicked: generic.calculationMenu = !generic.calculationMenu
+            }
+            IconTextSwitch {
+                text: qsTr("Use Dutch RD instead of UTM")
+                description: qsTr("RD = Rijksdriehoek system,\nwill work only in The Netherlands")
+                icon.source: "image://theme/icon-m-region"
+                checked: generic.xySystemIsRd
+                onClicked: generic.xySystemIsRd = !generic.xySystemIsRd
             }
 
             SectionHeader {

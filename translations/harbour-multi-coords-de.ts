@@ -197,6 +197,10 @@
         <source>Circle centre and radius (meter)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>UTM to WGS coordinate</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CoverPage</name>
@@ -356,6 +360,10 @@
         <source>Calculations</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Waypoint calculations</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsPage</name>
@@ -416,10 +424,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Normal behaviour: entire string, GC-mode: two parts of Lat/Lon minutes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&apos;where it started&apos; from Seattle</source>
         <translation type="unfinished"></translation>
     </message>
@@ -432,8 +436,20 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Depending on Rijksdriehoek system,
+        <source>Normal behaviour: entire string, GC-mode: three parts of entire/Lat/Lon minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use Dutch RD instead of UTM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RD = Rijksdriehoek system,
 will work only in The Netherlands</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cartesian system used: either UTM or Dutch RD</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -587,6 +603,18 @@ will work only in The Netherlands</source>
     </message>
     <message>
         <source>Note</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UTM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> and RD</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> notation</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -2,6 +2,7 @@ import QtQuick 2.2
 import Sailfish.Silica 1.0
 import "../scripts/Database.js" as Database
 import "../scripts/TextFunctions.js" as TF
+import "../scripts/Calculations.js" as Calc
 
 Dialog {
     id: dialog
@@ -150,24 +151,6 @@ Dialog {
                 color: generic.primaryColor
             }
 
-//            TextArea {
-//                width: parent.width
-//                readOnly: true
-//                text: qsTr("This waypoint has no letters attached. Click button to add them.")
-//                visible: letterExtract !== "" && !lettersFilled
-//                color: generic.highlightColor
-//            }
-
-//            Button {
-//                anchors.horizontalCenter: parent.horizontalCenter
-//                text: qsTr("Add letters: " + letterExtract)
-//                visible: letterExtract !== "" && !lettersFilled
-//                color: generic.primaryColor
-//                onClicked: {
-
-//                }
-//            }
-
             Repeater {
                 model: listModel
                 width: parent.width
@@ -221,6 +204,17 @@ Dialog {
             SectionHeader {
                 text: qsTr("Overview")
                 color: generic.highlightColor
+            }
+
+            TextArea {
+                id: txtUtmRd
+                width: parent.width
+                readOnly: true
+                label: qsTr("UTM") + ( generic.xySystemIsRd ? qsTr(" and RD") : "" ) + qsTr(" notation")
+                labelVisible: false
+                text: Calc.showUtmRd(generic.wpCalc, generic.xySystemIsRd)
+                font.pixelSize: Theme.fontSizeExtraSmall
+                color: generic.secondaryColor
             }
 
             TextArea {

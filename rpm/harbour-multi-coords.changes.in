@@ -15,6 +15,7 @@
 * Thu Sep 24 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.1
 - Small improvement to "Add Waypoint"
 - Polished the Calculations page, added calculation "Circle through 3 WPs"
+- Introduced UTM for calculations and display
 
 * Tue Sep 22 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.0
 - Many waypoint calculations added, for now only in The Netherlands

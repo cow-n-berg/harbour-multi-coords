@@ -11,7 +11,7 @@ function showFormula( wp1, waypts ) {
     }
 }
 
-function projectWp( wp1, degrees, distance, waypts ) {
+function projectWp( wp1, degrees, distance, waypts, rd ) {
     var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var wp = parseInt( wp1 );
     var formula = waypts[wp].formula;
@@ -19,7 +19,7 @@ function projectWp( wp1, degrees, distance, waypts ) {
 
     var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     var lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    var xy = wgs2rd(lat, lon);
+    var xy = wgs2xy(lat, lon, rd);
 
     var dist = parseFloat(distance);
     var rad = parseFloat(degrees) / 180 * Math.PI;
@@ -27,10 +27,10 @@ function projectWp( wp1, degrees, distance, waypts ) {
     var rdx = xy.x + dist * Math.sin(rad);
     var rdy = xy.y + dist * Math.cos(rad);
 
-    return rd2wgs(rdx, rdy)
+    return xy2wgs(rdx, rdy, rd, xy);
 }
 
-function intersection1( wp1, wp2, wp3, wp4, waypts ) {
+function intersection1( wp1, wp2, wp3, wp4, waypts, rd ) {
     var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var dist = 0;
     var str = "No intersection";
@@ -44,7 +44,7 @@ function intersection1( wp1, wp2, wp3, wp4, waypts ) {
 
     var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     var lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    var xy1 = wgs2rd(lat, lon);
+    var xy1 = wgs2xy(lat, lon, rd);
 
     // WP2
     wp = parseInt( wp2 );
@@ -53,7 +53,7 @@ function intersection1( wp1, wp2, wp3, wp4, waypts ) {
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    var xy2 = wgs2rd(lat, lon);
+    var xy2 = wgs2xy(lat, lon, rd);
 
     // Line 1: y = a1 + b1 * x
     var b1 = xy2.x === xy1.x ? Math.pow(10,10) : (xy2.y - xy1.y) / (xy2.x - xy1.x);
@@ -66,7 +66,7 @@ function intersection1( wp1, wp2, wp3, wp4, waypts ) {
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    xy1 = wgs2rd(lat, lon);
+    xy1 = wgs2xy(lat, lon, rd);
 
     // WP4
     wp = parseInt( wp4 );
@@ -75,7 +75,7 @@ function intersection1( wp1, wp2, wp3, wp4, waypts ) {
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    xy2 = wgs2rd(lat, lon);
+    xy2 = wgs2xy(lat, lon, rd);
 
     // Line 2: y = a1 + b1 * x
     var b2 = xy2.x === xy1.x ? Math.pow(10,10) : (xy2.y - xy1.y) / (xy2.x - xy1.x);
@@ -85,13 +85,13 @@ function intersection1( wp1, wp2, wp3, wp4, waypts ) {
         var rdx = (a1 - a2) / (b2 - b1);
         var rdy = a1 + b1 * rdx;
 
-        str = rd2wgs(rdx, rdy);
+        str = xy2wgs(rdx, rdy, rd, xy1);
     }
 
     return str
 }
 
-function intersection2( wp1, degrees1, wp2, degrees2, waypts ) {
+function intersection2( wp1, degrees1, wp2, degrees2, waypts, rd ) {
     var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var dist = 0;
     var str = "No intersection";
@@ -105,7 +105,7 @@ function intersection2( wp1, degrees1, wp2, degrees2, waypts ) {
 
     var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     var lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    var xy1 = wgs2rd(lat, lon);
+    var xy1 = wgs2xy(lat, lon, rd);
 
     var deg1 = parseFloat(degrees1) % 360;
     var rad1 = deg1 / 180 * Math.PI;
@@ -121,7 +121,7 @@ function intersection2( wp1, degrees1, wp2, degrees2, waypts ) {
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    var xy2 = wgs2rd(lat, lon);
+    var xy2 = wgs2xy(lat, lon, rd);
 
     var deg2 = parseFloat(degrees2) % 360;
     var rad2 = deg2 / 180 * Math.PI;
@@ -134,13 +134,14 @@ function intersection2( wp1, degrees1, wp2, degrees2, waypts ) {
         var rdx = (a1 - a2) / (b2 - b1);
         var rdy = a1 + b1 * rdx;
 
-        str = rd2wgs(rdx, rdy);
+        str = xy2wgs(rdx, rdy, rd, xy1);
+
     }
 
     return str
 }
 
-function intersection3( wp1, degrees1, wp2, radius2, waypts ) {
+function intersection3( wp1, degrees1, wp2, radius2, waypts, rd ) {
     var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var dist = 0;
     var str;
@@ -155,7 +156,7 @@ function intersection3( wp1, degrees1, wp2, radius2, waypts ) {
 
     var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     var lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    var xy1 = wgs2rd(lat, lon);
+    var xy1 = wgs2xy(lat, lon, rd);
 
     var deg1 = parseFloat(degrees1) % 360;
     var rad1 = deg1 / 180 * Math.PI;
@@ -171,7 +172,7 @@ function intersection3( wp1, degrees1, wp2, radius2, waypts ) {
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    var xy2 = wgs2rd(lat, lon);
+    var xy2 = wgs2xy(lat, lon, rd);
 
     var c = xy2.x;
     var d = xy2.y;
@@ -186,12 +187,12 @@ function intersection3( wp1, degrees1, wp2, radius2, waypts ) {
     if ( sqrt1 > 0 ) {
         var rdx1 = ( -l - Math.sqrt( sqrt1 ) ) / (2 * k);
         var rdy1 = a + b * rdx1;
-        var coord1 = rd2wgs(rdx1, rdy1);
+        var coord1 = xy2wgs(rdx1, rdy1, rd, xy1);
         str = "1. " + coord1;
 
         var rdx2 = ( -l + Math.sqrt( sqrt1 ) ) / (2 * k);
         var rdy2 = a + b * rdx2;
-        var coord2 = rd2wgs(rdx2, rdy2);
+        var coord2 = xy2wgs(rdx2, rdy2, rd, xy1);
         str += "\n2. " + coord2;
 
         result.possible = true;
@@ -203,7 +204,7 @@ function intersection3( wp1, degrees1, wp2, radius2, waypts ) {
     return result
 }
 
-function intersection4( wp1, radius1, wp2, radius2, waypts ) {
+function intersection4( wp1, radius1, wp2, radius2, waypts, rd ) {
     var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var dist = 0;
     var str;
@@ -218,7 +219,7 @@ function intersection4( wp1, radius1, wp2, radius2, waypts ) {
 
     var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     var lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    var xy1 = wgs2rd(lat, lon);
+    var xy1 = wgs2xy(lat, lon, rd);
 
     var c = xy1.x;
     var d = xy1.y;
@@ -231,7 +232,7 @@ function intersection4( wp1, radius1, wp2, radius2, waypts ) {
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    var xy2 = wgs2rd(lat, lon);
+    var xy2 = wgs2xy(lat, lon, rd);
 
     var e = xy2.x;
     var f = xy2.y;
@@ -250,12 +251,12 @@ function intersection4( wp1, radius1, wp2, radius2, waypts ) {
     if ( sqrt1 > 0 ) {
         var rdx1 = ( -l - Math.sqrt( sqrt1 ) ) / (2 * k);
         var rdy1 = a + b * rdx1;
-        var coord1 = rd2wgs(rdx1, rdy1);
+        var coord1 = xy2wgs(rdx1, rdy1, rd, xy1);
         str = "1. " + coord1;
 
         var rdx2 = ( -l + Math.sqrt( sqrt1 ) ) / (2 * k);
         var rdy2 = a + b * rdx2;
-        var coord2 = rd2wgs(rdx2, rdy2);
+        var coord2 = xy2wgs(rdx2, rdy2, rd, xy1);
         str += "\n2. " + coord2;
 
         result.possible = true;
@@ -267,7 +268,7 @@ function intersection4( wp1, radius1, wp2, radius2, waypts ) {
     return result
 }
 
-function distance( wp1, wp2, wp3, wp4, wp5, waypts ) {
+function distance( wp1, wp2, wp3, wp4, wp5, waypts, rd ) {
     var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var dist = 0;
     var str = "";
@@ -281,7 +282,7 @@ function distance( wp1, wp2, wp3, wp4, wp5, waypts ) {
 
     var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     var lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    var xy = wgs2rd(lat, lon);
+    var xy = wgs2xy(lat, lon, rd);
     var xy1 = xy;
     rdXY.push(xy);
 
@@ -294,7 +295,7 @@ function distance( wp1, wp2, wp3, wp4, wp5, waypts ) {
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    xy = wgs2rd(lat, lon);
+    xy = wgs2xy(lat, lon, rd);
     rdXY.push(xy);
 
 //    str += "WP" + wp + ": " + formula + ", x: " + x.toFixed(0) + ", y: " + y.toFixed(0) + "\n";
@@ -306,7 +307,7 @@ function distance( wp1, wp2, wp3, wp4, wp5, waypts ) {
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    xy = wgs2rd(lat, lon);
+    xy = wgs2xy(lat, lon, rd);
     rdXY.push(xy);
 
 //    str += "WP" + wp + ": " + formula + ", x: " + x.toFixed(0) + ", y: " + y.toFixed(0) + "\n";
@@ -318,7 +319,7 @@ function distance( wp1, wp2, wp3, wp4, wp5, waypts ) {
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    xy = wgs2rd(lat, lon);
+    xy = wgs2xy(lat, lon, rd);
     rdXY.push(xy);
 
 //    str += "WP" + wp + ": " + formula + ", x: " + x.toFixed(0) + ", y: " + y.toFixed(0) + "\n";
@@ -330,7 +331,7 @@ function distance( wp1, wp2, wp3, wp4, wp5, waypts ) {
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    xy = wgs2rd(lat, lon);
+    xy = wgs2xy(lat, lon, rd);
     rdXY.push(xy);
 
 //    str += "WP" + wp + ": " + formula + ", x: " + x.toFixed(0) + ", y: " + y.toFixed(0) + "\n";
@@ -349,7 +350,7 @@ function distance( wp1, wp2, wp3, wp4, wp5, waypts ) {
     return str
 }
 
-function distAngle( wp1, wp2, waypts ) {
+function distAngle( wp1, wp2, waypts, rd ) {
     var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var dist = 0;
     var str = "Distance: ";
@@ -362,7 +363,7 @@ function distAngle( wp1, wp2, waypts ) {
 
     var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     var lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    var xy = wgs2rd(lat, lon);
+    var xy = wgs2xy(lat, lon, rd);
     rdXY.push(xy);
 
     // WP2
@@ -372,7 +373,7 @@ function distAngle( wp1, wp2, waypts ) {
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    xy = wgs2rd(lat, lon);
+    xy = wgs2xy(lat, lon, rd);
     rdXY.push(xy);
 
     dist = Math.sqrt( Math.pow(rdXY[0].x - rdXY[1].x, 2) + Math.pow(rdXY[0].y - rdXY[1].y, 2) );
@@ -385,7 +386,7 @@ function distAngle( wp1, wp2, waypts ) {
     return str
 }
 
-function circle( wp1, wp2, wp3, waypts ) {
+function circle( wp1, wp2, wp3, waypts, rd ) {
     var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var dist = 0;
     var circl = { possible: false, centre: "No circle possible", radius: undefined };
@@ -399,7 +400,7 @@ function circle( wp1, wp2, wp3, waypts ) {
 
     var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     var lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    var xy1 = wgs2rd(lat, lon);
+    var xy1 = wgs2xy(lat, lon, rd);
 
     // WP2
     wp = parseInt( wp2 );
@@ -408,7 +409,7 @@ function circle( wp1, wp2, wp3, waypts ) {
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    var xy2 = wgs2rd(lat, lon);
+    var xy2 = wgs2xy(lat, lon, rd);
 
     // Perpendicular in between WP 1 and 2: y = a1 + b1 * x
     var b1 = xy2.y === xy1.y ? Math.pow(10,10) : (xy1.x - xy2.x) / (xy2.y - xy1.y);
@@ -421,7 +422,7 @@ function circle( wp1, wp2, wp3, waypts ) {
 
     lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    xy1 = wgs2rd(lat, lon);
+    xy1 = wgs2xy(lat, lon, rd);
 
     // Perpendicular in between WP 3 and 2: y = a2 + b2 * x
     var b2 = xy2.y === xy1.y ? Math.pow(10,10) : (xy1.x - xy2.x) / (xy2.y - xy1.y);
@@ -432,13 +433,70 @@ function circle( wp1, wp2, wp3, waypts ) {
         var rdy = a1 + b1 * rdx;
 
         circl.possible = true;
-        circl.centre = rd2wgs(rdx, rdy);
+        circl.centre = xy2wgs(rdx, rdy, rd, xy1);
         circl.radius = Math.sqrt( Math.pow(rdx - xy1.x, 2) + Math.pow(rdy - xy1.y, 2) ).toFixed(1);
     }
 
     return circl
 }
 
+/*
+ * General functions from WGS to RD/UTM and back
+ */
+function wgs2xy(lat, lon, rd ) {
+    // Needed for calculations, entire object to be returned
+    if (rd ) {
+        return wgs2rd(lat, lon)
+    }
+    else {
+        return wgs2utm(lat, lon)
+    }
+}
+
+function xy2wgs( x, y, rd, xy ) {
+    // Needed for UI, only string te be taken from object
+    if (rd ) {
+        return rd2wgs(x, y).str
+    }
+    else {
+        var utm = xy.zone + xy.letter + " E " + x.toFixed(0) + " N " + y.toFixed(0);
+        console.log(utm);
+        return utm2wgs(utm).str
+    }
+}
+
+function coord2utm( wp1, waypts ) {
+    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
+    var wp = parseInt( wp1 );
+    var formula = waypts[wp].formula;
+    var res = regExLatLon.exec(formula);
+
+    var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
+    var lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
+
+    return wgs2utm(lat, lon).str
+}
+
+function showUtmRd( coord, rd ){
+    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
+    var res = regExLatLon.exec(coord);
+
+    var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
+    var lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
+
+    var str = "UTM: " + wgs2utm(lat, lon).str;
+
+    if (rd) {
+        str += "\nRD " + wgs2rd(lat, lon).str;
+    }
+
+    return str
+
+}
+
+/*
+ * Functions from WGS to Dutch Rijksdriehoekssysteem (RD) and back
+ */
 function wgs2rd(lat, lon) {
 
     // Van lat, lon naar Rijksdriehoekscoordinaten X, Y.
@@ -499,9 +557,10 @@ function wgs2rd(lat, lon) {
     rdx = (rdx + rdxBase);
     rdy = (rdy + rdyBase);
 
-    console.log( "X: " + rdx.toFixed(0) + ", Y:" + rdy.toFixed(0));
+    var str = "X: " + rdx.toFixed(0) + ", Y:" + rdy.toFixed(0);
+    console.log(str);
 
-    return { x: rdx, y: rdy }
+    return { x: rdx, y: rdy, str: str }
 
 }
 
@@ -513,7 +572,9 @@ function rd2wgs(x, y) {
     var lpq = [];
     var p, q;
     var deltaX, deltaY;
-    var coordinate = "XY not valid";
+    var str = "XY not valid";
+    var latitude  = 0;
+    var longitude = 0;
     var lat = 0;
     var lon = 0;
     var rdx = typeof rdx === "string" ? parseInt(x) : x;
@@ -568,24 +629,141 @@ function rd2wgs(x, y) {
             }
         }
 
-        lat = (lat / 3600 + latBase);
-        lon = (lon / 3600 + lonBase);
+        latitude  = (lat / 3600 + latBase);
+        longitude = (lon / 3600 + lonBase);
 
-        var degLat = Math.floor(lat);
-        var degLon = Math.floor(lon);
-        lat = (lat - degLat) * 60;
-        lon = (lon - degLon) * 60;
+        var latDeg = Math.floor(latitude );
+        var lonDeg = Math.floor(longitude);
+        lat = (latitude  - latDeg) * 60;
+        lon = (longitude - lonDeg) * 60;
 
-        var strLat = "00" + degLat.toString();
-        var strLon = "00" + degLon.toString();
+        var strLat = "00" + latDeg.toString();
+        var strLon = "00" + lonDeg.toString();
         var minLat = "00" + lat.toFixed(3);
         var minLon = "00" + lon.toFixed(3);
 
-        coordinate  =  "N " + strLat.slice(-2) + "° " + minLat.slice(-6);
-        coordinate += " E " + strLon.slice(-3) + "° " + minLon.slice(-6);
+        str  =  "N " + strLat.slice(-2) + "° " + minLat.slice(-6);
+        str += " E " + strLon.slice(-3) + "° " + minLon.slice(-6);
 
     }
 
-    return coordinate
+    return { lat: latitude, lon: longitude, str: str }
+
+}
+
+/*
+ * Functions from WGS to UTM and back
+ */
+function wgs2utm(lat, lon) {
+
+    var easting, northing, zone, letter;
+
+    zone= Math.floor(lon/6+31);
+    if (lat<-72)
+        letter='C';
+    else if (lat<-64)
+        letter='D';
+    else if (lat<-56)
+        letter='E';
+    else if (lat<-48)
+        letter='F';
+    else if (lat<-40)
+        letter='G';
+    else if (lat<-32)
+        letter='H';
+    else if (lat<-24)
+        letter='J';
+    else if (lat<-16)
+        letter='K';
+    else if (lat<-8)
+        letter='L';
+    else if (lat<0)
+        letter='M';
+    else if (lat<8)
+        letter='N';
+    else if (lat<16)
+        letter='P';
+    else if (lat<24)
+        letter='Q';
+    else if (lat<32)
+        letter='R';
+    else if (lat<40)
+        letter='S';
+    else if (lat<48)
+        letter='T';
+    else if (lat<56)
+        letter='U';
+    else if (lat<64)
+        letter='V';
+    else if (lat<72)
+        letter='W';
+    else
+        letter='X';
+
+    easting=0.5*Math.log((1+Math.cos(lat*Math.PI/180)*Math.sin(lon*Math.PI/180-(6*zone-183)*Math.PI/180))/(1-Math.cos(lat*Math.PI/180)*Math.sin(lon*Math.PI/180-(6*zone-183)*Math.PI/180)))*0.9996*6399593.62/Math.pow((1+Math.pow(0.0820944379, 2)*Math.pow(Math.cos(lat*Math.PI/180), 2)), 0.5)*(1+ Math.pow(0.0820944379,2)/2*Math.pow((0.5*Math.log((1+Math.cos(lat*Math.PI/180)*Math.sin(lon*Math.PI/180-(6*zone-183)*Math.PI/180))/(1-Math.cos(lat*Math.PI/180)*Math.sin(lon*Math.PI/180-(6*zone-183)*Math.PI/180)))),2)*Math.pow(Math.cos(lat*Math.PI/180),2)/3)+500000;
+    easting=Math.round(easting*100)*0.01;
+
+    northing = (Math.atan(Math.tan(lat*Math.PI/180)/Math.cos((lon*Math.PI/180-(6*zone -183)*Math.PI/180)))-lat*Math.PI/180)*0.9996*6399593.625/Math.sqrt(1+0.006739496742*Math.pow(Math.cos(lat*Math.PI/180),2))*(1+0.006739496742/2*Math.pow(0.5*Math.log((1+Math.cos(lat*Math.PI/180)*Math.sin((lon*Math.PI/180-(6*zone -183)*Math.PI/180)))/(1-Math.cos(lat*Math.PI/180)*Math.sin((lon*Math.PI/180-(6*zone -183)*Math.PI/180)))),2)*Math.pow(Math.cos(lat*Math.PI/180),2))+0.9996*6399593.625*(lat*Math.PI/180-0.005054622556*(lat*Math.PI/180+Math.sin(2*lat*Math.PI/180)/2)+4.258201531e-05*(3*(lat*Math.PI/180+Math.sin(2*lat*Math.PI/180)/2)+Math.sin(2*lat*Math.PI/180)*Math.pow(Math.cos(lat*Math.PI/180),2))/4-1.674057895e-07*(5*(3*(lat*Math.PI/180+Math.sin(2*lat*Math.PI/180)/2)+Math.sin(2*lat*Math.PI/180)*Math.pow(Math.cos(lat*Math.PI/180),2))/4+Math.sin(2*lat*Math.PI/180)*Math.pow(Math.cos(lat*Math.PI/180),2)*Math.pow(Math.cos(lat*Math.PI/180),2))/3);
+    if (letter<'M')
+        northing = northing + 10000000;
+    northing=Math.round(northing*100)*0.01;
+
+    var str = zone + letter + " E " + easting.toFixed(0) + " N " + northing.toFixed(0);
+    console.log(str);
+
+    return { easting: easting, northing: northing, zone: zone, letter: letter, x: easting, y: northing, str: str };
+
+}
+
+function utm2wgs(utm) {
+    var regExUtm = /([0-9]{1,2})([A-Za-z])\s?E\s?([0-9]+)\s?N\s?([0-9]+)/;
+    var latitude = 0;
+    var longitude = 0;
+    var str = "No valid UTM";
+
+    var res = regExUtm.exec(utm);
+    if (res !== null) {
+        var zone     = parseInt(res[1]);
+        var letter   = res[2].toUpperCase();
+        var easting  = parseInt(res[3]);
+        var northing = parseInt(res[4]);
+        var hem;
+
+        if (letter > "M")
+            hem = "N";
+        else
+            hem = "S";
+
+        var north;
+        if (hem === "S")
+            north = northing - 10000000;
+        else
+            north = northing;
+
+        latitude = (north/6366197.724/0.9996+(1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)-0.006739496742*Math.sin(north/6366197.724/0.9996)*Math.cos(north/6366197.724/0.9996)*(Math.atan(Math.cos(Math.atan(( Math.exp((easting - 500000) / (0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*(1-0.006739496742*Math.pow((easting - 500000) / (0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2)/3))-Math.exp(-(easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*( 1 -  0.006739496742*Math.pow((easting - 500000) / (0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2)/3)))/2/Math.cos((north-0.9996*6399593.625*(north/6366197.724/0.9996-0.006739496742*3/4*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.pow(0.006739496742*3/4,2)*5/3*(3*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996 )/2)+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/4-Math.pow(0.006739496742*3/4,3)*35/27*(5*(3*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/4+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/3))/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*(1-0.006739496742*Math.pow((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2))+north/6366197.724/0.9996)))*Math.tan((north-0.9996*6399593.625*(north/6366197.724/0.9996 - 0.006739496742*3/4*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.pow(0.006739496742*3/4,2)*5/3*(3*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.sin(2*north/6366197.724/0.9996 )*Math.pow(Math.cos(north/6366197.724/0.9996),2))/4-Math.pow(0.006739496742*3/4,3)*35/27*(5*(3*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/4+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/3))/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*(1-0.006739496742*Math.pow((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2))+north/6366197.724/0.9996))-north/6366197.724/0.9996)*3/2)*(Math.atan(Math.cos(Math.atan((Math.exp((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*(1-0.006739496742*Math.pow((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2)/3))-Math.exp(-(easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*(1-0.006739496742*Math.pow((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2)/3)))/2/Math.cos((north-0.9996*6399593.625*(north/6366197.724/0.9996-0.006739496742*3/4*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.pow(0.006739496742*3/4,2)*5/3*(3*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/4-Math.pow(0.006739496742*3/4,3)*35/27*(5*(3*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/4+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/3))/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*(1-0.006739496742*Math.pow((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2))+north/6366197.724/0.9996)))*Math.tan((north-0.9996*6399593.625*(north/6366197.724/0.9996-0.006739496742*3/4*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.pow(0.006739496742*3/4,2)*5/3*(3*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/4-Math.pow(0.006739496742*3/4,3)*35/27*(5*(3*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/4+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/3))/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*(1-0.006739496742*Math.pow((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2))+north/6366197.724/0.9996))-north/6366197.724/0.9996))*180/Math.PI;
+        latitude = Math.round(latitude*10000000);
+        latitude = latitude/10000000;
+
+        longitude = Math.atan((Math.exp((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*(1-0.006739496742*Math.pow((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2)/3))-Math.exp(-(easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*(1-0.006739496742*Math.pow((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2)/3)))/2/Math.cos((north-0.9996*6399593.625*( north/6366197.724/0.9996-0.006739496742*3/4*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.pow(0.006739496742*3/4,2)*5/3*(3*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.sin(2* north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/4-Math.pow(0.006739496742*3/4,3)*35/27*(5*(3*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/4+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/3)) / (0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*(1-0.006739496742*Math.pow((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2))+north/6366197.724/0.9996))*180/Math.PI+zone*6-183;
+        longitude = Math.round(longitude*10000000);
+        longitude = longitude/10000000;
+
+        var latDeg = Math.floor(latitude);
+        var lat = (latitude - latDeg) * 60;
+        var lonDeg = Math.floor(longitude);
+        var lon = (longitude - lonDeg) * 60;
+        var east = longitude >= 0 ? "E" : "W"
+
+        var strLat = "00" + latDeg.toString();
+        var strLon = "00" + lonDeg.toString();
+        var minLat = "00" + lat.toFixed(3);
+        var minLon = "00" + lon.toFixed(3);
+
+        str  =  "N " + strLat.slice(-2) + "° " + minLat.slice(-6);
+        str += " E " + strLon.slice(-3) + "° " + minLon.slice(-6);
+        console.log(str);
+
+    }
+    return { lat: latitude, lon: longitude, str: str }
 
 }

@@ -155,8 +155,8 @@ Page {
                 })
             }
             MenuItem {
-                text: qsTr("Calculations")
-                visible: generic.gcCode === "GC8Y39T"
+                text: qsTr("Waypoint calculations")
+                visible: generic.calculationMenu || generic.gcCode === "GC8Y39T"
                 onClicked:  {
                     onClicked: pageStack.push(Qt.resolvedUrl("Calculations.qml"),
                                               {callback: updateAfterDialog})
@@ -180,7 +180,7 @@ Page {
             }
             MenuItem {
                 text: qsTr("Calculations")
-                visible: generic.calculationMenu
+                visible: false //generic.calculationMenu
                 onClicked:  {
                     onClicked: pageStack.push(Qt.resolvedUrl("Calculations.qml"))
                 }

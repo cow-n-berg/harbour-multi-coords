@@ -20,6 +20,7 @@ ApplicationWindow
     property bool nightCacheMode          : DB.getSetting( "nightCacheMode", false )
     property bool formulaCopyMode         : DB.getSetting( "formulaCopyMode", false )
     property bool calculationMenu         : DB.getSetting( "calculationMenu", false )
+    property bool xySystemIsRd            : DB.getSetting( "xySystemIsRd", false )
 
     property var browserUrl               : "https://coord.info/"
     property var primaryColor             : nightCacheMode ? "firebrick" : Theme.primaryColor
