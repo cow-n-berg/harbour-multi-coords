@@ -469,25 +469,32 @@ function coord2utm( wp1, waypts ) {
     var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\D*?\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var wp = parseInt( wp1 );
     var formula = waypts[wp].calculated;
+    var str = "";
     var res = regExLatLon.exec(formula);
 
-    var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
-    var lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
+    if (res !== null) {
+        var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
+        var lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
 
-    return wgs2utm(lat, lon).str
+        str = wgs2utm(lat, lon).str;
+    }
+    return str
 }
 
 function showUtmRd( coord, rd ){
     var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\D*?\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
+    var str = "";
     var res = regExLatLon.exec(coord);
 
-    var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
-    var lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
+    if (res !== null) {
+        var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
+        var lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
 
-    var str = "UTM: " + wgs2utm(lat, lon).str;
+        str = "UTM: " + wgs2utm(lat, lon).str;
 
-    if (rd) {
-        str += "\nRD " + wgs2rd(lat, lon).str;
+        if (rd) {
+            str += "\nRD " + wgs2rd(lat, lon).str;
+        }
     }
 
     return str

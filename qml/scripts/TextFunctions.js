@@ -400,6 +400,7 @@ function coordsByRegEx(rawText, searchLength) {
 
     // Additional Hidden Waypoints
     var regExHidden = /Additional Hidden Waypoints(.*)<\/groundspeak:long_description>/;
+    var regExHidCmt = /([A-Z0-9]{2})[A-Z0-9]{2,5}\s-\s(.*?)&lt;br\s\/&gt;(.*?)&lt;br\s\/&gt;(.*?)&lt;br\s\/&gt/g
 
     // Coordinates and formulas in plain text
     var regExCoords = /([NS]\s?[0-9]{1,2}°?\s[0-9]{1,2}\.[0-9]{1,3}\s[EW]\s?[0-9]{1,3}°?\s[0-9]{1,2}\.[0-9]{1,3})/g;
@@ -410,11 +411,13 @@ function coordsByRegEx(rawText, searchLength) {
     var result = {code: '', name: '', coords: undefined };
     var arrCoord = [];
     var sortCoord = [];
+    var wpCoord;
     var waypt = 0;
     var res;
     var coordinate;
     var raw;
     var note;
+    var i, coordRe;
     var toBeDeleted = [];
 
     rawText = rawText.replace(regExNewlin, "");
@@ -436,6 +439,7 @@ function coordsByRegEx(rawText, searchLength) {
 
             var coordObj = coordLatLon(wpt);
             coordinate = coordObj.coord;
+            raw = coordinate;
             if (coordinate !== "") {
                 toBeDeleted.push(coordObj.regex);
 
@@ -462,7 +466,7 @@ function coordsByRegEx(rawText, searchLength) {
                 }
 
                 note  = wpSym + " - " + wpDesc + " - " + wpCmt
-                arrCoord.push({number: wpnr, coord: coordinate, note: note, raw: coordinate});
+                arrCoord.push({number: wpnr, coord: coordinate, note: note, raw: raw});
                 console.log("added coord: " + waypt + ", coord:"  + coordinate + ", nr: " + wpnr + ", note: " + note)
                 waypt = Math.max(wpnr, waypt);
             }
@@ -470,22 +474,22 @@ function coordsByRegEx(rawText, searchLength) {
         }
     } while (res !== null)
 
-    for (var i = 0; i < toBeDeleted.length; i++) {
+    for (i = 0; i < toBeDeleted.length; i++) {
         // Remove coord from rawtext to prevent doubles
-        var coordRe = toBeDeleted[i];
-        rawText = rawText.replace(coordRe, "#");
+        coordRe = toBeDeleted[i];
+        rawText = rawText.replace(coordRe, "#DeletedWP#");
     }
     toBeDeleted = [];
 
     // Stages in Hidden Waypoints within GPX file
     var hidden = simpleRegEx(rawText, regExHidden);
     if (hidden !== "") {
-        var gcCode      = result.code.slice(2,8);
-        var strHidCmt   = "(..)" + gcCode + "\s-\s(.+?)&lt;br\s\/\&gt; \&lt;br \/\&gt;(.+?)\&lt;br \/\&gt;";
-        var regExHidCmt = new RegExp(strHidCmt, "g");
+        console.log("Section with Hidden Waypoints found");
+        console.log(hidden);
 
         do {
             res = regExHidCmt.exec(hidden);
+
             if (res !== null) {
                 console.log("Hidden waypoint found: "+ JSON.stringify(res));
 
@@ -498,24 +502,39 @@ function coordsByRegEx(rawText, searchLength) {
                     wpnr = isNaN(nr) ? 0 : nr;
                 }
 
-                wpSym  = res[1];
-                wpDesc = res[2];
-                wpCmt  = res[3];
-                coordinate = simpleRegEx(wpCmt, regExFormul);
-    //            console.log("wpSym " + wpSym + ", wpDesc " + wpDesc + ", coord: " + coordinate + ", wpCmt: " + wpCmt );
+                wpSym   = res[1];
+                wpDesc  = res[2];
+                wpCoord = res[3].trim();
+                wpCmt   = res[4];
 
-                if (coordinate === "") {
-                    var leng = Math.min(40, wpCmt.length + 1);
-                    coordinate = wpCmt.slice(0,leng);
+                console.log("wpSym " + wpSym + ", wpDesc " + wpDesc + ", wpCoord: " + wpCoord + ", wpCmt: " + wpCmt );
+
+                var res2 = regExFormul.exec(wpCmt);
+                if (res2 !== null) {
+                    coordinate = res2[1];
                 }
+                else {
+                    if (wpCoord === "") {
+                        var leng = Math.min(40, wpCmt.length + 1);
+                        coordinate = wpCmt.slice(0,leng);
+                    }
+                    else {
+                        coordinate = wpCoord;
+                    }
+                }
+
+                console.log(coordinate);
+//                console.log("wpSym " + wpSym + ", wpDesc " + wpDesc + ", coord: " + coordinate + ", wpCmt: " + wpCmt );
 
                 coordRe = new RegExp(escapeRegExp(wpCmt));
                 toBeDeleted.push(coordRe);
 
                 // Clean up coordinate here
+                raw = coordinate;
+                coordinate = cleanUpFormula(coordinate);
 
                 note  = wpSym + " - " + wpDesc + " - " + wpCmt
-                arrCoord.push({number: wpnr, coord: coordinate, note: note, raw: coordinate});
+                arrCoord.push({number: wpnr, coord: coordinate, note: note, raw: raw});
                 console.log("added hidden: " + waypt + ", coord:"  + coordinate + ", nr: " + wpnr + ", note: " + note)
                 waypt = Math.max(wpnr, waypt);
 
@@ -527,7 +546,7 @@ function coordsByRegEx(rawText, searchLength) {
     // Remove hidden waypoints from rawtext to prevent doubles
     for (i = 0; i < toBeDeleted.length; i++) {
         coordRe = toBeDeleted[i];
-        rawText = rawText.replace(coordRe, "#");
+        rawText = rawText.replace(coordRe, " # ");
     }
 
     note = "";
@@ -553,8 +572,10 @@ function coordsByRegEx(rawText, searchLength) {
         if (res !== null) {
             console.log("Formula found: " + res[1]);
             coordinate = res[1];
+            raw = coordinate;
             // Clean up here
-            arrCoord.push({number: waypt, coord: coordinate, note: note, raw: coordinate});
+            coordinate = cleanUpFormula(coordinate);
+            arrCoord.push({number: waypt, coord: coordinate, note: note, raw: raw});
             waypt++;
         }
     } while (res !== null)
@@ -581,18 +602,21 @@ function coordsByRegEx(rawText, searchLength) {
 }
 
 function cleanUpFormula(formula) {
-    var regExCleanUp= /([NS])\s?(.*)\s+([^.]*\..*)\s([EW])\s?(.*)\s+([^.]*\..*)/
+    var regExCleanUp= /([NS])\s?(.*)\s+([^.]+?[\.].*)\s([EW])\s?(.*)\s+([^.,]*[\.,].*)/
     var regExDivid  = /÷/g;
     var regExDegree = /°/g;
     var regExSecond = /'/g;
     var regExNonDig = /[^0-9.]/;
     var regExSpace  = /\s/g;
     var regExComma  = /,/g;
+    var regExBrack1 = /\[/g;
+    var regExBrack2 = /\]/g;
+    var regExNoBrack= /[^0-9./]/;
     var north, east;
     var parts = [];
     var part;
 
-    console.log(formula);
+//    console.log("Raw formula: " + formula);
 
     // The least to clean up is the dividing symbol
     formula = formula.replace(regExDivid, "/");
@@ -601,10 +625,12 @@ function cleanUpFormula(formula) {
     formula = formula.replace(regExDegree, " ");
     formula = formula.replace(regExSecond, " ");
 
+//    console.log("After first cleaning: " + formula);
+
     var res = regExCleanUp.exec(formula);
     // Resulting in 6 groups; group 2, 3, 5, 6 to clean up
 
-    if (res !== null) {
+    if (res !== null && res.length === 7) {
         north = res[1];
         parts.push(res[2]);
         parts.push(res[3]);
@@ -612,12 +638,21 @@ function cleanUpFormula(formula) {
         parts.push(res[5]);
         parts.push(res[6]);
 
-        for ( var i = 0; i < 4; i++ ) {
+//        console.log(parts.toString());
+
+        for ( var i = 0; i < parts.length; i++ ) {
             part = parts[i];
-            console.log("part of formula is: " + part);
+            part = part.replace(regExSpace, "");
+            // Let's replace all commas with dots, as Europeans are prone to use them instead of digital dots
+            // And all brackets with parentheses for proper detection of parentheses levels
+            part = part.replace(regExComma, "");
+            part = part.replace(regExBrack1, "(");
+            part = part.replace(regExBrack2, ")");
+
+//            console.log("part " + i + " of formula is: " + part);
 
             if (part.search(regExNonDig) >= 0) {
-                part.replace(regExSpace, "");
+
                 // Now split the parts in subparts
                 var subs = [];
                 var sub = "";
@@ -661,10 +696,13 @@ function cleanUpFormula(formula) {
                 } while ( j < part.length );
                 subs.push(sub);
 
+//                console.log("subs: " + subs.toString());
+
                 // Glue the subparts together again, if needed using brackets
                 part = "";
-                for (sub of subs) {
-                    if (sub.search(regExNonDig) >= 0) {
+                for (j = 0; j< subs.length; j++ ) {
+                    sub = subs[j];
+                    if (sub.search(regExNoBrack) >= 0) {
                         part += "[" + sub + "]";
                     }
                     else {
@@ -673,11 +711,26 @@ function cleanUpFormula(formula) {
                 }
             }
             parts[i] = part;
+//            console.log("cleaned up part " + i + " of formula is: " + part);
         }
 
         // Glue parts together again into a cleaned up formula
-        result = north + " " + part[0] + "° " + parts[1] + " " + east + " " + part[2] + "° " + parts[3];
-        console.log(result);
+//        console.log("After cleaning and glueing: " + parts.toString());
+
+        var degLat = parts[0];
+        var minLat = parts[1];
+        var degLon = parts[2];
+        var minLon = parts[3];
+
+        if (degLat.length < 2) {
+            degLat = ("0" + degLat).slice(-2);
+        }
+        if (degLon.length < 3) {
+            degLon = ("0" + degLon).slice(-3);
+        }
+
+        result = north + " " + degLat + "° " + minLat + " " + east + " " + degLon + "° " + minLon;
+//        console.log(result);
     }
 
     return result

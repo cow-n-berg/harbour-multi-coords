@@ -314,10 +314,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>WP </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>, orig. </source>
         <translation type="unfinished"></translation>
     </message>
@@ -327,6 +323,14 @@
     </message>
     <message>
         <source>Paste the entire Geocache description - or the content of a GPX file! - in the next text area. Use the button to extract possible coordinates and formulas. Use press-and-hold to remove options. Formulas may be too long, you can edit them later. Use TinyEdit for GPX downloads, or WlanKeyboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Additional WP</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
