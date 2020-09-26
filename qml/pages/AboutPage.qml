@@ -192,6 +192,23 @@ Page {
             }
 
             Label {
+                id: extrasLabel
+                width: parent.width - 2*Theme.paddingLarge
+                text: qsTr("Many calculations have been added, like
+                       <br/>intersections of lines and circles.
+                       <br/>BTW: I started using it for Mysteries as
+                       <br/>well, like the Bonus cache of a trail.
+                       <br/>Just one waypoint with the formula, and
+                       <br/>all letters to collect during the trail.")
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                font.pixelSize: Theme.fontSizeExtraSmall
+                horizontalAlignment: Text.AlignHCenter
+                textFormat: Text.StyledText
+                linkColor: generic.highlightColor
+                onLinkActivated: ExternalLinks.browse(link)
+            }
+
+            Label {
                 id: enjoyLabel
                 width: parent.width
                 text: qsTr("Enjoy!")

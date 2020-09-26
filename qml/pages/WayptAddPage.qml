@@ -21,7 +21,7 @@ Dialog {
     property var wpIsWp    : true
     property var wpFound   : false
     property var wpLetters : ""
-    property var letterExtract: TF.lettersFromRaw(txtNote.text)
+    property var letterExtract: TF.lettersFromRaw(txtNote.text, generic.allLetters, wayptid)
 
     property var regExPar1  : /\(/g;
     property var regExPar2  : /\)/g;
@@ -264,7 +264,7 @@ Dialog {
             ButtonLayout {
                 preferredWidth: Theme.buttonWidthExtraSmall
                 Button {
-                    text: letterExtract === "" ? qsTr("No letters?") : qsTr("Add ") + letterExtract
+                    text: letterExtract === "" ? qsTr("No letters?") : qsTr("Use ") + letterExtract
                     enabled: letterExtract !== ""
                     color: generic.primaryColor
                     onClicked: {

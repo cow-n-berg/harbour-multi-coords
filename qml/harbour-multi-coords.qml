@@ -29,6 +29,8 @@ ApplicationWindow
     property var secondaryHighlightColor  : nightCacheMode ? "crimson"   : Theme.secondaryHighlightColor
     property var highlightBackgroundColor : nightCacheMode ? "maroon"    : Theme.highlightBackgroundColor
 
+    property string rawText               : ""
+
     property var gcName
     property var gcCode
     property var gcId

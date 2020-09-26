@@ -76,8 +76,7 @@ function cleanTablesRecs() {
     });
 }
 
-function initializeDatabase()
-{
+function initializeDatabase() {
     var db = openDatabase();
 
     db.transaction(function(tx) {

@@ -13,12 +13,13 @@
 # - Summary of changes
 
 * Fri Sep 25 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.1
-- Small improvement to "Add Waypoint"
+- Small improvements to "Add Waypoint"
 - Polished the Calculations page, added calculation "Circle through 3 WPs"
 - Introduced UTM for calculations and display.
   UTM / WGS conversion is OK for North, but not for East/West! Usable for calculations though.
   Waypoint calculations available for given coordinates, and for solved formulas.
-  "Add multi" removed from cover because Geocache list was not refreshing
+  "Add multi" removed from cover because Geocache list was not refreshing.
+  Changed manipulation of raw text for easier setup of Waypoints, formulas, letters.
 
 * Tue Sep 22 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.0
 - Many waypoint calculations added, for now only in The Netherlands

@@ -47,6 +47,15 @@
                        &lt;br/&gt;Edit formulas and letters, and go!</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Many calculations have been added, like
+                       &lt;br/&gt;intersections of lines and circles.
+                       &lt;br/&gt;BTW: I started using it for Mysteries as
+                       &lt;br/&gt;well, like the Bonus cache of a trail.
+                       &lt;br/&gt;Just one waypoint with the formula, and
+                       &lt;br/&gt;all letters to collect during the trail.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CachesPage</name>
@@ -578,27 +587,15 @@ will work only in The Netherlands</source>
 <context>
     <name>WayptShowPage</name>
     <message>
-        <source>Calculated</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source> Find cache!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Original formula</source>
+        <source>Calculated</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>All values</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delete waypoint</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Overview</source>
+        <source>Note</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -606,7 +603,7 @@ will work only in The Netherlands</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Note</source>
+        <source>Overview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -619,6 +616,18 @@ will work only in The Netherlands</source>
     </message>
     <message>
         <source> notation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Original formula</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All values</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete waypoint</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

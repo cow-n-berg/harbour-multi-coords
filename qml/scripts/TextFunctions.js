@@ -515,8 +515,9 @@ function coordsByRegEx(rawText, searchLength) {
                 }
                 else {
                     if (wpCoord === "") {
-                        var leng = Math.min(40, wpCmt.length + 1);
-                        coordinate = wpCmt.slice(0,leng);
+//                        var leng = Math.min(40, wpCmt.length + 1);
+//                        coordinate = wpCmt.slice(0,leng);
+                        coordinate = wpCmt;
                     }
                     else {
                         coordinate = wpCoord;
@@ -771,30 +772,65 @@ function coordLatLon(rawText) {
     return { coord: coordinate, regex: re}
 }
 
-function lettersFromRaw(rawText) {
+function lettersFromRaw(rawText, allLetters, wayptid) {
     var result = "";
+    var regExNSEW = /([NS])\s?[0-9]{1,2}°?\s+[^.]+?[\.].*\s([EW])\s?[0-9]{1,3}°?\s+[^.]+?\./
     var regExLetter1 = /(\b[A-Z]+?\b)/g
     var regExLetter2 = /(\b[a-z]\b)/g
     var res;
-    var unwanted = ["WP", "FN"];
+    var unwanted = ["WP", "FN", "PK"];
+    var found = false;
+    var options = [];
 
+    if (wayptid === undefined)
+        wayptid = -1;
+    if (allLetters === undefined)
+        allLetters = [];
+
+    // We don't want to suggest NSEW
+    res = regExNSEW.exec(rawText);
+    if (res !== null) {
+//        console.log(JSON.stringify(res));
+        unwanted.push(res[1]);
+        unwanted.push(res[2]);
+    }
+
+    // We don't want any letters already searched in other waypoints
+    for (var i = 0; i < allLetters.length; i++) {
+        if (allLetters[i].wayptid !== wayptid) {
+            unwanted.push(allLetters[i].letter);
+        }
+    }
+
+//    console.log(unwanted.toString());
+
+    // Find candidates
     rawText = " " + rawText + " ";
     do {
         res = regExLetter1.exec(rawText);
         if (res !== null) {
-            if (res[1] !== "WP" && res[1] !== "FN" && result.search(res[1]) < 0) {
-                result += (result === "" ? "" : " ") + res[1];
-            }
+            options.push(res[1]);
         }
     } while (res !== null)
     do {
         res = regExLetter2.exec(rawText);
         if (res !== null) {
-            if (res[1] !== "WP" && res[1] !== "FN" && result.search(res[1]) < 0) {
-                result += (result === "" ? "" : " ") + res[1];
-            }
+            options.push(res[1]);
         }
     } while (res !== null)
+
+    options.sort();
+
+    for (i = 0; i < options.length; i++) {
+        found = false;
+        for (var j = 0; j < unwanted.length; j++) {
+            if (options[i] === unwanted [j])
+                found = true;
+        }
+        if (!found && result.search(options[i]) < 0) {
+            result += (result === "" ? "" : " ") + options[i];
+        }
+    }
 
     return result
 }

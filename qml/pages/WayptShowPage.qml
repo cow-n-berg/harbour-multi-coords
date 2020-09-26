@@ -57,12 +57,15 @@ Dialog {
             console.log( "listModel Letters updated");
             generic.allLetters = Database.getLetters(generic.gcId);
             generic.wpCalc      = TF.evalFormula(generic.wpForm, generic.allLetters)
-            letterExtract      = TF.lettersFromRaw(txtNote.text)
+            letterExtract      = TF.lettersFromRaw(txtNote.text, generic.allLetters, generic.wpId)
             bracketsFormula    = TF.addParentheses(generic.wpForm, "", generic.allLetters)
         }
     }
 
-    Component.onCompleted: listModel.update()
+    Component.onCompleted: {
+        listModel.update()
+
+    }
 
     Rectangle {
         anchors.fill: parent
@@ -111,13 +114,7 @@ Dialog {
             icon.color: generic.primaryColor
 //            visible: TF.formulaSolved (wpcalc.text)
             onClicked: {
-                if (generic.formulaCopyMode) {
-                    Clipboard.text = TF.copyText( generic.wpCalc, copyFirstPart )
-                    copyFirstPart = !copyFirstPart
-                }
-                else {
-                    Clipboard.text = wpcalc.text
-                }
+                Clipboard.text = wpcalc.text
             }
         }
 
