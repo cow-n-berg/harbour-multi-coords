@@ -253,6 +253,7 @@ function getGeocaches() {
 function getWaypts(cacheid, hideFound) {
     var waypts = [];
     var db = openDatabase();
+    var i;
 
     db.transaction(function(tx) {
         tx.executeSql('\
@@ -262,7 +263,8 @@ function getWaypts(cacheid, hideFound) {
         tx.executeSql('\
             UPDATE geocaches \
             SET active = 1 \
-            WHERE cacheid = ?;', [cacheid]);
+            WHERE cacheid = ? \
+            ;', [cacheid]);
     });
 
     if (hideFound) {
@@ -272,6 +274,7 @@ function getWaypts(cacheid, hideFound) {
                     wayptid, \
                     waypoint, \
                     formula, \
+                    '' AS calculated, \
                     note, \
                     is_waypoint, \
                     found \
@@ -280,7 +283,7 @@ function getWaypts(cacheid, hideFound) {
                   AND found=0\
                 ORDER BY cacheid, waypoint \
                 ;", [cacheid]);
-            for (var i = 0; i < rs.rows.length; ++i) {
+            for (i = 0; i < rs.rows.length; ++i) {
                 waypts.push(rs.rows.item(i));
             }
         });
@@ -292,6 +295,7 @@ function getWaypts(cacheid, hideFound) {
                     wayptid, \
                     waypoint, \
                     formula, \
+                    '' AS calculated, \
                     note, \
                     is_waypoint, \
                     found \
@@ -299,11 +303,16 @@ function getWaypts(cacheid, hideFound) {
                     WHERE cacheid=? \
                     ORDER BY cacheid, waypoint \
                 ;", [cacheid]);
-            for (var i = 0; i < rs.rows.length; ++i) {
+            for (i = 0; i < rs.rows.length; ++i) {
                 waypts.push(rs.rows.item(i));
             }
         });
     }
+    var allLetters = getLetters(cacheid);
+    for (i = 0; i < waypts.length; ++i) {
+        waypts[i].calculated = TF.evalFormula(waypts[i].formula, allLetters) ;
+    }
+    console.log(JSON.stringify(waypts));
     return waypts;
 }
 

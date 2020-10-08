@@ -114,7 +114,8 @@ Page {
                         anchors.left: iconContainer.right
                         width: parent.width - iconContainer.width - 2 * Theme.paddingSmall
                         height: Theme.itemSizeExtraLarge + Theme.paddingSmall
-                        text: ( is_waypoint ? "WP" + " " + waypoint : "Cache" ) + ": " + TF.evalFormula(formula, generic.allLetters) + TF.reqWpLetters( generic.allLetters, wayptid )
+                        text: ( is_waypoint ? "WP" + " " + waypoint : "Cache" ) + ": " + calculated + TF.reqWpLetters( generic.allLetters, wayptid )
+//                        text: ( is_waypoint ? "WP" + " " + waypoint : "Cache" ) + ": " + TF.evalFormula(formula, generic.allLetters) + TF.reqWpLetters( generic.allLetters, wayptid )
                         font.pixelSize: Theme.fontSizeMedium
                         color: found ? generic.secondaryColor : generic.primaryColor
                         readOnly: true

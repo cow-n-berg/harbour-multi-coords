@@ -27,6 +27,7 @@ Dialog {
     property var regExPar2  : /\)/g;
     property var regExTimes : /x/g;
     property var regExDivid : /÷/g;
+    property var regExMinus : /–/g;
     property var regExComma : /,/g;
 
     canAccept: txtFormula.text !== "" && txtWpNr.text !== ""
@@ -132,26 +133,6 @@ Dialog {
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: {
-                    if (txtNote.text === "") {
-                        txtNote.focus = true
-                    }
-                    else {
-                        focus = false
-                    }
-                }
-            }
-
-            TextArea {
-                id: txtNote
-                width: parent.width
-                text: wpNote
-                placeholderText: label
-                placeholderColor: generic.secondaryColor
-                label: qsTr("Note")
-                color: generic.primaryColor
-                EnterKey.enabled: text.length > 0
-                EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                EnterKey.onClicked: {
                     if (txtFormula.text === "") {
                         txtFormula.focus = true
                     }
@@ -196,8 +177,8 @@ Dialog {
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: {
-                    if (txtLetters.text === "") {
-                        txtLetters.focus = true
+                    if (txtNote.text === "") {
+                        txtNote.focus = true
                     }
                     else {
                         focus = false
@@ -224,11 +205,12 @@ Dialog {
                     }
                 }
                 Button {
-                    text: "x÷, » */"
+                    text: "x÷–, » */-"
                     color: generic.primaryColor
                     onClicked: {
                         txtFormula.text = txtFormula.text.replace(regExTimes, '*')
                         txtFormula.text = txtFormula.text.replace(regExDivid, '/')
+                        txtFormula.text = txtFormula.text.replace(regExMinus, '-')
                         txtFormula.text = txtFormula.text.replace(regExComma, '')
                     }
                 }
@@ -254,6 +236,26 @@ Dialog {
                 font.pixelSize: Theme.fontSizeExtraSmall
                 color: generic.secondaryColor
                 visible: text !== ""
+            }
+
+            TextArea {
+                id: txtNote
+                width: parent.width
+                text: wpNote
+                placeholderText: label
+                placeholderColor: generic.secondaryColor
+                label: qsTr("Note")
+                color: generic.primaryColor
+                EnterKey.enabled: text.length > 0
+                EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                EnterKey.onClicked: {
+                    if (txtLetters.text === "") {
+                        txtLetters.focus = true
+                    }
+                    else {
+                        focus = false
+                    }
+                }
             }
 
             SectionHeader {

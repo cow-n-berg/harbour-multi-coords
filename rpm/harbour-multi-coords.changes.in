@@ -12,6 +12,9 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Thu Oct 08 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.1
+- Bug fixes to Calculations, small improvements to AddMulti
+
 * Fri Sep 25 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.1
 - Small improvements to "Add Waypoint"
 - Polished the Calculations page, added calculation "Circle through 3 WPs"

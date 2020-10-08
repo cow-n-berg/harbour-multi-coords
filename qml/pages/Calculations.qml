@@ -12,6 +12,7 @@ Page {
     property var callback
 
     property var waypts
+    property var maxWaypt   : 0
     property var projCoord  : ""
     property var distAngle  : ""
     property var intersect1 : ""
@@ -23,6 +24,7 @@ Page {
     property var wgsCoord2  : ""
     property var distance   : 0
 
+    property bool addEnabled: true
     property var projText   : "Projection of WP " + wp11.text + ": " + deg1.text + "° and " + dist1.text + " m"
     property var interText1 : "Intersection of lines WPs " + wp21.text + "-" + wp22.text + " and " + wp23.text + "-" + wp24.text
     property var interText2 : "Intersection of lines WPs " + wp31.text + ", " + deg31.text + "° and " + wp32.text + ", " + deg32.text + "°"
@@ -34,8 +36,9 @@ Page {
 
     function populate() {
         waypts = Database.getWaypts(generic.gcId, false);
-        for (var i = 0; i < waypts.length; ++i) {
-            waypts[i].calculated = TF.evalFormula(waypts[i].formula, generic.allLetters)
+        for (var i = 0; i < waypts.length; i++) {
+            maxWaypt = waypts[i].waypoint > maxWaypt ? waypts[i].waypoint : maxWaypt
+//            waypts[i].calculated = TF.evalFormula(waypts[i].formula, generic.allLetters)
         }
     }
 
@@ -45,6 +48,7 @@ Page {
         running: false
         onTriggered: {
             indicator.running = false
+            addEnabled = true
         }
     }
 
@@ -254,12 +258,13 @@ Page {
                 IconButton {
                     icon.source: "image://theme/icon-l-new"
                     icon.color: generic.primaryColor
-                    enabled: newCoord.text !== ""
+                    enabled: newCoord.text !== "" && addEnabled
                     onClicked: {
                         indicator.running = true
+                        addEnabled = false
                         addTimer.start()
-                        Database.addWaypt(generic.gcId, "", waypts.length, projCoord, projCoord, projText, true, false, "")
-                        waypts = Database.getWaypts(generic.gcId, false);
+                        Database.addWaypt(generic.gcId, "", maxWaypt + 1, projCoord, projCoord, projText, true, false, "")
+                        populate()
                         page.callback(true)
                    }
                 }
@@ -423,12 +428,13 @@ Page {
                 IconButton {
                     icon.source: "image://theme/icon-l-new"
                     icon.color: generic.primaryColor
-                    enabled: inters1.text !== ""
+                    enabled: inters1.text !== "" && addEnabled
                     onClicked: {
                         indicator.running = true
+                        addEnabled = false
                         addTimer.start()
-                        Database.addWaypt(generic.gcId, "", waypts.length, intersect1, intersect1, interText1, true, false, "")
-                        waypts = Database.getWaypts(generic.gcId, false);
+                        Database.addWaypt(generic.gcId, "", maxWaypt + 1, intersect1, intersect1, interText1, true, false, "")
+                        populate()
                         page.callback(true)
                    }
                 }
@@ -533,12 +539,13 @@ Page {
                 IconButton {
                     icon.source: "image://theme/icon-l-new"
                     icon.color: generic.primaryColor
-                    enabled: inters2.text !== ""
+                    enabled: inters2.text !== "" && addEnabled
                     onClicked: {
                         indicator.running = true
+                        addEnabled = false
                         addTimer.start()
-                        Database.addWaypt(generic.gcId, "", waypts.length, intersect2, intersect2, interText2, true, false, "")
-                        waypts = Database.getWaypts(generic.gcId, false);
+                        Database.addWaypt(generic.gcId, "", maxWaypt + 1, intersect2, intersect2, interText2, true, false, "")
+                        populate()
                         page.callback(true)
                    }
                 }
@@ -643,17 +650,16 @@ Page {
                 IconButton {
                     icon.source: "image://theme/icon-l-new"
                     icon.color: generic.primaryColor
-                    enabled: intersect3 !== undefined
+                    enabled: intersect3 !== undefined && addEnabled
                     onClicked: {
-                        if (intersect3.possible) {
-                            indicator.running = true
-                            addTimer.start()
-                            Database.addWaypt(generic.gcId, "", waypts.length, intersect3.coord1, intersect3.coord1, interText3, true, false, "")
-                            Database.addWaypt(generic.gcId, "", waypts.length + 1, intersect3.coord2, intersect3.coord2, interText3, true, false, "")
-                            waypts = Database.getWaypts(generic.gcId, false);
-                            page.callback(true)
-                        }
-                   }
+                        indicator.running = true
+                        addEnabled = false
+                        addTimer.start()
+                        Database.addWaypt(generic.gcId, "", maxWaypt + 1, intersect3.coord1, intersect3.coord1, interText3, true, false, "")
+                        Database.addWaypt(generic.gcId, "", maxWaypt + 2, intersect3.coord2, intersect3.coord2, interText3, true, false, "")
+                        populate()
+                        page.callback(true)
+                    }
                 }
 
                 IconButton {
@@ -756,14 +762,15 @@ Page {
                 IconButton {
                     icon.source: "image://theme/icon-l-new"
                     icon.color: generic.primaryColor
-                    enabled: intersect4 !== undefined
+                    enabled: intersect4 !== undefined && addEnabled
                     onClicked: {
                         if (intersect4.possible) {
                             indicator.running = true
+                            addEnabled = false
                             addTimer.start()
-                            Database.addWaypt(generic.gcId, "", waypts.length, intersect4.coord1, intersect4.coord1, interText4, true, false, "")
-                            Database.addWaypt(generic.gcId, "", waypts.length + 1, intersect4.coord2, intersect4.coord2, interText4, true, false, "")
-                            waypts = Database.getWaypts(generic.gcId, false);
+                            Database.addWaypt(generic.gcId, "", maxWaypt + 1, intersect4.coord1, intersect4.coord1, interText4, true, false, "")
+                            Database.addWaypt(generic.gcId, "", maxWaypt + 2, intersect4.coord2, intersect4.coord2, interText4, true, false, "")
+                            populate()
                             page.callback(true)
                         }
                     }
@@ -856,13 +863,14 @@ Page {
                 IconButton {
                     icon.source: "image://theme/icon-l-new"
                     icon.color: generic.primaryColor
-                    enabled: circle !== undefined
+                    enabled: circle !== undefined && addEnabled
                     onClicked: {
                         if (circle.possible) {
                             indicator.running = true
+                            addEnabled = false
                             addTimer.start()
-                            Database.addWaypt(generic.gcId, "", waypts.length, circle.centre, circle.centre, centreTxt, true, false, "")
-                            waypts = Database.getWaypts(generic.gcId, false);
+                            Database.addWaypt(generic.gcId, "", maxWaypt + 1, circle.centre, circle.centre, centreTxt, true, false, "")
+                            populate()
                             page.callback(true)
                         }
                    }
@@ -941,12 +949,13 @@ Page {
                 IconButton {
                     icon.source: "image://theme/icon-l-new"
                     icon.color: generic.primaryColor
-                    enabled: wgs.text !== ""
+                    enabled: wgs.text !== "" && addEnabled
                     onClicked: {
                         indicator.running = true
+                        addEnabled = false
                         addTimer.start()
-                        Database.addWaypt(generic.gcId, "", waypts.length, wgsCoord1, wgsCoord1, rdText, true, false, "")
-                        waypts = Database.getWaypts(generic.gcId, false);
+                        Database.addWaypt(generic.gcId, "", maxWaypt + 1, wgsCoord1, wgsCoord1, rdText, true, false, "")
+                        populate()
                         page.callback(true)
                    }
                 }
@@ -1048,12 +1057,13 @@ Page {
                 IconButton {
                     icon.source: "image://theme/icon-l-new"
                     icon.color: generic.primaryColor
-                    enabled: wgs2.text !== ""
+                    enabled: wgs2.text !== "" && addEnabled
                     onClicked: {
                         indicator.running = true
+                        addEnabled = false
                         addTimer.start()
-                        Database.addWaypt(generic.gcId, "", waypts.length, wgsCoord2, wgsCoord2, utmText, true, false, "")
-                        waypts = Database.getWaypts(generic.gcId, false);
+                        Database.addWaypt(generic.gcId, "", maxWaypt + 1, wgsCoord2, wgsCoord2, utmText, true, false, "")
+                        populate()
                         page.callback(true)
                    }
                 }

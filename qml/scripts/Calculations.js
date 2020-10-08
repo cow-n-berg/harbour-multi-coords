@@ -6,14 +6,26 @@ function showFormula( wp1, waypts ) {
         return ""
     }
     else {
-        var wp = parseInt( wp1 );
-        return waypts[wp].calculated;
+        wp1 = findWp(wp1, waypts);
+        return "WP" + waypts[wp1].waypoint + " " + waypts[wp1].calculated;
     }
+}
+
+function findWp(wp1, waypts) {
+    var wp = parseInt(wp1);
+    var wpFound = wp;
+    for (var i = 0; i < waypts.length; i++) {
+        if (waypts[i].waypoint === wp) {
+            wpFound = i;
+        }
+    }
+    return wpFound
 }
 
 function projectWp( wp1, degrees, distance, waypts, rd ) {
     var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\D*?\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
-    var wp = parseInt( wp1 );
+    var wp = findWp(wp1, waypts);
+
     var formula = waypts[wp].calculated;
     var res = regExLatLon.exec(formula);
 
@@ -38,7 +50,7 @@ function intersection1( wp1, wp2, wp3, wp4, waypts, rd ) {
     // Intersection of two lines, from WP1 to WP2 and from WP3 to WP4
 
     // WP1
-    var wp = parseInt( wp1 );
+    var wp = findWp(wp1, waypts);
     var formula = waypts[wp].calculated;
     var res = regExLatLon.exec(formula);
 
@@ -47,7 +59,7 @@ function intersection1( wp1, wp2, wp3, wp4, waypts, rd ) {
     var xy1 = wgs2xy(lat, lon, rd);
 
     // WP2
-    wp = parseInt( wp2 );
+    wp = findWp(wp2, waypts);
     formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
@@ -60,7 +72,7 @@ function intersection1( wp1, wp2, wp3, wp4, waypts, rd ) {
     var a1 = xy1.y - b1 * xy1.x;
 
     // WP3
-    wp = parseInt( wp3 );
+    wp = findWp(wp3, waypts);
     formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
@@ -69,7 +81,7 @@ function intersection1( wp1, wp2, wp3, wp4, waypts, rd ) {
     xy1 = wgs2xy(lat, lon, rd);
 
     // WP4
-    wp = parseInt( wp4 );
+    wp = findWp(wp4, waypts);
     formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
@@ -99,7 +111,7 @@ function intersection2( wp1, degrees1, wp2, degrees2, waypts, rd ) {
     // Intersection of two lines, from WP1 at an angle, and from WP2 at another angle
 
     // WP1
-    var wp = parseInt( wp1 );
+    var wp = findWp(wp1, waypts);
     var formula = waypts[wp].calculated;
     var res = regExLatLon.exec(formula);
 
@@ -115,7 +127,7 @@ function intersection2( wp1, degrees1, wp2, degrees2, waypts, rd ) {
     var a1 = xy1.y - b1 * xy1.x;
 
     // WP2
-    wp = parseInt( wp2 );
+    wp = findWp(wp2, waypts);
     formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
@@ -150,7 +162,7 @@ function intersection3( wp1, degrees1, wp2, radius2, waypts, rd ) {
     // Intersection of a line, from WP1 at an angle, and a circle defined by WP2 and a radius
 
     // WP1
-    var wp = parseInt( wp1 );
+    var wp = findWp(wp1, waypts);
     var formula = waypts[wp].calculated;
     var res = regExLatLon.exec(formula);
 
@@ -166,7 +178,7 @@ function intersection3( wp1, degrees1, wp2, radius2, waypts, rd ) {
     var a = xy1.y - b * xy1.x;
 
     // WP2
-    wp = parseInt( wp2 );
+    wp = findWp(wp2, waypts);
     formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
@@ -213,7 +225,7 @@ function intersection4( wp1, radius1, wp2, radius2, waypts, rd ) {
     // Intersection of two circles, defined by WP1 and a radius, and WP2 and a radius
 
     // Circle WP1
-    var wp = parseInt( wp1 );
+    var wp = findWp(wp1, waypts);
     var formula = waypts[wp].calculated;
     var res = regExLatLon.exec(formula);
 
@@ -226,7 +238,7 @@ function intersection4( wp1, radius1, wp2, radius2, waypts, rd ) {
     var r = parseFloat(radius1);
 
     // Circle WP2
-    wp = parseInt( wp2 );
+    wp = findWp(wp2, waypts);
     formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
@@ -276,7 +288,7 @@ function distance( wp1, wp2, wp3, wp4, wp5, waypts, rd ) {
     var showSides = false;
 
     // WP1
-    var wp = parseInt( wp1 );
+    var wp = findWp(wp1, waypts);
     var formula = waypts[wp].calculated;
     var res = regExLatLon.exec(formula);
 
@@ -289,7 +301,7 @@ function distance( wp1, wp2, wp3, wp4, wp5, waypts, rd ) {
 //    str += "WP" + wp + ": " + formula + ", x: " + x.toFixed(0) + ", y: " + y.toFixed(0) + "\n";
 
     // WP2
-    wp = parseInt( wp2 );
+    wp = findWp(wp2, waypts);
     formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
@@ -301,7 +313,7 @@ function distance( wp1, wp2, wp3, wp4, wp5, waypts, rd ) {
 //    str += "WP" + wp + ": " + formula + ", x: " + x.toFixed(0) + ", y: " + y.toFixed(0) + "\n";
 
     // WP3
-    wp = parseInt( wp3 );
+    wp = findWp(wp3, waypts);
     formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
@@ -313,7 +325,7 @@ function distance( wp1, wp2, wp3, wp4, wp5, waypts, rd ) {
 //    str += "WP" + wp + ": " + formula + ", x: " + x.toFixed(0) + ", y: " + y.toFixed(0) + "\n";
 
     // WP4
-    wp = parseInt( wp4 );
+    wp = findWp(wp4, waypts);
     formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
@@ -325,7 +337,7 @@ function distance( wp1, wp2, wp3, wp4, wp5, waypts, rd ) {
 //    str += "WP" + wp + ": " + formula + ", x: " + x.toFixed(0) + ", y: " + y.toFixed(0) + "\n";
 
     // WP5
-    wp = parseInt( wp5 );
+    wp = findWp(wp5, waypts);
     formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
@@ -357,7 +369,7 @@ function distAngle( wp1, wp2, waypts, rd ) {
     var rdXY = [];
 
     // WP1
-    var wp = parseInt( wp1 );
+    var wp = findWp(wp1, waypts);
     var formula = waypts[wp].calculated;
     var res = regExLatLon.exec(formula);
 
@@ -367,7 +379,7 @@ function distAngle( wp1, wp2, waypts, rd ) {
     rdXY.push(xy);
 
     // WP2
-    wp = parseInt( wp2 );
+    wp = findWp(wp2, waypts);
     formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
@@ -394,7 +406,7 @@ function circle( wp1, wp2, wp3, waypts, rd ) {
     // Intersection of two lines, from WP1 to WP2 and from WP3 to WP4
 
     // WP1
-    var wp = parseInt( wp1 );
+    var wp = findWp(wp1, waypts);
     var formula = waypts[wp].calculated;
     var res = regExLatLon.exec(formula);
 
@@ -403,7 +415,7 @@ function circle( wp1, wp2, wp3, waypts, rd ) {
     var xy1 = wgs2xy(lat, lon, rd);
 
     // WP2
-    wp = parseInt( wp2 );
+    wp = findWp(wp2, waypts);
     formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
@@ -416,7 +428,7 @@ function circle( wp1, wp2, wp3, waypts, rd ) {
     var a1 = (xy1.y + xy2.y - b1 * (xy1.x + xy2.x)) / 2;
 
     // WP3
-    wp = parseInt( wp3 );
+    wp = findWp(wp3, waypts);
     formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
@@ -467,7 +479,7 @@ function xy2wgs( x, y, rd, xy ) {
 
 function coord2utm( wp1, waypts ) {
     var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\D*?\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
-    var wp = parseInt( wp1 );
+    var wp = findWp(wp1, waypts);
     var formula = waypts[wp].calculated;
     var str = "";
     var res = regExLatLon.exec(formula);

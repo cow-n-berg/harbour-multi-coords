@@ -99,11 +99,39 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Line distance, angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Intersect lines using 4 WP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Pentagon distance</source>
+        <source>Intersect lines 2 WPs, angles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intersect line and circle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intersect two circles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Circle through 3 WPs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RD XY to WGS coordinate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UTM to WGS coordinate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pentagon circumference</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -127,34 +155,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>RD XY to WGS coordinate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>WGS Coordinate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Circumference (meter)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Intersect line and circle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Pentagon circumference</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Line distance, angle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Intersect lines 2 WPs, angles</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>WP1: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -171,14 +171,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Radius (meter)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Intersection coordinates</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Line WP1: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -187,7 +179,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Intersect two circles</source>
+        <source>Radius (meter)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intersection coordinates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -199,15 +195,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Circle through 3 WPs</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Circle centre and radius (meter)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>UTM to WGS coordinate</source>
+        <source>WGS Coordinate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pentagon distance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Circumference (meter)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -576,11 +576,11 @@ will work only in The Netherlands</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Add </source>
+        <source>All information between brackets [] will be evaluated, e.g. [A+1]. Parentheses () are for calculations like [(B+3)/2]. Use squares like A*A, instead of A^2 or A². The buttons below may help with editing. The [A] button won&apos;t replace NSEW in the formula.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>All information between brackets [] will be evaluated, e.g. [A+1]. Parentheses () are for calculations like [(B+3)/2]. Use squares like A*A, instead of A^2 or A². The buttons below may help with editing. The [A] button won&apos;t replace NSEW in the formula.</source>
+        <source>Use </source>
         <translation type="unfinished"></translation>
     </message>
 </context>

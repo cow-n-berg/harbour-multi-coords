@@ -386,7 +386,7 @@ function coordsByRegEx(rawText, searchLength) {
     var regExNewlin = /\r?\n|\r/g;                             // to remove newlines
     var regExEmpty  = /N\/S[^_]+?__[^_]+?__[^_]+?___\sW\/E[^_]+?___[^_]+?__[^_]+?___/g;
 
-    var regExGcCode = /(GC.{1,5})/;
+    var regExGcCode = /(GC[0-9A-Z]{1,5})/;
     var regExGcName = /<groundspeak:name>([^<]*)/;
 
     // Stages in GPX file
@@ -394,6 +394,7 @@ function coordsByRegEx(rawText, searchLength) {
     var regExWaypt  = /(<wpt lat=.+?<\/wpt)>/g;
     var regExStWayp = /<wpt lat="([^"]*)" lon="([^"]*)">/;
     var regExStName = /<name>(.{2}).+?<\/name>/;
+    var regExWpNr   = /([0-9]+?)/;
     var regExStCmt  = /<cmt>(.*?)<\/cmt>/;
     var regExStDesc = /<desc>(.*?)<\/desc>/;
     var regExStSym  = /<sym>(.*?)<\/sym>/;
@@ -461,8 +462,9 @@ function coordsByRegEx(rawText, searchLength) {
                     var wpnr = 1;
                 }
                 else {
-                    var nr = parseInt(wpName);
-                    wpnr = isNaN(nr) ? 0 : nr;
+                    wpName = simpleRegEx(wpName, regExWpNr);
+                    if (wpName === "" ) wpName = simpleRegEx(wpDesc, regExWpNr);
+                    wpnr = ( wpName === "" ? 0 : parseInt(wpName) );
                 }
 
                 note  = wpSym + " - " + wpDesc + " - " + wpCmt
@@ -493,19 +495,20 @@ function coordsByRegEx(rawText, searchLength) {
             if (res !== null) {
                 console.log("Hidden waypoint found: "+ JSON.stringify(res));
 
+                wpSym   = res[1];
+                wpDesc  = res[2];
+                wpCoord = res[3].trim();
+                wpCmt   = res[4];
+
                 if (res[1] === "FN") {
                     wpnr = waypt;
                     console.log("Final Location, " + wpnr);
                 }
                 else {
-                    nr = parseInt(res[1]);
-                    wpnr = isNaN(nr) ? 0 : nr;
+                    wpName = simpleRegEx(wpName, regExWpNr);
+                    if (wpName === "" ) wpName = simpleRegEx(wpDesc, regExWpNr);
+                    wpnr = ( wpName === "" ? 0 : parseInt(wpName) );
                 }
-
-                wpSym   = res[1];
-                wpDesc  = res[2];
-                wpCoord = res[3].trim();
-                wpCmt   = res[4];
 
                 console.log("wpSym " + wpSym + ", wpDesc " + wpDesc + ", wpCoord: " + wpCoord + ", wpCmt: " + wpCmt );
 
@@ -524,7 +527,7 @@ function coordsByRegEx(rawText, searchLength) {
                     }
                 }
 
-                console.log(coordinate);
+//                console.log(coordinate);
 //                console.log("wpSym " + wpSym + ", wpDesc " + wpDesc + ", coord: " + coordinate + ", wpCmt: " + wpCmt );
 
                 coordRe = new RegExp(escapeRegExp(wpCmt));
