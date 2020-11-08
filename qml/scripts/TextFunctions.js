@@ -115,7 +115,7 @@ function wayptIconUrl(isWpt) {
 }
 
 /*
-*  Building up an button text
+*  Building up a button text
 */
 function wayptFoundButton(isWpt, isFound) {
     //qsTr("Mark waypoint as Found")
@@ -136,7 +136,7 @@ function wayptFoundButton(isWpt, isFound) {
 }
 
 /*
-*  Building up an button text
+*  Building up a button text
 */
 function coverText(gccode, gcname, wpnumber, showAppName) {
     var text = "";
@@ -219,6 +219,7 @@ function formulaToObj( formula ) {
 function evalFormula( formstr, letters ) {
 //    var formula = JSON.parse(formjson);
     var formula = formulaToObj(formstr);
+    var regExNonDigit = /[^0-9]/;
     var result = "";
     var i, j;
 
@@ -246,17 +247,24 @@ function evalFormula( formstr, letters ) {
                     str = str.replace(re, val);
                 }
             }
-            try {
-                var evaluated = eval(str);
-                if (evaluated === undefined) {
+            if (simpleRegEx(str, regExNonDigit) === "") {
+                // Only digits, that's what we want
+                result += str;
+            }
+            else {
+                // Won't probably be evaluated
+                try {
+                    var evaluated = eval(str);
+                    if (evaluated === undefined) {
+                        result += "[" + str + "]";
+                    }
+                    else {
+                        result += evaluated;
+                    }
+                }
+                catch(err) {
                     result += "[" + str + "]";
                 }
-                else {
-                    result += evaluated;
-                }
-            }
-            catch(err) {
-                result += "[" + str + "]";
             }
         }
         else {
@@ -425,7 +433,7 @@ function coordsByRegEx(rawText, searchLength) {
     rawText = rawText.replace(regExEmpty, "");
 
     // In case they entered a GPX file
-    result.name = simpleRegEx(rawText, regExGcName);
+    result.name = simpleRegEx(rawText, regExGcName).trim();
     result.code = simpleRegEx(rawText, regExGcCode);
 
     var regex = /<wpt lat=.+?<\/wpt>/g;

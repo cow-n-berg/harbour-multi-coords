@@ -136,6 +136,7 @@ Dialog {
                 text: generic.wpCalc
                 visible: true
                 color: generic.primaryColor
+                font.pixelSize: Theme.fontSizeLarge
             }
 
             TextArea {
@@ -162,13 +163,14 @@ Dialog {
                         width: parent.width
                         height: Theme.itemSizeMedium
                         color: generic.highlightBackgroundColor
-                        opacity: 0.85
+                        opacity: 0.7
 
                         TextField {
                             id: lettValue
                             anchors.centerIn: parent
                             text: letter + " = " + (lettervalue === "" ? "<?>" : lettervalue) + qsTr(". Click to change")
-//                            font.bold: true
+                            font.bold: true
+                            font.pixelSize: Theme.fontSizeLarge
                             labelVisible: false
                             readOnly: true
                             horizontalAlignment: TextInput.AlignHCenter

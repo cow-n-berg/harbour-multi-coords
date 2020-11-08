@@ -12,12 +12,16 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
-* Thu Oct 08 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.1
-- Bug fixes to Calculations, small improvements to AddMulti
+* Thu Oct 08 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.3
+- A part of a solved formula was shown as [06] instead of 06. Can't have that.
+- Changed appearance of letter buttons.
+
+* Thu Oct 08 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.2
+- Bug fixes to Calculations, small improvements to AddMulti.
 
 * Fri Sep 25 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.1
-- Small improvements to "Add Waypoint"
-- Polished the Calculations page, added calculation "Circle through 3 WPs"
+- Small improvements to "Add Waypoint".
+- Polished the Calculations page, added calculation "Circle through 3 WPs".
 - Introduced UTM for calculations and display.
   UTM / WGS conversion is OK for North, but not for East/West! Usable for calculations though.
   Waypoint calculations available for given coordinates, and for solved formulas.
@@ -25,11 +29,11 @@
   Changed manipulation of raw text for easier setup of Waypoints, formulas, letters.
 
 * Tue Sep 22 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.0
-- Many waypoint calculations added, for now only in The Netherlands
+- Many waypoint calculations added, for now only in The Netherlands.
 
 * Thu Sep 17 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 1.9
-- Different sorting of geocaches: 1. active (only 1), 2. found, 3. name
-- Upgrade database to support Active geocache
+- Different sorting of geocaches: 1. active (only 1), 2. found, 3. name.
+- Upgrade database to support Active geocache.
 
 * Sat Sep 12 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 1.8
 - Specific tool added for geocache GC8Y39T La Arbora, Hilversum

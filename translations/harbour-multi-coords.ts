@@ -259,11 +259,35 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Raw text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paste the entire Geocache description - or the content of a GPX file! - in the next text area. Use the button to extract possible coordinates and formulas. Use press-and-hold to remove options. Formulas may be too long, you can edit them later. Use TinyEdit for GPX downloads, or WlanKeyboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>How to add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Paste description, gpx or raw text here</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Process raw text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide formula search length</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change formula search length</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Formula search: characters after NSEW</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -279,51 +303,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>About the coordinates</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>End of coordinates list</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Coordinates list from raw text</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Paste description, gpx or raw text here</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>About waypoint numbering</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Waypoint numbering</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Raw text</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Formula search: characters after NSEW</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>As formulas may get quite long, too much text may be selected. Editing is possible AFTER creating the Geocache. Too much text selected or too little? Change formula search length and try again.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Change formula search length</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hide formula search length</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>, orig. </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -331,7 +311,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Paste the entire Geocache description - or the content of a GPX file! - in the next text area. Use the button to extract possible coordinates and formulas. Use press-and-hold to remove options. Formulas may be too long, you can edit them later. Use TinyEdit for GPX downloads, or WlanKeyboard.</source>
+        <source>About waypoint numbering</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>As formulas may get quite long, too much text may be selected. Editing is possible AFTER creating the Geocache. Too much text selected or too little? Change formula search length and try again.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About the coordinates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Coordinates list from raw text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -340,6 +332,14 @@
     </message>
     <message>
         <source>Additional WP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>, orig. </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>End of coordinates list</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
