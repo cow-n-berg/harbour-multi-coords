@@ -31,15 +31,34 @@ function projectWp( wp1, degrees, distance, waypts, rd ) {
 
     var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
     var lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    var xy = wgs2xy(lat, lon, rd);
-
     var dist = parseFloat(distance);
-    var rad = parseFloat(degrees) / 180 * Math.PI;
 
-    var rdx = xy.x + dist * Math.sin(rad);
-    var rdy = xy.y + dist * Math.cos(rad);
+//    var xy = wgs2xy(lat, lon, rd);
+//    var rad = parseFloat(degrees) / 180 * Math.PI;
+//    var rdx = xy.x + dist * Math.sin(rad);
+//    var rdy = xy.y + dist * Math.cos(rad);
+//    return xy2wgs(rdx, rdy, rd, xy);
 
-    return xy2wgs(rdx, rdy, rd, xy);
+    var deg = parseFloat(degrees);
+    var destiny = destVincenty(lat, lon, deg, dist);
+
+    var latitude  = destiny.lat;
+    var longitude = destiny.lon;
+
+    var latDeg = Math.floor(latitude );
+    var lonDeg = Math.floor(longitude);
+    lat = (latitude  - latDeg) * 60;
+    lon = (longitude - lonDeg) * 60;
+
+    var strLat = "00" + latDeg.toString();
+    var strLon = "00" + lonDeg.toString();
+    var minLat = "00" + lat.toFixed(3);
+    var minLon = "00" + lon.toFixed(3);
+
+    var str  =  "N " + strLat.slice(-2) + "° " + minLat.slice(-6);
+    str += " E " + strLon.slice(-3) + "° " + minLon.slice(-6);
+
+    return str
 }
 
 function intersection1( wp1, wp2, wp3, wp4, waypts, rd ) {
@@ -365,6 +384,7 @@ function distance( wp1, wp2, wp3, wp4, wp5, waypts, rd ) {
 function distAngle( wp1, wp2, waypts, rd ) {
     var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\D*?\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var dist = 0;
+    var deg  = 0;
     var str = "Distance: ";
     var rdXY = [];
 
@@ -373,27 +393,35 @@ function distAngle( wp1, wp2, waypts, rd ) {
     var formula = waypts[wp].calculated;
     var res = regExLatLon.exec(formula);
 
-    var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
-    var lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    var xy = wgs2xy(lat, lon, rd);
-    rdXY.push(xy);
+    // var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
+    // var lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
+    // var xy = wgs2xy(lat, lon, rd);
+    // rdXY.push(xy);
+
+    var lat1 = parseInt(res[1]) + parseFloat(res[2]) / 60;
+    var lon1 = parseInt(res[3]) + parseFloat(res[4]) / 60;
 
     // WP2
     wp = findWp(wp2, waypts);
     formula = waypts[wp].calculated;
     res = regExLatLon.exec(formula);
 
-    lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
-    lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
-    xy = wgs2xy(lat, lon, rd);
-    rdXY.push(xy);
+    // lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
+    // lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
+    // xy = wgs2xy(lat, lon, rd);
+    // rdXY.push(xy);
 
-    dist = Math.sqrt( Math.pow(rdXY[0].x - rdXY[1].x, 2) + Math.pow(rdXY[0].y - rdXY[1].y, 2) );
+    var lat2 = parseInt(res[1]) + parseFloat(res[2]) / 60;
+    var lon2 = parseInt(res[3]) + parseFloat(res[4]) / 60;
+
+    // dist = Math.sqrt( Math.pow(rdXY[0].x - rdXY[1].x, 2) + Math.pow(rdXY[0].y - rdXY[1].y, 2) );
+    dist = distVincenty(lat1, lon1, lat2, lon2);
     str += Math.round(dist) + " m, angle: ";
 
-    var deg = Math.atan2(rdXY[1].x - rdXY[0].x, rdXY[1].y - rdXY[0].y) / Math.PI * 180;
-    deg = (deg + 360) % 360;
-    str += deg.toFixed(1) + "°";
+    // deg = Math.atan2(rdXY[1].x - rdXY[0].x, rdXY[1].y - rdXY[0].y) / Math.PI * 180;
+    deg = bearVincenty(lat1, lon1, lat2, lon2, false);
+    // deg = (deg + 360) % 360;
+    str += deg.toFixed(2) + "°";
 
     return str
 }
@@ -786,3 +814,168 @@ function utm2wgs(utm) {
     return { lat: latitude, lon: longitude, str: str }
 
 }
+
+/*!
+ * JavaScript function to calculate the destination point given start point latitude / longitude (numeric degrees), bearing (numeric degrees) and distance (in m).
+ *
+ * Original scripts by Chris Veness
+ * Taken from http://movable-type.co.uk/scripts/latlong-vincenty-direct.html and optimized / cleaned up by Mathias Bynens <http://mathiasbynens.be/>
+ * Based on the Vincenty direct formula by T. Vincenty, “Direct and Inverse Solutions of Geodesics on the Ellipsoid with application of nested equations”, Survey Review, vol XXII no 176, 1975 <http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf>
+ */
+function toRad(n) {
+    return n * Math.PI / 180;
+};
+
+function toDeg(n) {
+    return n * 180 / Math.PI;
+};
+
+function destVincenty(lat1, lon1, brng, dist) {
+    var a = 6378137,
+        b = 6356752.3142,
+        f = 1 / 298.257223563, // WGS-84 ellipsiod
+        s = dist,
+        alpha1 = toRad(brng),
+        sinAlpha1 = Math.sin(alpha1),
+        cosAlpha1 = Math.cos(alpha1),
+        tanU1 = (1 - f) * Math.tan(toRad(lat1)),
+        cosU1 = 1 / Math.sqrt((1 + tanU1 * tanU1)), sinU1 = tanU1 * cosU1,
+        sigma1 = Math.atan2(tanU1, cosAlpha1),
+        sinAlpha = cosU1 * sinAlpha1,
+        cosSqAlpha = 1 - sinAlpha * sinAlpha,
+        uSq = cosSqAlpha * (a * a - b * b) / (b * b),
+        A = 1 + uSq / 16384 * (4096 + uSq * (-768 + uSq * (320 - 175 * uSq))),
+        B = uSq / 1024 * (256 + uSq * (-128 + uSq * (74 - 47 * uSq))),
+        sigma = s / (b * A),
+        sigmaP = 2 * Math.PI;
+    while (Math.abs(sigma - sigmaP) > 1e-12) {
+        var cos2SigmaM = Math.cos(2 * sigma1 + sigma),
+            sinSigma = Math.sin(sigma),
+            cosSigma = Math.cos(sigma),
+            deltaSigma = B * sinSigma * (cos2SigmaM + B / 4 * (cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM) - B / 6 * cos2SigmaM * (-3 + 4 * sinSigma * sinSigma) * (-3 + 4 * cos2SigmaM * cos2SigmaM)));
+        sigmaP = sigma;
+        sigma = s / (b * A) + deltaSigma;
+    };
+    var tmp = sinU1 * sinSigma - cosU1 * cosSigma * cosAlpha1,
+        lat2 = Math.atan2(sinU1 * cosSigma + cosU1 * sinSigma * cosAlpha1, (1 - f) * Math.sqrt(sinAlpha * sinAlpha + tmp * tmp)),
+        lambda = Math.atan2(sinSigma * sinAlpha1, cosU1 * cosSigma - sinU1 * sinSigma * cosAlpha1),
+        C = f / 16 * cosSqAlpha * (4 + f * (4 - 3 * cosSqAlpha)),
+        L = lambda - (1 - C) * f * sinAlpha * (sigma + C * sinSigma * (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM))),
+        revAz = Math.atan2(sinAlpha, -tmp); // final bearing
+//    return new LatLon(toDeg(lat2), lon1 + toDeg(L));
+    return { lat: toDeg(lat2), lon: lon1 + toDeg(L) }
+
+};
+
+/*!
+ * JavaScript function to calculate the geodetic distance between two points specified by latitude/longitude using the Vincenty inverse formula for ellipsoids.
+ *
+ * Original scripts by Chris Veness
+ * Taken from http://movable-type.co.uk/scripts/latlong-vincenty.html and optimized / cleaned up by Mathias Bynens <http://mathiasbynens.be/>
+ * Based on the Vincenty direct formula by T. Vincenty, “Direct and Inverse Solutions of Geodesics on the Ellipsoid with application of nested equations”, Survey Review, vol XXII no 176, 1975 <http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf>
+ *
+ * @param   {Number} lat1, lon1: first point in decimal degrees
+ * @param   {Number} lat2, lon2: second point in decimal degrees
+ * @returns {Number} distance in metres between points
+ */
+
+function distVincenty(lat1, lon1, lat2, lon2) {
+    var a = 6378137,
+        b = 6356752.3142,
+        f = 1 / 298.257223563, // WGS-84 ellipsoid params
+        L = toRad(lon2-lon1),
+        U1 = Math.atan((1 - f) * Math.tan(toRad(lat1))),
+        U2 = Math.atan((1 - f) * Math.tan(toRad(lat2))),
+        sinU1 = Math.sin(U1),
+        cosU1 = Math.cos(U1),
+        sinU2 = Math.sin(U2),
+        cosU2 = Math.cos(U2),
+        lambda = L,
+        lambdaP,
+        iterLimit = 100;
+    do {
+        var sinLambda = Math.sin(lambda),
+            cosLambda = Math.cos(lambda),
+            sinSigma = Math.sqrt((cosU2 * sinLambda) * (cosU2 * sinLambda) + (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda) * (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda));
+        if (0 === sinSigma) {
+            return 0; // co-incident points
+        };
+        var cosSigma = sinU1 * sinU2 + cosU1 * cosU2 * cosLambda,
+            sigma = Math.atan2(sinSigma, cosSigma),
+            sinAlpha = cosU1 * cosU2 * sinLambda / sinSigma,
+            cosSqAlpha = 1 - sinAlpha * sinAlpha,
+            cos2SigmaM = cosSigma - 2 * sinU1 * sinU2 / cosSqAlpha,
+            C = f / 16 * cosSqAlpha * (4 + f * (4 - 3 * cosSqAlpha));
+        if (isNaN(cos2SigmaM)) {
+            cos2SigmaM = 0; // equatorial line: cosSqAlpha = 0 (§6)
+        };
+        lambdaP = lambda;
+        lambda = L + (1 - C) * f * sinAlpha * (sigma + C * sinSigma * (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)));
+    } while (Math.abs(lambda - lambdaP) > 1e-12 && --iterLimit > 0);
+   
+    if (!iterLimit) {
+        return 0; // formula failed to converge
+    };
+   
+    var uSq = cosSqAlpha * (a * a - b * b) / (b * b),
+        A = 1 + uSq / 16384 * (4096 + uSq * (-768 + uSq * (320 - 175 * uSq))),
+        B = uSq / 1024 * (256 + uSq * (-128 + uSq * (74 - 47 * uSq))),
+        deltaSigma = B * sinSigma * (cos2SigmaM + B / 4 * (cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM) - B / 6 * cos2SigmaM * (-3 + 4 * sinSigma * sinSigma) * (-3 + 4 * cos2SigmaM * cos2SigmaM))),
+        s = b * A * (sigma - deltaSigma);
+    return s; // round to 1mm precision
+};
+
+function bearVincenty(lat1, lon1, lat2, lon2, atDestination) {
+    var a = 6378137,
+        b = 6356752.3142,
+        f = 1 / 298.257223563, // WGS-84 ellipsoid params
+        L = toRad(lon2-lon1),
+        U1 = Math.atan((1 - f) * Math.tan(toRad(lat1))),
+        U2 = Math.atan((1 - f) * Math.tan(toRad(lat2))),
+        sinU1 = Math.sin(U1),
+        cosU1 = Math.cos(U1),
+        sinU2 = Math.sin(U2),
+        cosU2 = Math.cos(U2),
+        lambda = L,
+        lambdaP,
+        iterLimit = 100;
+    do {
+        var sinLambda = Math.sin(lambda),
+            cosLambda = Math.cos(lambda),
+            sinSigma = Math.sqrt((cosU2 * sinLambda) * (cosU2 * sinLambda) + (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda) * (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda));
+        if (0 === sinSigma) {
+            return 0; // co-incident points
+        };
+        var cosSigma = sinU1 * sinU2 + cosU1 * cosU2 * cosLambda,
+            sigma = Math.atan2(sinSigma, cosSigma),
+            sinAlpha = cosU1 * cosU2 * sinLambda / sinSigma,
+            cosSqAlpha = 1 - sinAlpha * sinAlpha,
+            cos2SigmaM = cosSigma - 2 * sinU1 * sinU2 / cosSqAlpha,
+            C = f / 16 * cosSqAlpha * (4 + f * (4 - 3 * cosSqAlpha));
+        if (isNaN(cos2SigmaM)) {
+            cos2SigmaM = 0; // equatorial line: cosSqAlpha = 0 (§6)
+        };
+        lambdaP = lambda;
+        lambda = L + (1 - C) * f * sinAlpha * (sigma + C * sinSigma * (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)));
+    } while (Math.abs(lambda - lambdaP) > 1e-12 && --iterLimit > 0);
+   
+    if (!iterLimit) {
+        return 0; // formula failed to converge
+    };
+   
+    var Az
+    var bear
+
+    if (atDestination) {
+        // revAz = Math.atan2(cosU1*sinλ, -sinU1*cosU2+cosU1*sinU2*cosλ);
+        Az = Math.atan2(cosU2 * sinLambda, - sinU1 * cosU2 + cosU1 * sinU2 * cosLambda);
+    }
+    else {
+        // fwdAz = Math.atan2(cosU2*sinλ,  cosU1*sinU2-sinU1*cosU2*cosλ);
+        Az = Math.atan2(cosU2 * sinLambda, cosU1 * sinU2 - sinU1 * cosU2 * cosLambda);
+    }
+
+    bear  = toDeg(Az);
+
+    return bear;
+};

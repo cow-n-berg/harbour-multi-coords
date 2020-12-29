@@ -12,6 +12,9 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Mon Dec 28 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.4
+- Installed Vincenty formulas for distance and bearing.
+
 * Thu Oct 08 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.3
 - A part of a solved formula was shown as [06] instead of 06. Can't have that.
 - Changed appearance of letter buttons.
@@ -37,7 +40,7 @@
 
 * Sat Sep 12 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 1.8
 - Specific tool added for geocache GC8Y39T La Arbora, Hilversum
-  Calculates disttance around a pentagon, based on Dutch coordinate system Rijksdriehoek
+  Calculates distance around a pentagon, based on Dutch coordinate system Rijksdriehoek
   Thought of pushing it to a separate branch, but decided to keep it
 - Option to hide found waypoints
 

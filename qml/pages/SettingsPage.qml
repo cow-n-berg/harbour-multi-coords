@@ -92,14 +92,14 @@ Dialog {
             }
             IconTextSwitch {
                 text: qsTr("Show Calculations in menu")
-                description: qsTr("Cartesian system used: either UTM or Dutch RD")
+                description: qsTr("Partly Vincenty, partly Cartesian system used")
                 icon.source: Qt.resolvedUrl("../images/icon-pentagon.svg")
                 checked: generic.calculationMenu
                 onClicked: generic.calculationMenu = !generic.calculationMenu
             }
             IconTextSwitch {
                 text: qsTr("Use Dutch RD instead of UTM")
-                description: qsTr("RD = Rijksdriehoek system,\nwill work only in The Netherlands")
+                description: qsTr("RD = Rijksdriehoek system,\nCartesian system of The Netherlands")
                 icon.source: "image://theme/icon-m-region"
                 checked: generic.xySystemIsRd
                 onClicked: generic.xySystemIsRd = !generic.xySystemIsRd

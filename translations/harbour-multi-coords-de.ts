@@ -210,6 +210,14 @@
         <source>Circumference (meter)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Waypoint projection (Vincenty)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line distance, angle (Vincenty)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CoverPage</name>
@@ -457,12 +465,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>RD = Rijksdriehoek system,
-will work only in The Netherlands</source>
+        <source>Partly Vincenty, partly Cartesian system used</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cartesian system used: either UTM or Dutch RD</source>
+        <source>RD = Rijksdriehoek system,
+Cartesian system of The Netherlands</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

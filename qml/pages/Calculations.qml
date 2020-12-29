@@ -195,7 +195,7 @@ Page {
             }
 
             SectionHeader {
-                text: qsTr("Waypoint projection")
+                text: qsTr("Waypoint projection (Vincenty)")
                 color: generic.highlightColor
             }
 
@@ -289,7 +289,7 @@ Page {
             }
 
             SectionHeader {
-                text: qsTr("Line distance, angle")
+                text: qsTr("Line distance, angle (Vincenty)")
                 color: generic.highlightColor
             }
 
