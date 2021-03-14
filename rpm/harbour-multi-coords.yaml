@@ -1,7 +1,7 @@
 Name: harbour-multi-coords
 Summary: GMFS - Geocaching Multi Formula Solver
-Version: 2.4
-Release: 1
+Version: 2.5
+Release: 2
 # The contents of the Group field should be one of the groups listed here:
 # https://github.com/mer-tools/spectacle/blob/master/data/GROUPS
 Group: Qt/Qt

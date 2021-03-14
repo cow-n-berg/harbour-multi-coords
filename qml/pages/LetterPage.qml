@@ -26,11 +26,11 @@ Dialog {
         var letterremark = lettRemark.text
         Database.setLetter(generic.gcId, generic.wpId, letterid, letter, lettervalue, letterremark)
         generic.allLetters = Database.getLetters(generic.gcId)
-        dialog.callback(true)
+        dialog.callback(true, true)
     }
 
     onRejected: {
-        dialog.callback(false)
+        dialog.callback(false, false)
     }
 
     Component.onCompleted: getThisLetter(letterid);

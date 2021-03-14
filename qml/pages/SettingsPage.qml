@@ -19,6 +19,7 @@ Dialog {
         Database.setSetting( "formulaCopyMode" , generic.formulaCopyMode  )
         Database.setSetting( "calculationMenu" , generic.calculationMenu  )
         Database.setSetting( "xySystemIsRd"    , generic.xySystemIsRd     )
+        Database.setSetting( "provideLatLon"   , generic.provideLatLon    )
 
         if (cache1Adding) {
             Database.addStd1Cache()
@@ -63,25 +64,11 @@ Dialog {
             }
 
             IconTextSwitch {
-                text: qsTr("Show hints on dialogs")
-                description: qsTr("Explanations of entry fields")
-                icon.source: "image://theme/icon-m-annotation"
-                checked: generic.showDialogHints
-                onClicked: generic.showDialogHints = !generic.showDialogHints
-            }
-            IconTextSwitch {
-                text: qsTr("Dark mode")
-                description: qsTr("Red characters on black background")
-                icon.source: "image://theme/icon-m-moon"
-                checked: generic.nightCacheMode
-                onClicked: generic.nightCacheMode = !generic.nightCacheMode
-            }
-            IconTextSwitch {
-                text: qsTr("Show app name on cover")
-                description: qsTr("'GMFS' for better recognition of app tiles")
-                icon.source: "image://theme/icon-m-about"
-                checked: generic.coverShowAppName
-                onClicked: generic.coverShowAppName = !generic.coverShowAppName
+                text: qsTr("Provide Lat/Lon pattern for new waypoint")
+                description: qsTr("Or leave formula area empty")
+                icon.source: "image://theme/icon-m-wizard"
+                checked: generic.provideLatLon
+                onClicked: generic.provideLatLon = !generic.provideLatLon
             }
             IconTextSwitch {
                 text: qsTr("Copy evaluated formula for geocaching app")
@@ -89,6 +76,13 @@ Dialog {
                 icon.source: "image://theme/icon-m-clipboard"
                 checked: generic.formulaCopyMode
                 onClicked: generic.formulaCopyMode = !generic.formulaCopyMode
+            }
+            IconTextSwitch {
+                text: qsTr("Show hints on dialogs")
+                description: qsTr("Explanations of entry fields")
+                icon.source: "image://theme/icon-m-annotation"
+                checked: generic.showDialogHints
+                onClicked: generic.showDialogHints = !generic.showDialogHints
             }
             IconTextSwitch {
                 text: qsTr("Show Calculations in menu")
@@ -103,6 +97,26 @@ Dialog {
                 icon.source: "image://theme/icon-m-region"
                 checked: generic.xySystemIsRd
                 onClicked: generic.xySystemIsRd = !generic.xySystemIsRd
+            }
+
+            SectionHeader {
+                text: qsTr("Appearance")
+                color: generic.highlightColor
+            }
+
+            IconTextSwitch {
+                text: qsTr("Dark mode")
+                description: qsTr("Red characters on black background")
+                icon.source: "image://theme/icon-m-moon"
+                checked: generic.nightCacheMode
+                onClicked: generic.nightCacheMode = !generic.nightCacheMode
+            }
+            IconTextSwitch {
+                text: qsTr("Show app name on cover")
+                description: qsTr("'GMFS' for better recognition of app tiles")
+                icon.source: "image://theme/icon-m-about"
+                checked: generic.coverShowAppName
+                onClicked: generic.coverShowAppName = !generic.coverShowAppName
             }
 
             SectionHeader {

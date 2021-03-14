@@ -35,11 +35,11 @@ Dialog {
     onAccepted: {
         rawText = txtRaw.text === "" ? txtFormula.text : txtRaw.text
         Database.addWaypt(generic.gcId, wayptid, txtWpNr.text, txtFormula.text, rawText, txtNote.text, isWP.checked, wpFound, txtLetters.text.trim())
-        dialog.callback(true)
+        dialog.callback(true, false)
     }
 
     onRejected: {
-        dialog.callback(false)
+        dialog.callback(false, false)
     }
 
     function getThisWaypt(wayptid) {
@@ -47,7 +47,7 @@ Dialog {
             addNewWp  = true
             wpNumber  = maxNumber + 1
             rawText   = ""
-            formula   = template
+            formula   = generic.provideLatLon ? template : ""
             wpNote    = ""
             wpIsWp    = true
             wpFound   = false

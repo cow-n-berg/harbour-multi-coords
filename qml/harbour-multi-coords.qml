@@ -8,19 +8,20 @@ ApplicationWindow
 {
     id: generic
 
-    property string version               : "2.3"
+    property string version               : "2.5"
     property string dbversion             : "1.5"
     property var    dbhandler             : DB.openDatabase(dbversion)
     property bool   debug                 : false
 
     // Settings                           
     property bool coverShowAppName        : DB.getSetting( "coverShowAppName", false )
-    property bool showDialogHints         : DB.getSetting( "showDialogHints", true )
-    property bool deleteDatabase          : DB.getSetting( "deleteDatabase", false )
-    property bool nightCacheMode          : DB.getSetting( "nightCacheMode", false )
-    property bool formulaCopyMode         : DB.getSetting( "formulaCopyMode", false )
-    property bool calculationMenu         : DB.getSetting( "calculationMenu", false )
-    property bool xySystemIsRd            : DB.getSetting( "xySystemIsRd", false )
+    property bool showDialogHints         : DB.getSetting( "showDialogHints",  true )
+    property bool deleteDatabase          : DB.getSetting( "deleteDatabase",   false )
+    property bool nightCacheMode          : DB.getSetting( "nightCacheMode",   false )
+    property bool formulaCopyMode         : DB.getSetting( "formulaCopyMode",  false )
+    property bool calculationMenu         : DB.getSetting( "calculationMenu",  false )
+    property bool xySystemIsRd            : DB.getSetting( "xySystemIsRd",     false )
+    property bool provideLatLon           : DB.getSetting( "provideLatLon",    true )
 
     property var browserUrl               : "https://coord.info/"
     property var primaryColor             : nightCacheMode ? "firebrick" : Theme.primaryColor

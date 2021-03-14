@@ -26,6 +26,7 @@ var databaseVersion = ""
 
 function openDatabase( dbversion ) {
     // optional parameter
+    console.log("openDatabase started");
     if (dbversion === null) {
         dbversion = databaseVersion
     }
@@ -45,7 +46,7 @@ function openDatabase( dbversion ) {
                 setSetting( "deleteDatabase", deleteDatabase )
             }
 
-            initializeDatabase();
+            initializeDatabase( databaseHandler );
             upgradeDatabase(dbversion);
         } catch (err) {
             console.log("initDatabase " + err);
@@ -57,7 +58,9 @@ function cleanTablesRecs() {
 
     deleteDatabase = getSetting( "deleteDatabase" );
 
-    var db = openDatabase();
+    console.log("cleanTablesRecs ");
+    var db = databaseHandler || openDatabase();
+
     db.transaction(function(tx) {
         if (deleteDatabase) {
             tx.executeSql("\
@@ -76,9 +79,9 @@ function cleanTablesRecs() {
     });
 }
 
-function initializeDatabase() {
-    var db = openDatabase();
-
+function initializeDatabase( dbH ) {
+    var db = dbH || openDatabase();
+    console.log("initializeDatabase started");
     db.transaction(function(tx) {
         /*
          * Set up settings.
@@ -93,6 +96,7 @@ function initializeDatabase() {
          * Set up geocaches.
          */
 
+        console.log("Set up geocaches");
         tx.executeSql("\
             CREATE TABLE IF NOT EXISTS geocaches ( \
                 cacheid INTEGER PRIMARY KEY, \
@@ -108,7 +112,7 @@ function initializeDatabase() {
                 updatd \
             );");
         tx.executeSql("\
-            CREATE INDEX active ON geocaches ( \
+            CREATE INDEX IF NOT EXISTS active ON geocaches ( \
                 active, \
                 found, \
                 name \
@@ -117,6 +121,7 @@ function initializeDatabase() {
         /*
          * Set up waypoints.
          */
+        console.log("Set up waypoints");
         tx.executeSql("\
             CREATE TABLE IF NOT EXISTS geo_waypts ( \
                 wayptid INTEGER PRIMARY KEY, \
@@ -137,6 +142,7 @@ function initializeDatabase() {
         /*
          * Set up letters.
          */
+        console.log("Set up letters");
         tx.executeSql("\
             CREATE TABLE IF NOT EXISTS geo_letters ( \
                 letterid INTEGER PRIMARY KEY, \
@@ -158,6 +164,7 @@ function initializeDatabase() {
             );");
 
     });
+    console.log("initialization completed");
 }
 
 /*
@@ -165,7 +172,8 @@ function initializeDatabase() {
  */
 function upgradeDatabase( dbversion )
 {
-    var db = openDatabase();
+    console.log("upgradeDatabase ");
+    var db = databaseHandler || openDatabase();
     var rs;
 
     console.log("Current version: " + db.version + ", New version: " + dbversion);
@@ -232,7 +240,8 @@ function upgradeDatabase( dbversion )
  */
 function getGeocaches() {
     var caches = [];
-    var db = openDatabase();
+    console.log("getGeocaches ");
+    var db = databaseHandler || openDatabase();
     db.transaction(function(tx) {
         var rs = tx.executeSql("\
             SELECT cacheid, \
@@ -252,7 +261,8 @@ function getGeocaches() {
 
 function getWaypts(cacheid, hideFound) {
     var waypts = [];
-    var db = openDatabase();
+    console.log("getWaypts ");
+    var db = databaseHandler || openDatabase();
     var i;
 
     db.transaction(function(tx) {
@@ -318,7 +328,8 @@ function getWaypts(cacheid, hideFound) {
 
 function getLetters(cacheid) {
     var letters = [];
-    var db = openDatabase();
+    console.log("getLetters ");
+    var db = databaseHandler || openDatabase();
     db.transaction(function(tx) {
         var rs = tx.executeSql("\
             SELECT * \
@@ -336,7 +347,8 @@ function getLetters(cacheid) {
 
 function getLettersWP(wayptid) {
     var letters = [];
-    var db = openDatabase();
+    console.log("getLettersWP ");
+    var db = databaseHandler || openDatabase();
     db.transaction(function(tx) {
         var rs = tx.executeSql("\
             SELECT * \
@@ -354,7 +366,8 @@ function getLettersWP(wayptid) {
 
 function getOneWaypt(wayptid) {
     var waypt
-    var db = openDatabase();
+    console.log("getOneWaypt ");
+    var db = databaseHandler || openDatabase();
     var letters = []
     db.transaction(function(tx) {
         var rs = tx.executeSql("\
@@ -399,7 +412,8 @@ function getOneWaypt(wayptid) {
 
 function getOneLetter(letterid) {
     var letters = [];
-    var db = openDatabase();
+    console.log("getOneLetter ");
+    var db = databaseHandler || openDatabase();
     db.transaction(function(tx) {
         var rs = tx.executeSql("\
             SELECT letter, \
@@ -418,8 +432,9 @@ function getOneLetter(letterid) {
 
 function showAllData() {
     var rs
-    var db = openDatabase();
-    console.log("Databases");
+    console.log("showAllData ");
+    var db = databaseHandler || openDatabase();
+
     db.transaction(function(tx) {
         rs = tx.executeSql("\
             SELECT * \
@@ -464,7 +479,8 @@ function showAllData() {
 function showCacheLetters( cacheid ) {
     var result = "";
     var oldWpt = "";
-    var db = openDatabase();
+    console.log("showCacheLetters ");
+    var db = databaseHandler || openDatabase();
     db.transaction(function(tx) {
         var rs = tx.executeSql("\
             SELECT w.waypoint, \
@@ -502,7 +518,8 @@ function addStd1Cache() {
             { waypt: "4", is_waypt: "0", found: "0", formula: "N 47 36.[589+A+B+C] W 122 20.[542+D+E+F]", letters: [],         note: "PLEASE WATCH OUT FOR MUGGLES" }
         ];
 
-    var db = openDatabase();
+    console.log("addStd1Cache ");
+    var db = databaseHandler || openDatabase();
 
     db.transaction(function(tx) {
         var rs = tx.executeSql("\
@@ -548,7 +565,8 @@ function addStd2Cache() {
             { waypt: "9", is_waypt: "0", found: "0", formula: "N52 0[A+3].[B-9][C-8][D-2] E005 1[E-4].[F+2][G-1][H-5]", letters: [], note: " " }
         ];
 
-    var db = openDatabase();
+    console.log("AddStd2Cache ");
+    var db = databaseHandler || openDatabase();
 
     db.transaction(function(tx) {
         var rs = tx.executeSql("\
@@ -578,7 +596,8 @@ function addStd2Cache() {
 
 function addCache(geocache, name, waypts)
 {
-    var db = openDatabase();
+    console.log("addCache ");
+    var db = databaseHandler || openDatabase();
     var rs;
     console.log(JSON.stringify(waypts))
     db.transaction(function(tx) {

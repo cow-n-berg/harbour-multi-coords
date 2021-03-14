@@ -473,6 +473,18 @@
 Cartesian system of The Netherlands</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Provide Lat/Lon pattern for new waypoint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Or leave formula area empty</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Appearance</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TextFunctions</name>

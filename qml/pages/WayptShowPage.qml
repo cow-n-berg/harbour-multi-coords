@@ -28,9 +28,13 @@ Dialog {
         dialog.callback(false)
     }
 
-    function updateAfterDialog(updated) {
+    function updateAfterDialog(updated, found) {
         if (updated) {
             listModel.update()
+        }
+        if (found) {
+            generic.wpFound = true
+            isFound.checked = true
         }
     }
 
