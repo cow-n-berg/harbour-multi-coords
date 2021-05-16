@@ -91,6 +91,18 @@
         <source>Found</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Unhide found geocaches</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide found geocaches</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> to be found</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Calculations</name>

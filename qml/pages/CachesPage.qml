@@ -13,8 +13,9 @@ Page {
 
     allowedOrientations: Orientation.Portrait
 
-    property var numberOfCaches : 0
-    property var numberOfFinds  : 0
+    property var  numberOfCaches : 0
+    property var  numberOfFinds  : 0
+    property bool hideFound      : generic.hideFoundCaches
 
     function updateAfterDialog(updated) {
         if (updated) {
@@ -30,7 +31,7 @@ Page {
         {
             listModel.clear();
             numberOfFinds = 0;
-            var caches = Database.getGeocaches();
+            var caches = Database.getGeocaches(hideFound);
             for (var i = 0; i < caches.length; ++i) {
                 listModel.append(caches[i]);
                 numberOfFinds += caches[i].found ? 1 : 0;
@@ -65,7 +66,7 @@ Page {
 
         header: PageHeader {
             id: pageHeader
-            title: ( numberOfCaches ? numberOfCaches : qsTr("No")) + " " + qsTr("Geocaches") + ( numberOfFinds ? ", " + numberOfFinds + " " + qsTr("Found") : "")
+            title: ( numberOfCaches ? numberOfCaches : qsTr("No")) + " " + qsTr("Geocaches") + ( hideFound ? qsTr(" to be found") : ", " + numberOfFinds + " " + qsTr("Found"))
         }
 
         VerticalScrollDecorator {}
@@ -191,6 +192,17 @@ Page {
                 text: qsTr("Add Geocache Multi")
                 onClicked: pageStack.push(Qt.resolvedUrl("MultiAddPage.qml"),
                                           {callback: updateAfterDialog})
+            }
+        }
+        PushUpMenu {
+            MenuItem {
+                text: hideFound ? qsTr("Unhide found geocaches") : qsTr("Hide found geocaches")
+                onClicked: {
+                    hideFound = !hideFound
+                    generic.hideFoundCaches = hideFound
+                    Database.setSetting( "hideFoundCaches", generic.hideFoundCaches )
+                    listModel.update()
+                }
             }
         }
     }

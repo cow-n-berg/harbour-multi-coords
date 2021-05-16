@@ -22,6 +22,7 @@ ApplicationWindow
     property bool calculationMenu         : DB.getSetting( "calculationMenu",  false )
     property bool xySystemIsRd            : DB.getSetting( "xySystemIsRd",     false )
     property bool provideLatLon           : DB.getSetting( "provideLatLon",    true )
+    property bool hideFoundCaches         : DB.getSetting( "hideFoundCaches",  false )
 
     property var browserUrl               : "https://coord.info/"
     property var primaryColor             : nightCacheMode ? "firebrick" : Theme.primaryColor

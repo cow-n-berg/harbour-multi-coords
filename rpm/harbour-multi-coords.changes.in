@@ -12,10 +12,15 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Sun May 16 2021 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.6
+- Option to hide found geocaches
+- Mark waypoint as found only when all letter values were entered
+
 * Sat Mar 13 2021 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.5
 - New setting for providing lat/lon for new waypoints (or leaving it empty).
 - Marking waypoint as found after entering a letter value
 - Compatibility with HarbourBackup
+- Startup error solved when initialising database
 
 * Mon Dec 28 2020 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.4
 - Installed Vincenty formulas for distance and bearing.

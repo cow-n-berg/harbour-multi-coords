@@ -24,9 +24,11 @@ Dialog {
     onAccepted: {
         var lettervalue = lettValue.text.valueOf()
         var letterremark = lettRemark.text
+        var found = true
         Database.setLetter(generic.gcId, generic.wpId, letterid, letter, lettervalue, letterremark)
         generic.allLetters = Database.getLetters(generic.gcId)
-        dialog.callback(true, true)
+        found = Database.allLettersWpFound(generic.wpId)
+        dialog.callback(true, found)
     }
 
     onRejected: {

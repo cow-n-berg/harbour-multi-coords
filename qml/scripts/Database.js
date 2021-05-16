@@ -238,23 +238,42 @@ function upgradeDatabase( dbversion )
 /*
  * All records.
  */
-function getGeocaches() {
+function getGeocaches(hideFound) {
     var caches = [];
     console.log("getGeocaches ");
     var db = databaseHandler || openDatabase();
-    db.transaction(function(tx) {
-        var rs = tx.executeSql("\
-            SELECT cacheid, \
-                geocache, \
-                name, \
-                found \
-                FROM geocaches \
-                ORDER BY active DESC, found ASC, name ASC \
-            ;");
-        for (var i = 0; i < rs.rows.length; ++i) {
-            caches.push(rs.rows.item(i));
-        }
-    });
+    if (hideFound) {
+        db.transaction(function(tx) {
+            var rs = tx.executeSql("\
+                SELECT cacheid, \
+                    geocache, \
+                    name, \
+                    found \
+                    FROM geocaches \
+                    WHERE found = 0 \
+                    OR active = 1 \
+                    ORDER BY active DESC, found ASC, name ASC \
+                ;");
+            for (var i = 0; i < rs.rows.length; ++i) {
+                caches.push(rs.rows.item(i));
+            }
+        });
+    }
+    else {
+        db.transaction(function(tx) {
+            var rs = tx.executeSql("\
+                SELECT cacheid, \
+                    geocache, \
+                    name, \
+                    found \
+                    FROM geocaches \
+                    ORDER BY active DESC, found ASC, name ASC \
+                ;");
+            for (var i = 0; i < rs.rows.length; ++i) {
+                caches.push(rs.rows.item(i));
+            }
+        });
+    }
 
     return caches;
 }
@@ -289,8 +308,8 @@ function getWaypts(cacheid, hideFound) {
                     is_waypoint, \
                     found \
                 FROM geo_waypts \
-                WHERE cacheid=? \
-                  AND found=0\
+                WHERE cacheid = ? \
+                  AND found = 0\
                 ORDER BY cacheid, waypoint \
                 ;", [cacheid]);
             for (i = 0; i < rs.rows.length; ++i) {
@@ -310,7 +329,7 @@ function getWaypts(cacheid, hideFound) {
                     is_waypoint, \
                     found \
                     FROM geo_waypts \
-                    WHERE cacheid=? \
+                    WHERE cacheid = ? \
                     ORDER BY cacheid, waypoint \
                 ;", [cacheid]);
             for (i = 0; i < rs.rows.length; ++i) {
@@ -334,7 +353,7 @@ function getLetters(cacheid) {
         var rs = tx.executeSql("\
             SELECT * \
                 FROM geo_letters \
-                WHERE cacheid=? \
+                WHERE cacheid = ? \
                 ORDER BY letter \
             ;", [cacheid]);
         for (var i = 0; i < rs.rows.length; ++i) {
@@ -362,6 +381,24 @@ function getLettersWP(wayptid) {
     });
 
     return letters;
+}
+
+function allLettersWpFound(wayptid) {
+    var found = true;
+    console.log("allLettersWpFound ");
+    var db = databaseHandler || openDatabase();
+    db.transaction(function(tx) {
+        var rs = tx.executeSql("\
+            SELECT COUNT(*) AS nr \
+                FROM geo_letters \
+                WHERE wayptid = ? \
+                AND lettervalue = '' \
+            ;", [wayptid]);
+        if (rs.rows.item(0).nr === 1)
+            found = false;
+    });
+
+    return found;
 }
 
 function getOneWaypt(wayptid) {
@@ -420,7 +457,7 @@ function getOneLetter(letterid) {
                 lettervalue, \
                 remark \
                 FROM geo_letters \
-                WHERE letterid=? \
+                WHERE letterid = ? \
             ;", [letterid]);
         for (var i = 0; i < rs.rows.length; ++i) {
             letters.push(rs.rows.item(i));
