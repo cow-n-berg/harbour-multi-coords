@@ -1,5 +1,6 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
+import Nemo.Notifications 1.0
 import "../scripts/TextFunctions.js" as TF
 
 CoverBackground {
@@ -8,7 +9,18 @@ CoverBackground {
     property var gccode        : generic.gcCode
     property var gcname        : generic.gcName
     property var wpnumb        : generic.wpNumber
-    property var copyTriState : true
+    property var copyTriState  : true
+    property var notify        : ""
+
+    Notification {
+        id: notification
+
+        summary: notify
+        body: "GMFS"
+        expireTimeout: 500
+        urgency: Notification.Low
+        isTransient: true
+    }
 
     Timer {
         id: coverTimer
@@ -56,10 +68,14 @@ CoverBackground {
                         Clipboard.text = TF.copyText( generic.wpCalc, copyTriState )
                         coverLabel.text = copyTriState === 0 ? qsTr("Formula copied") : ( copyTriState === 1 ? qsTr("Lat copied") : qsTr("Lon copied") )
                         copyTriState === 2 ? 0 : copyTriState++
+                        notify = coverLabel.text
+                        notification.publish()
                     }
                     else {
                         Clipboard.text = generic.wpCalc
                         coverLabel.text = qsTr("Formula copied")
+                        notify = coverLabel.text
+                        notification.publish()
                     }
                 coverTimer.start()
             }

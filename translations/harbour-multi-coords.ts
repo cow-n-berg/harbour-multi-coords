@@ -230,6 +230,38 @@
         <source>Line distance, angle (Vincenty)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Projection WP added</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intersection WP added</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Circle centre WP added</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WGS coordinate WP added</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Projection WP copied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intersection WP copied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Circle centre coords copied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WGS coordinates copied</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CoverPage</name>
@@ -660,6 +692,18 @@ Cartesian system of The Netherlands</source>
     </message>
     <message>
         <source>Delete waypoint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Calculated coordinates copied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Waypoint note copied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All letter values copied</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

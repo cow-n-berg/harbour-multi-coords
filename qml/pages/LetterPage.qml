@@ -84,14 +84,32 @@ Dialog {
                 EnterKey.onClicked: lettRemark.focus = true
             }
 
-            TextField {
-                id: lettRemark
-                width: parent.width
-                label: qsTr("Optional remark")
-                placeholderText: label
-                color: generic.primaryColor
-                EnterKey.iconSource: "image://theme/icon-m-enter-close"
-                EnterKey.onClicked: lettRemark.focus = false
+            Row {
+                id: row
+                width: column.width
+                height: Theme.itemSizeLarge
+
+                TextField {
+                    id: lettRemark
+                    width: parent.width - removeIcon.width
+                    label: qsTr("Optional remark")
+                    placeholderText: label
+                    color: generic.primaryColor
+                    EnterKey.iconSource: "image://theme/icon-m-enter-close"
+                    EnterKey.onClicked: lettRemark.focus = false
+                }
+                IconButton {
+                    id: removeIcon
+                    icon.source: "image://theme/icon-m-input-clear"
+                    icon.width: Theme.iconSizeMedium
+                    icon.height: Theme.iconSizeMedium
+                    icon.color: generic.primaryColor
+                    onClicked: {
+                        lettRemark.text = ""
+                        lettRemark.focus = true
+                    }
+                }
+
             }
 
             TextArea {

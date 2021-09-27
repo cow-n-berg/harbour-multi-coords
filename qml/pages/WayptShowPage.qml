@@ -1,5 +1,6 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
+import Nemo.Notifications 1.0
 import "../scripts/Database.js" as Database
 import "../scripts/TextFunctions.js" as TF
 import "../scripts/Calculations.js" as Calc
@@ -13,6 +14,8 @@ Dialog {
     property var  letterExtract   : ""
     property var  bracketsFormula : ""
     property var  copyFirstPart   : true
+    property var  copyElement     : 0
+    property var  copyMessage     : ""
 
     allowedOrientations: Orientation.All
 
@@ -71,6 +74,27 @@ Dialog {
 
     }
 
+    Timer {
+        id: highlightTimer
+        interval: 500
+        running: false
+        onTriggered: {
+            wpcalc.color = generic.primaryColor
+            txtNote.color = generic.primaryColor
+            txtShowLetters.color = generic.secondaryColor
+        }
+    }
+
+    Notification {
+        id: notification
+
+        summary: copyMessage
+        body: "GMFS"
+        expireTimeout: 500
+        urgency: Notification.Low
+        isTransient: true
+    }
+
     Rectangle {
         anchors.fill: parent
         color: "black"
@@ -118,7 +142,31 @@ Dialog {
             icon.color: generic.primaryColor
 //            visible: TF.formulaSolved (wpcalc.text)
             onClicked: {
-                Clipboard.text = wpcalc.text
+                if (copyElement == 0) {
+                    Clipboard.text = wpcalc.text
+                    copyMessage = qsTr("Calculated coordinates copied")
+                    wpcalc.color = generic.highlightColor
+                    highlightTimer.start()
+                }
+                else if (copyElement == 1) {
+                    Clipboard.text = txtNote.text
+                    copyMessage = qsTr("Waypoint note copied")
+                    txtNote.color = generic.highlightColor
+                    highlightTimer.start()
+                }
+                else {
+                    Clipboard.text = txtShowLetters.text
+                    copyMessage = qsTr("All letter values copied")
+                    txtShowLetters.color = generic.highlightColor
+                    highlightTimer.start()
+                }
+
+                notification.publish()
+
+                if (copyElement < 2)
+                    copyElement++
+                else
+                    copyElement = 0
             }
         }
 
@@ -232,6 +280,7 @@ Dialog {
             }
 
             TextArea {
+                id: txtShowLetters
                 width: parent.width
                 readOnly: true
                 label: qsTr("All values")

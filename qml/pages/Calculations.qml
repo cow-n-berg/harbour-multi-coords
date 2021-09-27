@@ -1,5 +1,6 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
+import Nemo.Notifications 1.0
 import "../scripts/Database.js" as Database
 import "../scripts/Calculations.js" as Calc
 import "../scripts/TextFunctions.js" as TF
@@ -23,6 +24,7 @@ Page {
     property var wgsCoord1  : ""
     property var wgsCoord2  : ""
     property var distance   : 0
+    property var notify     : ""
 
     property bool addEnabled: true
     property var projText   : "Projection of WP " + wp11.text + ": " + deg1.text + "° and " + dist1.text + " m"
@@ -50,6 +52,16 @@ Page {
             indicator.running = false
             addEnabled = true
         }
+    }
+
+    Notification {
+        id: notification
+
+        summary: notify
+        body: "GMFS"
+        expireTimeout: 500
+        urgency: Notification.Low
+        isTransient: true
     }
 
     BusyIndicator {
@@ -260,6 +272,8 @@ Page {
                     icon.color: generic.primaryColor
                     enabled: newCoord.text !== "" && addEnabled
                     onClicked: {
+                        notify = qsTr("Projection WP added")
+                        notification.publish()
                         indicator.running = true
                         addEnabled = false
                         addTimer.start()
@@ -272,6 +286,8 @@ Page {
                     icon.source: "image://theme/icon-l-clipboard"
                     icon.color: generic.primaryColor
                     onClicked: {
+                        notify = qsTr("Projection WP copied")
+                        notification.publish()
                         Clipboard.text = projCoord
                    }
                 }
@@ -430,6 +446,8 @@ Page {
                     icon.color: generic.primaryColor
                     enabled: inters1.text !== "" && addEnabled
                     onClicked: {
+                        notify = qsTr("Intersection WP added")
+                        notification.publish()
                         indicator.running = true
                         addEnabled = false
                         addTimer.start()
@@ -443,6 +461,8 @@ Page {
                     icon.source: "image://theme/icon-l-clipboard"
                     icon.color: generic.primaryColor
                     onClicked: {
+                        notify = qsTr("Intersection WP copied")
+                        notification.publish()
                         Clipboard.text = intersect1
                    }
                 }
@@ -541,6 +561,8 @@ Page {
                     icon.color: generic.primaryColor
                     enabled: inters2.text !== "" && addEnabled
                     onClicked: {
+                        notify = qsTr("Intersection WP added")
+                        notification.publish()
                         indicator.running = true
                         addEnabled = false
                         addTimer.start()
@@ -554,6 +576,8 @@ Page {
                     icon.source: "image://theme/icon-l-clipboard"
                     icon.color: generic.primaryColor
                     onClicked: {
+                        notify = qsTr("Intersection WP copied")
+                        notification.publish()
                         Clipboard.text = intersect2
                    }
                 }
@@ -652,6 +676,8 @@ Page {
                     icon.color: generic.primaryColor
                     enabled: intersect3 !== undefined && addEnabled
                     onClicked: {
+                        notify = qsTr("Intersection WP added")
+                        notification.publish()
                         indicator.running = true
                         addEnabled = false
                         addTimer.start()
@@ -666,6 +692,8 @@ Page {
                     icon.source: "image://theme/icon-l-clipboard"
                     icon.color: generic.primaryColor
                     onClicked: {
+                        notify = qsTr("Intersection WP copied")
+                        notification.publish()
                         Clipboard.text = intersect3 === undefined ? "" : intersect3.str
                    }
                 }
@@ -765,6 +793,8 @@ Page {
                     enabled: intersect4 !== undefined && addEnabled
                     onClicked: {
                         if (intersect4.possible) {
+                            notify = qsTr("Intersection WP added")
+                            notification.publish()
                             indicator.running = true
                             addEnabled = false
                             addTimer.start()
@@ -780,6 +810,8 @@ Page {
                     icon.source: "image://theme/icon-l-clipboard"
                     icon.color: generic.primaryColor
                     onClicked: {
+                        notify = qsTr("Intersection WP copied")
+                        notification.publish()
                         Clipboard.text = intersect4 === undefined ? "" : intersect4.str
                    }
                 }
@@ -866,6 +898,8 @@ Page {
                     enabled: circle !== undefined && addEnabled
                     onClicked: {
                         if (circle.possible) {
+                            notify = qsTr("Circle centre WP added")
+                            notification.publish()
                             indicator.running = true
                             addEnabled = false
                             addTimer.start()
@@ -880,6 +914,8 @@ Page {
                     icon.source: "image://theme/icon-l-clipboard"
                     icon.color: generic.primaryColor
                     onClicked: {
+                        notify = qsTr("Circle centre coords copied")
+                        notification.publish()
                         Clipboard.text = circle === undefined ? "" : circle.centre
                    }
                 }
@@ -951,6 +987,8 @@ Page {
                     icon.color: generic.primaryColor
                     enabled: wgs.text !== "" && addEnabled
                     onClicked: {
+                        notify = qsTr("WGS coordinate WP added")
+                        notification.publish()
                         indicator.running = true
                         addEnabled = false
                         addTimer.start()
@@ -964,6 +1002,8 @@ Page {
                     icon.source: "image://theme/icon-l-clipboard"
                     icon.color: generic.primaryColor
                     onClicked: {
+                        notify = qsTr("WGS coordinates copied")
+                        notification.publish()
                         Clipboard.text = wgsCoord1
                    }
                 }
@@ -1059,6 +1099,8 @@ Page {
                     icon.color: generic.primaryColor
                     enabled: wgs2.text !== "" && addEnabled
                     onClicked: {
+                        notify = qsTr("WGS coordinate WP added")
+                        notification.publish()
                         indicator.running = true
                         addEnabled = false
                         addTimer.start()
@@ -1072,6 +1114,8 @@ Page {
                     icon.source: "image://theme/icon-l-clipboard"
                     icon.color: generic.primaryColor
                     onClicked: {
+                        notify = qsTr("WGS coordinates copied")
+                        notification.publish()
                         Clipboard.text = wgsCoord2
                    }
                 }
