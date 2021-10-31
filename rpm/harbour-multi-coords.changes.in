@@ -12,7 +12,7 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
-* Sun Aug 25 2021 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.7.3
+* Sun Aug 25 2021 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.7
 - Button to delete remark on LetterPage
 - Notification for added calculated waypoints, or copied information to clipboard.
 
