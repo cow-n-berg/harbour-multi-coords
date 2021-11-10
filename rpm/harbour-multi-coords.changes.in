@@ -12,6 +12,9 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Wed Nov 11 2021 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.8
+- Re-compile for SFOS 4.3
+
 * Sun Aug 25 2021 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.7
 - Button to delete remark on LetterPage
 - Notification for added calculated waypoints, or copied information to clipboard.

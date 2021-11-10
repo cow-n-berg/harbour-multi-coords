@@ -8,7 +8,7 @@ ApplicationWindow
 {
     id: generic
 
-    property string version               : "2.7"
+    property string version               : "2.8"
     property string dbversion             : "1.5"
     property var    dbhandler             : DB.openDatabase(dbversion)
     property bool   debug                 : false
@@ -24,7 +24,7 @@ ApplicationWindow
     property bool provideLatLon           : DB.getSetting( "provideLatLon",    true )
     property bool hideFoundCaches         : DB.getSetting( "hideFoundCaches",  false )
 
-    property var browserUrl               : "https://coord.info/"
+    property string browserUrl               : "https://coord.info/"
     property var primaryColor             : nightCacheMode ? "firebrick" : Theme.primaryColor
     property var secondaryColor           : nightCacheMode ? "maroon"    : Theme.secondaryColor
     property var highlightColor           : nightCacheMode ? "red"       : Theme.highlightColor
