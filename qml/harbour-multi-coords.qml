@@ -1,6 +1,7 @@
 import QtQuick 2.2
 import QtQuick.LocalStorage 2.0
 import Sailfish.Silica 1.0
+import Nemo.Configuration 1.0
 import "pages"
 import "scripts/Database.js" as DB
 
@@ -8,7 +9,7 @@ ApplicationWindow
 {
     id: generic
 
-    property string version               : "2.8"
+    property string version               : "2.9"
     property string dbversion             : "1.5"
     property var    dbhandler             : DB.openDatabase(dbversion)
     property bool   debug                 : false

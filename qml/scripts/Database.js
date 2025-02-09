@@ -228,6 +228,16 @@ function upgradeDatabase( dbversion )
                 rs = tx.executeSql('INSERT OR REPLACE INTO settings VALUES (?,?);', ["databaseVersion",15]);
                 console.log("Tables altered " + db.version);
             }
+            if (db.version < "1.6") {
+                /*
+                 * Adds new column to geocaches.
+                 */
+                rs = tx.executeSql("ALTER TABLE geocaches ADD COLUMN active TEXT DEFAULT ''");
+                console.log(rs);
+                db.version = "1.6";
+                rs = tx.executeSql('INSERT OR REPLACE INTO settings VALUES (?,?);', ["databaseVersion",16]);
+                console.log("Tables altered " + db.version);
+            }
             /*
              * Upgrade complete.
              */

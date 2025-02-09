@@ -69,6 +69,8 @@ Dialog {
                 readOnly: true
                 visible: generic.wpNote !== ""
                 labelVisible: false
+                font.pixelSize: Theme.fontSizeLarge
+
             }
 
             TextField {
@@ -77,6 +79,7 @@ Dialog {
                 label: qsTr("Value for: ") + letter
                 placeholderText: label
                 color: generic.primaryColor
+                font.pixelSize: Theme.fontSizeLarge
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 focus: true
                 EnterKey.enabled: text.length > 0
@@ -94,6 +97,7 @@ Dialog {
                     width: parent.width - removeIcon.width
                     label: qsTr("Optional remark")
                     placeholderText: label
+                    font.pixelSize: Theme.fontSizeLarge
                     color: generic.primaryColor
                     EnterKey.iconSource: "image://theme/icon-m-enter-close"
                     EnterKey.onClicked: lettRemark.focus = false
@@ -118,7 +122,7 @@ Dialog {
                 text: TF.remarkValues(lettRemark.text)
                 label: qsTr("Remark analysis")
                 labelVisible: false
-                font.pixelSize: Theme.fontSizeExtraSmall
+                font.pixelSize: Theme.fontSizeNormal
                 color: generic.secondaryColor
                 visible: lettRemark.text !== ""
             }

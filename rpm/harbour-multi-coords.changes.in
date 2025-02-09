@@ -12,6 +12,9 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Sat Nov 20 2021 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.9
+- SailJail compliancy
+
 * Wed Nov 11 2021 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.8
 - Re-compile for SFOS 4.3
 

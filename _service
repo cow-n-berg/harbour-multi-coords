@@ -2,6 +2,6 @@
     <service name="tar_git">
     <param name="url">https://github.com/cow-n-berg/harbour-multi-coords</param>
     <param name="branch">master</param>
-    <param name="revision">7e23e76</param>
+    <param name="revision">c40a5f1</param>
     </service>
 </services>

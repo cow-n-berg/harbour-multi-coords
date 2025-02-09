@@ -188,7 +188,7 @@ Dialog {
                 text: generic.wpCalc
                 visible: true
                 color: generic.primaryColor
-                font.pixelSize: Theme.fontSizeLarge
+                font.pixelSize: Theme.fontSizeExtraLarge
             }
 
             TextArea {
@@ -264,7 +264,7 @@ Dialog {
                 label: qsTr("UTM") + ( generic.xySystemIsRd ? qsTr(" and RD") : "" ) + qsTr(" notation")
                 labelVisible: false
                 text: Calc.showUtmRd(generic.wpCalc, generic.xySystemIsRd)
-                font.pixelSize: Theme.fontSizeExtraSmall
+                font.pixelSize: Theme.fontSizeNormal
                 color: generic.secondaryColor
             }
 
@@ -274,7 +274,7 @@ Dialog {
                 readOnly: true
                 label: qsTr("Original formula")
                 text: generic.wpForm
-                font.pixelSize: Theme.fontSizeExtraSmall
+                font.pixelSize: Theme.fontSizeNormal
                 color: generic.secondaryColor
                 visible: generic.wpForm !== wpcalc.text
             }
@@ -285,8 +285,9 @@ Dialog {
                 readOnly: true
                 label: qsTr("All values")
                 text: TF.showLetters(generic.allLetters)
-                font.pixelSize: Theme.fontSizeExtraSmall
+                font.pixelSize: Theme.fontSizeNormal
                 color: generic.secondaryColor
+
             }
 
         }

@@ -1,16 +1,19 @@
 [Desktop Entry]
 Type=Application
 X-Nemo-Application-Type=silica-qt5
+# Icon=multi-coords
+# Exec=/usr/bin/org.cow-n-berg.multi-coords
 Icon=harbour-multi-coords
 Exec=sailfish-qml harbour-multi-coords
 Name=GMFS
-# translation example:
-# your app name in German locale (de)
-#
-# Remember to comment out the following line, if you do not want to use
-# a different app name in German locale (de).
-# Name[de]=harbour-multi-coords
 
 [X-HarbourBackup]
 BackupPathList=.local/share/harbour-multi-coords/
 BackupConfigList=/apps/harbour-multi-coords/
+# BackupPathList=.local/share/cow-n-berg/harbour-multi-coords/
+# BackupConfigList=/apps/cow-n-berg/multi-coords/
+
+# [X-Sailjail]
+# OrganizationName=org.cow-n-berg
+# ApplicationName=multi-coords
+# Permissions=Notifications
