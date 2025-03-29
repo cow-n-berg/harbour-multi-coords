@@ -1,5 +1,6 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
+import "../modules/Opal/Delegates"
 import "../scripts/Database.js" as Database
 import "../scripts/ExternalLinks.js" as ExternalLinks
 import "../scripts/TextFunctions.js" as TF
@@ -9,13 +10,14 @@ Page {
 
     allowedOrientations: Orientation.All
 
-    property var callback
+    property var    callback
 
-    property bool hideFound: false
+    property bool   hideFound: false
 
-    property var waypts
-    property var formulaTemplate: ""
-    property var maxWpNumber    : 0
+    property var    waypts
+    property string formulaTemplate: ""
+    property int    maxWpNumber    : 0
+    property int    listLength
 
     function updateAfterDialog(updated) {
         if (updated) {
@@ -40,11 +42,12 @@ Page {
             generic.allLetters = Database.getLetters(generic.gcId)
             listModel.clear()
             waypts = Database.getWaypts(generic.gcId, hideFound)
-            if (waypts.length > 0) {
+            listLength = waypts.length;
+            if (listLength > 0) {
                 formulaTemplate = TF.formulaTemplate(waypts[0].formula)
             }
             maxWpNumber = 0
-            for (var i = 0; i < waypts.length; ++i) {
+            for (var i = 0; i < listLength; ++i) {
                 listModel.append(waypts[i])
                 maxWpNumber = Math.max(maxWpNumber, waypts[i].waypoint)
             }
@@ -68,7 +71,9 @@ Page {
             leftMargin: Theme.paddingSmall
             rightMargin: Theme.paddingSmall
         }
-        contentHeight: column.height
+//        contentHeight: column.height
+        contentHeight: listLength * Theme.itemSizeLarge
+        flickableDirection: Flickable.VerticalFlick
         quickScroll : true
 
         VerticalScrollDecorator {}
@@ -83,53 +88,42 @@ Page {
                 title: generic.gcCode + " - " + generic.gcName
             }
 
-            ColumnView  {
+            ViewPlaceholder {
+                id: placeh
+                enabled: listModel.count === 0
+                text: "No waypoints yet"
+                hintText: "Pull down to add them"
+            }
+
+            DelegateColumn  {
                 id: columnView
                 model: listModel
 
-                width: parent.width
-                itemHeight: Theme.itemSizeExtraLarge + Theme.paddingSmall
+                delegate: TwoLineDelegate {
+                    id: wpDelegat
+                    text: ( is_waypoint ? "WP" + " " + waypoint : "Cache" ) + ": "  + TF.reqWpLetters( generic.allLetters, wayptid )
+                    description: calculated
 
-                ViewPlaceholder {
-                    id: placeh
-                    enabled: listModel.count === 0
-                    text: "No waypoints yet"
-                    hintText: "Pull down to add them"
-                }
-
-                delegate: BackgroundItem {
-                    id: listItem
-
-                    width: parent.width
-
-                    Icon {
-                        id: iconContainer
-                        x: Theme.paddingSmall
-                        source: TF.wayptIconUrl( is_waypoint )
-                        color: generic.primaryColor
+                    leftItem: DelegateIconButton {
+                        iconSource: TF.wayptIconUrl( is_waypoint )
+                        iconSize: Theme.iconSizeMedium
                     }
 
-                    TextArea {
-                        id: wpDescr
-                        anchors.left: iconContainer.right
-                        width: parent.width - iconContainer.width - 2 * Theme.paddingSmall
-                        height: Theme.itemSizeExtraLarge + Theme.paddingSmall
-                        text: ( is_waypoint ? "WP" + " " + waypoint : "Cache" ) + ": " + calculated + TF.reqWpLetters( generic.allLetters, wayptid )
-//                        text: ( is_waypoint ? "WP" + " " + waypoint : "Cache" ) + ": " + TF.evalFormula(formula, generic.allLetters) + TF.reqWpLetters( generic.allLetters, wayptid )
-                        font.pixelSize: Theme.fontSizeMedium
-                        color: found ? generic.secondaryColor : generic.primaryColor
-                        readOnly: true
-                        onClicked: {
-                            generic.wpId     = wayptid
-                            generic.wpNumber = waypoint
-                            generic.wpForm   = formula
-                            generic.wpNote   = note
-                            generic.wpIsWp   = is_waypoint
-                            generic.wpFound  = found
-                            console.log("Clicked WP " + index)
-                            pageStack.push(Qt.resolvedUrl("WayptShowPage.qml"),
-                                           {callback: updateAfterDialog})
-                        }
+                    rightItem: DelegateIconButton {
+                        iconSource: TF.foundIconUrl(found)
+                        iconSize: Theme.iconSizeMedium
+                    }
+
+                    onClicked: {
+                        generic.wpId     = wayptid
+                        generic.wpNumber = waypoint
+                        generic.wpForm   = formula
+                        generic.wpNote   = note
+                        generic.wpIsWp   = is_waypoint
+                        generic.wpFound  = found
+                        console.log("Clicked WP " + index)
+                        pageStack.push(Qt.resolvedUrl("WayptShowPage.qml"),
+                                       {callback: updateAfterDialog})
                     }
                 }
             }

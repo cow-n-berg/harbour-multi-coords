@@ -307,6 +307,7 @@ function reqWpLetters( letters, wayptid ) {
 //        console.log("Vergelijk " + letters[j].wayptid + ", " + wayptid + ", " + letters[j].letter );
         if (letters[j].wayptid === wayptid) {
             result += (result === "" ? "" : ", ") + letters[j].letter;
+            result += (letters[j].lettervalue === "" ? "" : "=") + letters[j].lettervalue;
         }
     }
     if (result !== "") {
@@ -409,7 +410,7 @@ function coordsByRegEx(rawText, searchLength) {
 
     // Additional Hidden Waypoints
     var regExHidden = /Additional Hidden Waypoints(.*)<\/groundspeak:long_description>/;
-    var regExHidCmt = /([A-Z0-9]{2})[A-Z0-9]{2,5}\s-\s(.*?)&lt;br\s\/&gt;(.*?)&lt;br\s\/&gt;(.*?)&lt;br\s\/&gt/g
+    var regExHidCmt = /([A-Z0-9]{2})[A-Z0-9]{2,5}\s-\s(.*?)&lt;br\s\/&gt;(.*?)&lt;br\s\/&gt;(.*?)&lt;br\s\/&gt/g;
 
     // Coordinates and formulas in plain text
     var regExCoords = /([NS]\s?[0-9]{1,2}°?\s[0-9]{1,2}\.[0-9]{1,3}\s[EW]\s?[0-9]{1,3}°?\s[0-9]{1,2}\.[0-9]{1,3})/g;

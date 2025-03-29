@@ -1,5 +1,6 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
+import "../modules/Opal/Delegates"
 import "../scripts/Database.js" as Database
 import "../scripts/ExternalLinks.js" as ExternalLinks
 import "../scripts/TextFunctions.js" as TF
@@ -13,9 +14,10 @@ Page {
 
     allowedOrientations: Orientation.Portrait
 
-    property var  numberOfCaches : 0
-    property var  numberOfFinds  : 0
+    property int  numberOfCaches : 0
+    property int  numberOfFinds  : 0
     property bool hideFound      : generic.hideFoundCaches
+    property int  listLength
 
     function updateAfterDialog(updated) {
         if (updated) {
@@ -32,14 +34,15 @@ Page {
             listModel.clear();
             numberOfFinds = 0;
             var caches = Database.getGeocaches(hideFound);
-            for (var i = 0; i < caches.length; ++i) {
+            listLength = caches.length;
+            for (var i = 0; i < listLength; ++i) {
                 listModel.append(caches[i]);
                 numberOfFinds += caches[i].found ? 1 : 0;
                 console.log( JSON.stringify(caches[i]));
             }
             console.log( "listModel Caches updated");
             console.log(JSON.stringify(listModel.get(0)));
-            numberOfCaches = caches.length;
+            numberOfCaches = listLength;
         }
     }
 
@@ -53,132 +56,82 @@ Page {
         visible: generic.nightCacheMode
     }
 
-    SilicaListView {
-        id: listView
-        model: listModel
-
+    SilicaFlickable {
+        id: flickGC
         anchors {
             fill: parent
-            leftMargin: Theme.paddingMedium
-            rightMargin: Theme.paddingMedium
+            leftMargin: Theme.paddingSmall
+            rightMargin: Theme.paddingSmall
         }
-        spacing: Theme.paddingMedium
-
-        header: PageHeader {
-            id: pageHeader
-            title: ( numberOfCaches ? numberOfCaches : qsTr("No")) + " " + qsTr("Geocaches") + ( hideFound ? qsTr(" to be found") : ", " + numberOfFinds + " " + qsTr("Found"))
-        }
+//        contentHeight: column.height
+        contentHeight: listLength * Theme.itemSizeLarge
+        flickableDirection: Flickable.VerticalFlick
+        quickScroll : true
 
         VerticalScrollDecorator {}
 
-        ViewPlaceholder {
-            id: placeh
-            enabled: listModel.count === 0
-            text: "No geocaches yet"
-            hintText: "Pull down to add,\nor go to Settings for examples"
-        }
-
-        delegate: ListItem {
-            id: listItem
-            menu: contextMenu
-
+        Column {
+            id: column
             width: parent.width
-            contentHeight: Theme.itemSizeSmall
-            ListView.onRemove: animateRemoval(listItem)
+            spacing: Theme.paddingSmall
 
-            Label {
-                id: nameGC
-                text: TF.truncateString(name, 35)
-                font.pixelSize: Theme.fontSizeMedium
-                anchors {
-                    left: parent.left
-                    right: foundGC.left
-                    margins: Theme.paddingSmall
+            PageHeader {
+                id: pageHeader
+                title: ( numberOfCaches ? numberOfCaches : qsTr("No")) + " " + qsTr("Geocaches") + ( hideFound ? qsTr(" to be found") : ", " + numberOfFinds + " " + qsTr("Found"))
+            }
+
+            ViewPlaceholder {
+                id: placeh
+                enabled: listModel.count === 0
+                text: "No geocaches yet"
+                hintText: "Pull down to add,\nor go to Settings for examples"
+            }
+
+            DelegateColumn  {
+                id: columnView
+                model: listModel
+
+                delegate: TwoLineDelegate {
+                    id: cacheDelegat
+                    text: name
+                    description: geocache
+
+                    rightItem: DelegateIconButton {
+                        iconSource: TF.foundIconUrl(found)
+                        iconSize: Theme.iconSizeMedium
+                    }
+
+                    onClicked: {
+                        console.log("Clicked GC " + index)
+                        generic.gcName = name
+                        generic.gcCode = geocache
+                        generic.gcId   = cacheid
+
+                        pageStack.push(Qt.resolvedUrl("MultiShowPage.qml"),
+                                       {callback: updateAfterDialog})
+                    }
                 }
-                color: generic.primaryColor
-            }
-            onClicked: {
-                console.log("Clicked GC " + index)
-                generic.gcName = name
-                generic.gcCode = geocache
-                generic.gcId   = cacheid
-
-                pageStack.push(Qt.resolvedUrl("MultiShowPage.qml"),
-                               {callback: updateAfterDialog})
-            }
-//            onPressAndHold: {
-//            }
-
-            Label {
-                id: codeGC
-                text: geocache
-                font.pixelSize: Theme.fontSizeSmall
-                color: generic.secondaryColor
-                anchors {
-                          top: nameGC.bottom
-                          left: parent.left
-                          right: foundGC.left
-                          margins: Theme.paddingSmall
-                        }
             }
 
-            Icon {
-                id: foundGC
-                anchors {
-                          right: parent.right
-                          margins: Theme.paddingSmall
-                        }
-                source: TF.foundIconUrl(found)
-                color: generic.primaryColor
-            }
-
-            Separator {
-                width: parent.width
-                color: generic.secondaryColor
-            }
 
             RemorsePopup { id: remorse }
 
-            Component {
-                id: contextMenu
-                ContextMenu {
-                    MenuItem {
-                        text: qsTr("View in browser")
-                        onClicked:  {
-                            console.log("Browser " + generic.browserUrl  + geocache + ", id " + cacheid)
-                            ExternalLinks.browse(generic.browserUrl + geocache)
-                        }
-                    }
+//            Component {
+//                id: contextMenu
+//                ContextMenu {
 //                    MenuItem {
-//                        text: qsTr("Edit")
-//                        onClicked: {
-//                            console.log("Edit " + index + ", id " + listModel[model.index].cacheid)
+//                        text: qsTr("View in browser")
+//                        onClicked:  {
+//                            console.log("Browser " + generic.browserUrl  + geocache + ", id " + cacheid)
+//                            ExternalLinks.browse(generic.browserUrl + geocache)
 //                        }
 //                    }
-//                    MenuItem {
-//                        text: qsTr("Delete")
-//                        onClicked: remorse.execute("Clearing geocache", function() {
-//                            console.log("Remove geocache " + codeGC.text)
-////                            Database.deleteCache(codeGC.text)
-//                            dialog.callback(true)
-//                        })
-//                    }
 
-                }
-            }
+//                }
+//            }
         }
 
         PullDownMenu {
-            MenuItem {
-                text: qsTr("Show Contents DB in Console")
-                enabled: generic.debug
-                visible: generic.debug
-                onClicked: Database.showAllData()
-            }
-//            MenuItem {
-//                text: qsTr("Refresh page")
-//                onClicked: { listModel.update() }
-//            }
             MenuItem {
                 text: qsTr("About")
                 onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
@@ -203,6 +156,12 @@ Page {
                     Database.setSetting( "hideFoundCaches", generic.hideFoundCaches )
                     listModel.update()
                 }
+            }
+            MenuItem {
+                text: qsTr("Show Contents DB in Console")
+                enabled: generic.debug
+                visible: generic.debug
+                onClicked: Database.showAllData()
             }
         }
     }
