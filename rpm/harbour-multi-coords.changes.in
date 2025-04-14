@@ -12,6 +12,9 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Sat Mar 29 2025 Rob Kouwenberg <sailfish@cow-n-berg.nl> 3.1
+- Introducing Opal Delegates
+
 * Sat Nov 20 2021 Rob Kouwenberg <sailfish@cow-n-berg.nl> 2.9
 - SailJail compliancy
 

@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.6
 import Sailfish.Silica 1.0
 import Nemo.Notifications 1.0
 import "../scripts/Database.js" as Database
@@ -10,12 +10,12 @@ Dialog {
 
     property var callback
 
-    property bool lettersFilled   : true
-    property var  letterExtract   : ""
-    property var  bracketsFormula : ""
-    property var  copyFirstPart   : true
-    property var  copyElement     : 0
-    property var  copyMessage     : ""
+    property bool   lettersFilled   : true
+    property string letterExtract   : ""
+    property string bracketsFormula : ""
+    property bool   copyFirstPart   : true
+    property int    copyElement     : 0
+    property string copyMessage     : ""
 
     allowedOrientations: Orientation.All
 
@@ -188,7 +188,7 @@ Dialog {
                 text: generic.wpCalc
                 visible: true
                 color: generic.primaryColor
-                font.pixelSize: Theme.fontSizeExtraLarge
+                font.pixelSize: Theme.fontSizeLarge
             }
 
             TextArea {
@@ -264,7 +264,7 @@ Dialog {
                 label: qsTr("UTM") + ( generic.xySystemIsRd ? qsTr(" and RD") : "" ) + qsTr(" notation")
                 labelVisible: false
                 text: Calc.showUtmRd(generic.wpCalc, generic.xySystemIsRd)
-                font.pixelSize: Theme.fontSizeNormal
+                font.pixelSize: Theme.fontSizeMedium
                 color: generic.secondaryColor
             }
 
@@ -274,7 +274,7 @@ Dialog {
                 readOnly: true
                 label: qsTr("Original formula")
                 text: generic.wpForm
-                font.pixelSize: Theme.fontSizeNormal
+                font.pixelSize: Theme.fontSizeMedium
                 color: generic.secondaryColor
                 visible: generic.wpForm !== wpcalc.text
             }
@@ -285,7 +285,7 @@ Dialog {
                 readOnly: true
                 label: qsTr("All values")
                 text: TF.showLetters(generic.allLetters)
-                font.pixelSize: Theme.fontSizeNormal
+                font.pixelSize: Theme.fontSizeSmall
                 color: generic.secondaryColor
 
             }

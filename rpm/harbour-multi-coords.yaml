@@ -43,5 +43,8 @@ Files:
   - '%{_datadir}/applications/%{name}.desktop'
   - '%{_datadir}/icons/hicolor/*/apps/%{name}.png'
 
+Macros:
+  - __provides_exclude_from;^%{_datadir}/.*$
+
 # For more information about yaml and what's supported in Sailfish OS
 # build system, please see https://wiki.merproject.org/wiki/Spectacle

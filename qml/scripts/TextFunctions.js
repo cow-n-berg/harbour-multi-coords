@@ -303,15 +303,18 @@ function showLetters( letters ) {
 function reqWpLetters( letters, wayptid ) {
     var result = "";
     var checksum = 0;
+    var allFound = true;
     for (var j = 0; j < letters.length; j++) {
 //        console.log("Vergelijk " + letters[j].wayptid + ", " + wayptid + ", " + letters[j].letter );
         if (letters[j].wayptid === wayptid) {
             result += (result === "" ? "" : ", ") + letters[j].letter;
-            result += (letters[j].lettervalue === "" ? "" : "=") + letters[j].lettervalue;
+            result += (letters[j].lettervalue === "" ? "" : " = ") + letters[j].lettervalue;
+            if (letters[j].lettervalue === "")
+                allFound = false;
         }
     }
     if (result !== "") {
-        result = ", " + qsTr("find ") + result;
+        result = ", " + (allFound ? qsTr("find ") : qsTr("found ")) + result;
     }
 //    console.log("wayptid: " + wayptid + ", " + result + ", " + JSON.stringify(letters));
     return result
@@ -390,6 +393,13 @@ function remarkValues( remark ) {
 /*
 *  Function to extract information from raw text
 */
+function extractDescr(rawText) {}
+
+function extractHint(rawText) {
+    var regExHint = /Additional Hidden Waypoints(.*)<\/groundspeak:long_description>/;
+
+}
+
 function coordsByRegEx(rawText, searchLength) {
 
     var regExNewlin = /\r?\n|\r/g;                             // to remove newlines

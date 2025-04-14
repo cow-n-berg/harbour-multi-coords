@@ -82,7 +82,13 @@ function cleanTablesRecs() {
 function initializeDatabase( dbH ) {
     var db = dbH || openDatabase();
     console.log("initializeDatabase started");
+    if (typeof db.version !== "string" )
+        db.version = "0.0";
+
     db.transaction(function(tx) {
+
+        tx.executeSql('INSERT OR REPLACE INTO settings VALUES (?,?);', ["databaseVersion",db.version]);
+
         /*
          * Set up settings.
          */
@@ -102,6 +108,9 @@ function initializeDatabase( dbH ) {
                 cacheid INTEGER PRIMARY KEY, \
                 geocache TEXT UNIQUE, \
                 name TEXT NOT NULL, \
+                description TEXT NOT NULL DEFAULT '', \
+                attributes TEXT NOT NULL DEFAULT '', \
+                hint TEXT NOT NULL DEFAULT '', \
                 found INTEGER DEFAULT 0, \
                 updatd DATETIME DEFAULT CURRENT_TIMESTAMP, \
                 active INTEGER DEFAULT 0 \
@@ -232,9 +241,23 @@ function upgradeDatabase( dbversion )
                 /*
                  * Adds new column to geocaches.
                  */
-                rs = tx.executeSql("ALTER TABLE geocaches ADD COLUMN active TEXT DEFAULT ''");
+                rs = tx.executeSql("ALTER TABLE geocaches ADD COLUMN active INTEGER DEFAULT ''");
                 console.log(rs);
                 db.version = "1.6";
+                rs = tx.executeSql('INSERT OR REPLACE INTO settings VALUES (?,?);', ["databaseVersion",20]);
+                console.log("Tables altered " + db.version);
+            }
+            if (db.version < "2.0") {
+                /*
+                 * Adds new columns to geocaches.
+                 */
+                rs = tx.executeSql("ALTER TABLE geocaches ADD COLUMN description TEXT NOT NULL DEFAULT ''");
+                console.log(rs);
+                rs = tx.executeSql("ALTER TABLE geocaches ADD COLUMN attributes TEXT NOT NULL DEFAULT ''");
+                console.log(rs);
+                rs = tx.executeSql("ALTER TABLE geocaches ADD COLUMN hint TEXT NOT NULL DEFAULT ''");
+                console.log(rs);
+                db.version = "2.0";
                 rs = tx.executeSql('INSERT OR REPLACE INTO settings VALUES (?,?);', ["databaseVersion",16]);
                 console.log("Tables altered " + db.version);
             }
@@ -286,6 +309,68 @@ function getGeocaches(hideFound) {
     }
 
     return caches;
+}
+
+function getDescription(cacheid) {
+    var str  = qsTr("No description saved to this geocache");
+    var list = [];
+    console.log("getDescription ");
+    var db = databaseHandler || openDatabase();
+    db.transaction(function(tx) {
+        var rs = tx.executeSql("\
+            SELECT description \
+                FROM geocaches \
+                WHERE cacheid = ?;", [cacheid]);
+        for (var i = 0; i < rs.rows.length; ++i) {
+            list.push(rs.rows.item(i));
+        }
+    });
+    if (list.length === 0) {
+        list.push( { description: str } );
+    }
+    return list;
+}
+
+function getAttributes(cacheid) {
+
+    var str  = qsTr("No attributes saved to this geocache");
+    var rec  = { attribute: str };
+    var list = [];
+    console.log("getAttributes ");
+    var db = databaseHandler || openDatabase();
+    db.transaction(function(tx) {
+        var rs = tx.executeSql("\
+            SELECT attributes \
+                FROM geocaches \
+                WHERE cacheid = ?;", [cacheid]);
+        for (var i = 0; i < rs.rows.length; ++i) {
+            list.push(rs.rows.item(i));
+        }
+    });
+    if (list.length === 0) {
+        list.push( JSON.stringify(rec) );
+    }
+    return list;
+}
+
+function getHint(cacheid) {
+    var str  = qsTr("No hint saved to this geocache");
+    var list = [];
+    console.log("getHint ");
+    var db = databaseHandler || openDatabase();
+    db.transaction(function(tx) {
+        var rs = tx.executeSql("\
+            SELECT hint \
+                FROM geocaches \
+                WHERE cacheid = ?;", [cacheid]);
+        for (var i = 0; i < rs.rows.length; ++i) {
+            list.push(rs.rows.item(i));
+        }
+    });
+    if (list.length === 0) {
+        list.push( { hint: str } );
+    }
+    return str;
 }
 
 function getWaypts(cacheid, hideFound) {

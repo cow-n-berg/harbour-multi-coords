@@ -14,6 +14,7 @@ Page {
     property var callback
 
     property var    waypts
+    property int    listLength
     property int    maxWaypt   : 0
     property string projCoord  : ""
     property string distAngle  : ""
@@ -37,13 +38,34 @@ Page {
     property string rdText     : "Conversion of RD X: " + x.text + ", Y: " + y.text
     property string utmText    : "Conversion of UTM " + zone.text + letter.text.toUpperCase() + " E " + easting.text + " N " + northing.text
 
-    function populate() {
-        waypts = Database.getWaypts(generic.gcId, false);
-        for (var i = 0; i < waypts.length; i++) {
-            maxWaypt = waypts[i].waypoint > maxWaypt ? waypts[i].waypoint : maxWaypt
-//            waypts[i].calculated = TF.evalFormula(waypts[i].formula, generic.allLetters)
+    ListModel {
+        id: listModel
+
+        // Available within listModel:
+        // cacheid, wayptid, waypoint, formula, calculated, note, is_waypoint, found
+
+        function update()
+        {
+            listModel.clear();
+            waypts = Database.getWaypts(generic.gcId, false);
+            listLength = waypts.length;
+            for (var i = 0; i < listLength; ++i) {
+                listModel.append(waypts[i]);
+                maxWaypt = waypts[i].waypoint > maxWaypt ? waypts[i].waypoint : maxWaypt
+//                console.log( JSON.stringify(waypts[i]));
+            }
+            console.log( "listModel projects updated");
         }
     }
+
+    Component.onCompleted: listModel.update()
+//    function populate() {
+//        waypts = Database.getWaypts(generic.gcId, false);
+//        for (var i = 0; i < waypts.length; i++) {
+//            maxWaypt = waypts[i].waypoint > maxWaypt ? waypts[i].waypoint : maxWaypt
+////            waypts[i].calculated = TF.evalFormula(waypts[i].formula, generic.allLetters)
+//        }
+//    }
 
     Timer {
         id: addTimer
@@ -72,7 +94,7 @@ Page {
          running: false
     }
 
-    Component.onCompleted: populate()
+//    Component.onCompleted: populate()
 
     SilicaFlickable {
         id: flick
@@ -97,22 +119,134 @@ Page {
             anchors.top: pageHeader.bottom
 
             // Mogelijk werken met
-//            ExpandingSection {
-//                title: qsTr("Waypoint projection")
+            ExpandingSection {
+                title: qsTr("Waypoint projection")
 
-//                content.sourceComponent: Column {}
-//            }
+                content.sourceComponent: Column {
 
-            Button {
-                height: Theme.itemSizeLarge
-                preferredWidth: Theme.buttonWidthLarge
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: qsTr("Waypoint projection")
-                color: generic.primaryColor
-                onClicked: {
-                    wp11.focus = true
-               }
+                    ComboBox {
+                        id: box11
+                        label: qsTr("Waypoint")
+            //                currentIndex: 1
+                        menu: ContextMenu {
+                            Repeater {
+                                model: listModel
+                                MenuItem {
+                                    text: waypoint;
+                                    onClicked: {
+                                        console.log("ComboBox onClicked: " + waypoint)
+                                        proj = listText
+                                    }
+                                }
+                            }
+                        }
+                    }
+//                    TextField {
+//                        id: wp11
+//                        width: parent.width
+//                        label: Calc.showFormula( wp11.text, waypts)
+//                        placeholderText: "Enter WP number"
+//                        placeholderColor: generic.secondaryColor
+//                        color: generic.primaryColor
+//                        inputMethodHints: Qt.ImhDigitsOnly
+//                        EnterKey.enabled: text.length > 0
+//                        EnterKey.iconSource: "image://theme/icon-m-enter-next"
+//                        EnterKey.onClicked: deg1.focus = true
+//                    }
+
+                    TextField {
+                        id: deg1
+                        width: parent.width
+                        label: qsTr("Degrees")
+                        placeholderText: label
+                        placeholderColor: generic.secondaryColor
+                        color: generic.primaryColor
+                        inputMethodHints: Qt.ImhFormattedNumbersOnly
+                        EnterKey.enabled: text.length > 0
+                        EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                        EnterKey.onClicked: dist1.focus = true
+                    }
+        
+                    TextField {
+                        id: dist1
+                        width: parent.width
+                        label: qsTr("Distance (meter)")
+                        placeholderText: label
+                        placeholderColor: generic.secondaryColor
+                        color: generic.primaryColor
+                        inputMethodHints: Qt.ImhFormattedNumbersOnly
+                        EnterKey.enabled: text.length > 0
+                        EnterKey.iconSource: "image://theme/icon-m-enter-close"
+                        EnterKey.onClicked: {
+                            projCoord = Calc.projectWp(wp11.text, deg1.text, dist1.text, waypts, generic.xySystemIsRd)
+                            dist1.focus = false
+                        }
+                    }
+        
+                    TextField {
+                        id: newCoord
+                        width: parent.width
+                        text: projCoord
+                        label: qsTr("New coordinate")
+                        placeholderText: label
+                        placeholderColor: generic.secondaryColor
+                        color: generic.highlightColor
+                        readOnly: true
+                    }
+        
+                    Row {
+                        spacing: Theme.itemSizeSmall
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        IconButton {
+                            icon.source: "image://theme/icon-l-new"
+                            icon.color: generic.primaryColor
+                            enabled: newCoord.text !== "" && addEnabled
+                            onClicked: {
+                                notify = qsTr("Projection WP added")
+                                notification.publish()
+                                indicator.running = true
+                                addEnabled = false
+                                addTimer.start()
+                                Database.addWaypt(generic.gcId, "", maxWaypt + 1, projCoord, projCoord, projText, true, false, "")
+                                populate()
+                                page.callback(true)
+                           }
+                        }
+                        IconButton {
+                            icon.source: "image://theme/icon-l-clipboard"
+                            icon.color: generic.primaryColor
+                            onClicked: {
+                                notify = qsTr("Projection WP copied")
+                                notification.publish()
+                                Clipboard.text = projCoord
+                           }
+                        }
+                        IconButton {
+                            icon.color: generic.primaryColor
+                            icon.source: "image://theme/icon-l-dismiss"
+                            onClicked: {
+                                wp11.text = ""
+                                deg1.text = ""
+                                dist1.text = ""
+                                projCoord = ""
+                                wp11.focus = true
+                            }
+                        }
+                    }
+                }
+    
             }
+
+//            Button {
+//                height: Theme.itemSizeLarge
+//                preferredWidth: Theme.buttonWidthLarge
+//                anchors.horizontalCenter: parent.horizontalCenter
+//                text: qsTr("Waypoint projection")
+//                color: generic.primaryColor
+//                onClicked: {
+//                    wp11.focus = true
+//               }
+//            }
 
 //            // Toe te voegen
 //            Button {
@@ -231,98 +365,98 @@ Page {
                 color: generic.highlightColor
             }
 
-            TextField {
-                id: wp11
-                width: parent.width
-                label: Calc.showFormula( wp11.text, waypts)
-                placeholderText: "Enter WP number"
-                placeholderColor: generic.secondaryColor
-                color: generic.primaryColor
-                inputMethodHints: Qt.ImhDigitsOnly
-                EnterKey.enabled: text.length > 0
-                EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                EnterKey.onClicked: deg1.focus = true
-            }
+//            TextField {
+//                id: wp11
+//                width: parent.width
+//                label: Calc.showFormula( wp11.text, waypts)
+//                placeholderText: "Enter WP number"
+//                placeholderColor: generic.secondaryColor
+//                color: generic.primaryColor
+//                inputMethodHints: Qt.ImhDigitsOnly
+//                EnterKey.enabled: text.length > 0
+//                EnterKey.iconSource: "image://theme/icon-m-enter-next"
+//                EnterKey.onClicked: deg1.focus = true
+//            }
 
-            TextField {
-                id: deg1
-                width: parent.width
-                label: qsTr("Degrees")
-                placeholderText: label
-                placeholderColor: generic.secondaryColor
-                color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
-                EnterKey.enabled: text.length > 0
-                EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                EnterKey.onClicked: dist1.focus = true
-            }
+//            TextField {
+//                id: deg1
+//                width: parent.width
+//                label: qsTr("Degrees")
+//                placeholderText: label
+//                placeholderColor: generic.secondaryColor
+//                color: generic.primaryColor
+//                inputMethodHints: Qt.ImhFormattedNumbersOnly
+//                EnterKey.enabled: text.length > 0
+//                EnterKey.iconSource: "image://theme/icon-m-enter-next"
+//                EnterKey.onClicked: dist1.focus = true
+//            }
 
-            TextField {
-                id: dist1
-                width: parent.width
-                label: qsTr("Distance (meter)")
-                placeholderText: label
-                placeholderColor: generic.secondaryColor
-                color: generic.primaryColor
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
-                EnterKey.enabled: text.length > 0
-                EnterKey.iconSource: "image://theme/icon-m-enter-close"
-                EnterKey.onClicked: {
-                    projCoord = Calc.projectWp(wp11.text, deg1.text, dist1.text, waypts, generic.xySystemIsRd)
-                    dist1.focus = false
-                }
-            }
+//            TextField {
+//                id: dist1
+//                width: parent.width
+//                label: qsTr("Distance (meter)")
+//                placeholderText: label
+//                placeholderColor: generic.secondaryColor
+//                color: generic.primaryColor
+//                inputMethodHints: Qt.ImhFormattedNumbersOnly
+//                EnterKey.enabled: text.length > 0
+//                EnterKey.iconSource: "image://theme/icon-m-enter-close"
+//                EnterKey.onClicked: {
+//                    projCoord = Calc.projectWp(wp11.text, deg1.text, dist1.text, waypts, generic.xySystemIsRd)
+//                    dist1.focus = false
+//                }
+//            }
 
-            TextField {
-                id: newCoord
-                width: parent.width
-                text: projCoord
-                label: qsTr("New coordinate")
-                placeholderText: label
-                placeholderColor: generic.secondaryColor
-                color: generic.highlightColor
-                readOnly: true
-            }
+//            TextField {
+//                id: newCoord
+//                width: parent.width
+//                text: projCoord
+//                label: qsTr("New coordinate")
+//                placeholderText: label
+//                placeholderColor: generic.secondaryColor
+//                color: generic.highlightColor
+//                readOnly: true
+//            }
 
-            Row {
-                spacing: Theme.itemSizeSmall
-                anchors.horizontalCenter: parent.horizontalCenter
-                IconButton {
-                    icon.source: "image://theme/icon-l-new"
-                    icon.color: generic.primaryColor
-                    enabled: newCoord.text !== "" && addEnabled
-                    onClicked: {
-                        notify = qsTr("Projection WP added")
-                        notification.publish()
-                        indicator.running = true
-                        addEnabled = false
-                        addTimer.start()
-                        Database.addWaypt(generic.gcId, "", maxWaypt + 1, projCoord, projCoord, projText, true, false, "")
-                        populate()
-                        page.callback(true)
-                   }
-                }
-                IconButton {
-                    icon.source: "image://theme/icon-l-clipboard"
-                    icon.color: generic.primaryColor
-                    onClicked: {
-                        notify = qsTr("Projection WP copied")
-                        notification.publish()
-                        Clipboard.text = projCoord
-                   }
-                }
-                IconButton {
-                    icon.color: generic.primaryColor
-                    icon.source: "image://theme/icon-l-dismiss"
-                    onClicked: {
-                        wp11.text = ""
-                        deg1.text = ""
-                        dist1.text = ""
-                        projCoord = ""
-                        wp11.focus = true
-                    }
-                }
-            }
+//            Row {
+//                spacing: Theme.itemSizeSmall
+//                anchors.horizontalCenter: parent.horizontalCenter
+//                IconButton {
+//                    icon.source: "image://theme/icon-l-new"
+//                    icon.color: generic.primaryColor
+//                    enabled: newCoord.text !== "" && addEnabled
+//                    onClicked: {
+//                        notify = qsTr("Projection WP added")
+//                        notification.publish()
+//                        indicator.running = true
+//                        addEnabled = false
+//                        addTimer.start()
+//                        Database.addWaypt(generic.gcId, "", maxWaypt + 1, projCoord, projCoord, projText, true, false, "")
+//                        populate()
+//                        page.callback(true)
+//                   }
+//                }
+//                IconButton {
+//                    icon.source: "image://theme/icon-l-clipboard"
+//                    icon.color: generic.primaryColor
+//                    onClicked: {
+//                        notify = qsTr("Projection WP copied")
+//                        notification.publish()
+//                        Clipboard.text = projCoord
+//                   }
+//                }
+//                IconButton {
+//                    icon.color: generic.primaryColor
+//                    icon.source: "image://theme/icon-l-dismiss"
+//                    onClicked: {
+//                        wp11.text = ""
+//                        deg1.text = ""
+//                        dist1.text = ""
+//                        projCoord = ""
+//                        wp11.focus = true
+//                    }
+//                }
+//            }
 
             SectionHeader {
                 text: qsTr("Line distance, angle (Vincenty)")

@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.6
 import QtQuick.LocalStorage 2.0
 import Sailfish.Silica 1.0
 import Nemo.Configuration 1.0
@@ -9,7 +9,7 @@ ApplicationWindow
 {
     id: generic
 
-    property string version               : "3.1-0"
+    property string version               : "3.0-0"
     property string dbversion             : "1.5"
     property var    dbhandler             : DB.openDatabase(dbversion)
     property bool   debug                 : false
@@ -34,16 +34,16 @@ ApplicationWindow
 
     property string rawText               : ""
 
-    property var gcName
-    property var gcCode
-    property var gcId
-    property var wpId
-    property var wpNumber
-    property var wpForm
-    property var wpCalc
-    property var wpNote
-    property var wpIsWp
-    property var wpFound
+    property string gcName
+    property string gcCode
+    property string gcId
+    property string wpId
+    property int    wpNumber
+    property string wpForm
+    property string wpCalc
+    property string wpNote
+    property bool   wpIsWp
+    property bool   wpFound
     property var allLetters
     property var lettEdit
 

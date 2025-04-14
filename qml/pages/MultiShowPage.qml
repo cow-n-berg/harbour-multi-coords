@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.6
 import Sailfish.Silica 1.0
 import "../modules/Opal/Delegates"
 import "../scripts/Database.js" as Database
@@ -37,6 +37,9 @@ Page {
     ListModel {
         id: listModel
 
+        // Available within listModel:
+        // cacheid, wayptid, waypoint, formula, calculated, note, is_waypoint, found
+
         function update()
         {
             generic.allLetters = Database.getLetters(generic.gcId)
@@ -68,11 +71,11 @@ Page {
         id: flickGC
         anchors {
             fill: parent
-            leftMargin: Theme.paddingSmall
-            rightMargin: Theme.paddingSmall
+//            leftMargin: Theme.paddingSmall
+//            rightMargin: Theme.paddingSmall
         }
 //        contentHeight: column.height
-        contentHeight: listLength * Theme.itemSizeLarge
+        contentHeight: (listLength + 1) * Theme.itemSizeLarge
         flickableDirection: Flickable.VerticalFlick
         quickScroll : true
 
@@ -81,7 +84,7 @@ Page {
         Column {
             id: column
             width: parent.width
-            spacing: Theme.paddingSmall
+//            spacing: Theme.paddingSmall
 
             PageHeader {
                 id: pageHeader
@@ -98,11 +101,12 @@ Page {
             DelegateColumn  {
                 id: columnView
                 model: listModel
+                spacing: Theme.paddingSmall
 
                 delegate: TwoLineDelegate {
                     id: wpDelegat
-                    text: ( is_waypoint ? "WP" + " " + waypoint : "Cache" ) + ": "  + TF.reqWpLetters( generic.allLetters, wayptid )
-                    description: calculated
+                    text: calculated
+                    description: ( is_waypoint ? "WP" + " " + waypoint : "Cache" ) + TF.reqWpLetters( generic.allLetters, wayptid )
 
                     leftItem: DelegateIconButton {
                         iconSource: TF.wayptIconUrl( is_waypoint )
@@ -112,6 +116,11 @@ Page {
                     rightItem: DelegateIconButton {
                         iconSource: TF.foundIconUrl(found)
                         iconSize: Theme.iconSizeMedium
+                        onClicked: {
+                            found = !found
+                            generic.wpFound = found
+                            Database.setWayptFound(cacheid, wayptid, found)
+                        }
                     }
 
                     onClicked: {

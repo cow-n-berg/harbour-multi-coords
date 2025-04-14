@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.6
 import Sailfish.Silica 1.0
 import "../scripts/Database.js" as Database
 import "../scripts/TextFunctions.js" as TF
@@ -13,15 +13,15 @@ Dialog {
     property var template
     property var maxNumber
 
-    property var addNewWp  : true
-    property var wpNumber  : ""
-    property var rawText   : ""
-    property var formula   : ""
-    property var wpNote    : ""
-    property var wpIsWp    : true
-    property var wpFound   : false
-    property var wpLetters : ""
-    property var letterExtract: TF.lettersFromRaw(txtNote.text, generic.allLetters, wayptid)
+    property bool   addNewWp  : true
+    property string wpNumber  : ""
+    property string rawText   : ""
+    property string formula   : ""
+    property string wpNote    : ""
+    property bool   wpIsWp    : true
+    property bool   wpFound   : false
+    property string wpLetters : ""
+    property var    letterExtract: TF.lettersFromRaw(txtNote.text, generic.allLetters, wayptid)
 
     property var regExPar1  : /\(/g;
     property var regExPar2  : /\)/g;
@@ -97,7 +97,7 @@ Dialog {
             leftMargin: Theme.paddingMedium
             rightMargin: Theme.paddingMedium
         }
-        contentHeight: column.height + Theme.itemSizeMedium
+        contentHeight: column.height + 2 * Theme.itemSizeMedium
         quickScroll : true
 
         Icon {

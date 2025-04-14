@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.6
 import Sailfish.Silica 1.0
 import "../modules/Opal/Delegates"
 import "../scripts/Database.js" as Database
@@ -22,7 +22,7 @@ Page {
     function updateAfterDialog(updated) {
         if (updated) {
             listModel.update()
-            listView.scrollToTop()
+//            columnView.scrollToTop()
         }
     }
 
@@ -60,8 +60,8 @@ Page {
         id: flickGC
         anchors {
             fill: parent
-            leftMargin: Theme.paddingSmall
-            rightMargin: Theme.paddingSmall
+//            leftMargin: Theme.paddingSmall
+//            rightMargin: Theme.paddingSmall
         }
 //        contentHeight: column.height
         contentHeight: listLength * Theme.itemSizeLarge
@@ -73,7 +73,7 @@ Page {
         Column {
             id: column
             width: parent.width
-            spacing: Theme.paddingSmall
+//            spacing: Theme.paddingSmall
 
             PageHeader {
                 id: pageHeader
@@ -90,6 +90,7 @@ Page {
             DelegateColumn  {
                 id: columnView
                 model: listModel
+                spacing: Theme.paddingSmall
 
                 delegate: TwoLineDelegate {
                     id: cacheDelegat

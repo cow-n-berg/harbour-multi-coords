@@ -6,10 +6,11 @@
 Name:       harbour-multi-coords
 
 # >> macros
+%define __provides_exclude_from ^%{_datadir}/.*$
 # << macros
 
 Summary:    GMFS - Geocaching Multi Formula Solver
-Version:    3.1
+Version:    3.0
 Release:    0
 Group:      Qt/Qt
 License:    LICENSE
