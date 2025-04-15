@@ -61,6 +61,63 @@ function projectWp( wp1, degrees, distance, waypts, rd ) {
     return str
 }
 
+function moveWp( wp1, north, east, waypts, rd ) {
+    var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\D*?\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
+    var wp = findWp(wp1, waypts);
+
+    var formula = waypts[wp].calculated;
+    var res = regExLatLon.exec(formula);
+
+    var lat = parseInt(res[1]) + parseFloat(res[2]) / 60;
+    var lon = parseInt(res[3]) + parseFloat(res[4]) / 60;
+    var mNorth = parseFloat(north);
+    var mEast  = parseFloat(east);
+    var str, deg;
+
+    if (rd) {
+        var rdCoord = wgs2rd(lat, lon);
+        var x = rdCoord.x + mEast;
+        var y = rdCoord.y + mNorth;
+        var wgsCoord = rd2wgs(x, y);
+        str = wgsCoord.str;
+    }
+    else {
+    //    var xy = wgs2xy(lat, lon, rd);
+    //    var rad = parseFloat(degrees) / 180 * Math.PI;
+    //    var rdx = xy.x + dist * Math.sin(rad);
+    //    var rdy = xy.y + dist * Math.cos(rad);
+    //    return xy2wgs(rdx, rdy, rd, xy);
+        var dist = Math.sqrt(mNorth * mNorth + mEast * mEast);
+
+        if (mEast === 0)
+            deg = 90;
+        else {
+            var sinus = (mNorth / mEast) / dist;
+            deg = Math.asin(sinus) * 180 / Math.PI;
+        }
+
+        var destiny = destVincenty(lat, lon, deg, dist);
+
+        var latitude  = destiny.lat;
+        var longitude = destiny.lon;
+
+        var latDeg = Math.floor(latitude );
+        var lonDeg = Math.floor(longitude);
+        lat = (latitude  - latDeg) * 60;
+        lon = (longitude - lonDeg) * 60;
+
+        var strLat = "00" + latDeg.toString();
+        var strLon = "00" + lonDeg.toString();
+        var minLat = "00" + lat.toFixed(3);
+        var minLon = "00" + lon.toFixed(3);
+
+        str  =  "N " + strLat.slice(-2) + "° " + minLat.slice(-6);
+        str += " E " + strLon.slice(-3) + "° " + minLon.slice(-6);
+    }
+
+    return str
+}
+
 function intersection1( wp1, wp2, wp3, wp4, waypts, rd ) {
     var regExLatLon = /[NS]\s?([0-9]{1,2})°?\s([0-9]{1,2}\.[0-9]{1,3})\D*?\s[EW]\s?([0-9]{1,3})°?\s([0-9]{1,2}\.[0-9]{1,3})/;
     var dist = 0;

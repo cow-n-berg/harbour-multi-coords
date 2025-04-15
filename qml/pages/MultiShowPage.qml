@@ -108,18 +108,17 @@ Page {
                     text: calculated
                     description: ( is_waypoint ? "WP" + " " + waypoint : "Cache" ) + TF.reqWpLetters( generic.allLetters, wayptid )
 
-                    leftItem: DelegateIconButton {
-                        iconSource: TF.wayptIconUrl( is_waypoint )
-                        iconSize: Theme.iconSizeMedium
-                    }
-
                     rightItem: DelegateIconButton {
-                        iconSource: TF.foundIconUrl(found)
+                        iconSource: TF.wayptIconUrl( is_waypoint, found )
                         iconSize: Theme.iconSizeMedium
                         onClicked: {
                             found = !found
-                            generic.wpFound = found
                             Database.setWayptFound(cacheid, wayptid, found)
+                            if (!is_waypoint) {
+                                Database.setCacheFound(cacheid, found)
+                                generic.wpFound = found
+                                callbackTimer.start()
+                            }
                         }
                     }
 

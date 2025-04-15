@@ -127,7 +127,7 @@ Dialog {
                 verticalCenter: pageHeader.verticalCenter
             }
 
-            source: TF.wayptIconUrl( generic.wpIsWp )
+            source: TF.wayptSmallIconUrl( generic.wpIsWp )
             color: generic.highlightColor
         }
 

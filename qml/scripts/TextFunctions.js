@@ -86,20 +86,20 @@ function copyIconUrl(darkTheme, nightMode) {
 
 function foundIconUrl(found) {
     var url;
-    var filename = "../images/icon-";
+    var filename = "../images/icon-cache-";
     if (found) {
         filename += "found-";
     }
-    else {
-        filename += "blank-";
-    }
+//    else {
+//        filename += "blank-";
+//    }
     filename += "black.svg";
     url = Qt.resolvedUrl(filename)
 //    console.log("foundIcon " + filename)
     return url
 }
 
-function wayptIconUrl(isWpt) {
+function wayptIconUrl(isWpt, isFound) {
     var url;
     var filename = "../images/icon-";
     if (isWpt) {
@@ -108,7 +108,24 @@ function wayptIconUrl(isWpt) {
     else {
         filename += "cache-";
     }
+    if (isFound)
+        filename += "found-";
     filename += "black.svg";
+    url = Qt.resolvedUrl(filename)
+//    console.log("wayptIcon " + filename)
+    return url
+}
+
+function wayptSmallIconUrl(isWpt) {
+    var url;
+    var filename = "../images/icon-";
+    if (isWpt) {
+        filename += "waypt-";
+    }
+    else {
+        filename += "cache-";
+    }
+    filename += "small-black.svg";
     url = Qt.resolvedUrl(filename)
 //    console.log("wayptIcon " + filename)
     return url
