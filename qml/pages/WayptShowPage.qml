@@ -125,10 +125,12 @@ Dialog {
             anchors {
                 right: parent.right
                 verticalCenter: pageHeader.verticalCenter
+                rightMargin: Theme.paddingMedium
             }
 
             source: TF.wayptSmallIconUrl( generic.wpIsWp )
             color: generic.highlightColor
+
         }
 
         IconButton {
@@ -241,7 +243,7 @@ Dialog {
             IconTextSwitch {
                 id: isFound
                 text: TF.wayptFoundButton(generic.wpIsWp, generic.wpFound)
-                icon.source: TF.foundIconUrl(generic.wpFound)
+                icon.source: TF.wayptIconUrl(generic.wpIsWp, generic.wpFound)
                 icon.color: generic.primaryColor
                 checked: generic.wpFound
                 onClicked: {

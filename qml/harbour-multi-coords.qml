@@ -9,8 +9,8 @@ ApplicationWindow
 {
     id: generic
 
-    property string version               : "3.0-3"
-    property string dbversion             : "1.5"
+    property string version               : "3.0-4"
+    property string dbversion             : "1.5" // wordt 1.6
     property var    dbhandler             : DB.openDatabase(dbversion)
     property bool   debug                 : false
 
@@ -44,8 +44,8 @@ ApplicationWindow
     property string wpNote
     property bool   wpIsWp
     property bool   wpFound
-    property var allLetters
-    property var lettEdit
+    property var    allLetters
+    property var    lettEdit
 
     Component.onCompleted: { DB.openDatabase() }
 

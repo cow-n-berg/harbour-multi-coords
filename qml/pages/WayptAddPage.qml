@@ -63,10 +63,10 @@ Dialog {
             rawText   = waypt.rawtext
             formula   = waypt.formula
             wpNote    = waypt.note
-            wpIsWp    = waypt.iswp
-            wpFound   = waypt.found
+            wpIsWp    = (waypt.iswp === 1)
+            wpFound   = (waypt.found === 1)
             wpLetters = waypt.letterstr
-            isWP.checked = wpIsWp === 1
+            isWP.checked  = wpIsWp
             txtWpNr.focus = txtWpNr.txt === ""
             txtNote.text  = wpNote
 
@@ -105,6 +105,7 @@ Dialog {
             anchors {
                 right: parent.right
                 verticalCenter: pageHeader.verticalCenter
+                rightMargin: Theme.paddingMedium
             }
 
             source: TF.wayptSmallIconUrl( wpIsWp )

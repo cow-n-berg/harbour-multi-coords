@@ -110,7 +110,7 @@ function initializeDatabase( dbH ) {
                 name TEXT NOT NULL, \
                 description TEXT NOT NULL DEFAULT '', \
                 attributes TEXT NOT NULL DEFAULT '', \
-                hint TEXT NOT NULL DEFAULT '', \
+                facts TEXT NOT NULL DEFAULT '', \
                 found INTEGER DEFAULT 0, \
                 updatd DATETIME DEFAULT CURRENT_TIMESTAMP, \
                 active INTEGER DEFAULT 0 \
@@ -239,26 +239,16 @@ function upgradeDatabase( dbversion )
             }
             if (db.version < "1.6") {
                 /*
-                 * Adds new column to geocaches.
-                 */
-                rs = tx.executeSql("ALTER TABLE geocaches ADD COLUMN active INTEGER DEFAULT ''");
-                console.log(rs);
-                db.version = "1.6";
-                rs = tx.executeSql('INSERT OR REPLACE INTO settings VALUES (?,?);', ["databaseVersion",20]);
-                console.log("Tables altered " + db.version);
-            }
-            if (db.version < "2.0") {
-                /*
                  * Adds new columns to geocaches.
                  */
                 rs = tx.executeSql("ALTER TABLE geocaches ADD COLUMN description TEXT NOT NULL DEFAULT ''");
                 console.log(rs);
                 rs = tx.executeSql("ALTER TABLE geocaches ADD COLUMN attributes TEXT NOT NULL DEFAULT ''");
                 console.log(rs);
-                rs = tx.executeSql("ALTER TABLE geocaches ADD COLUMN hint TEXT NOT NULL DEFAULT ''");
+                rs = tx.executeSql("ALTER TABLE geocaches ADD COLUMN facts TEXT NOT NULL DEFAULT ''");
                 console.log(rs);
-                db.version = "2.0";
-                rs = tx.executeSql('INSERT OR REPLACE INTO settings VALUES (?,?);', ["databaseVersion",16]);
+                db.version = "1.6";
+                rs = tx.executeSql('INSERT OR REPLACE INTO settings VALUES (?,?);', ["databaseVersion",1.6]);
                 console.log("Tables altered " + db.version);
             }
             /*

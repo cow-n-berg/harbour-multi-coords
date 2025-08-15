@@ -296,8 +296,12 @@ function evalFormula( formstr, letters ) {
 *  Function to show all letters and values for the geocache
 */
 function showLetters( letters ) {
+    var regExNr = /([0-9])/g;
     var result = "";
     var checksum = 0;
+    var checkSngl = 0;
+    var tmp
+
     for (var j = 0; j < letters.length; j++) {
         if (typeof letters[j].remark !== "undefined") {
             result += letters[j].letter + " = " + letters[j].lettervalue;
@@ -307,10 +311,24 @@ function showLetters( letters ) {
             result += "\n";
             if (letters[j].lettervalue !== "") {
                 checksum += Number(letters[j].lettervalue);
+                if (letters[j].letter.length === 1) {
+                    checkSngl += Number(letters[j].lettervalue);
+                }
+                else {
+                    // Add values separately
+                    do {
+                        tmp = regExNr.exec(letters[j].lettervalue);
+                        if (tmp !== null) {
+                            checkSngl += Number(tmp[1]);
+                        }
+                    } while (tmp !== null)
+                }
             }
         }
     }
     result += "Checksum = " + checksum;
+    result += "\n";
+    result += "Checksum single = " + checkSngl;
     return result
 }
 
@@ -319,7 +337,6 @@ function showLetters( letters ) {
 */
 function reqWpLetters( letters, wayptid ) {
     var result = "";
-    var checksum = 0;
     var allFound = true;
     for (var j = 0; j < letters.length; j++) {
 //        console.log("Vergelijk " + letters[j].wayptid + ", " + wayptid + ", " + letters[j].letter );
@@ -331,7 +348,7 @@ function reqWpLetters( letters, wayptid ) {
         }
     }
     if (result !== "") {
-        result = ", " + (allFound ? qsTr("find ") : qsTr("found ")) + result;
+        result = ", " + (allFound ? qsTr("found ") : qsTr("find ")) + result;
     }
 //    console.log("wayptid: " + wayptid + ", " + result + ", " + JSON.stringify(letters));
     return result
@@ -427,7 +444,7 @@ function coordsByRegEx(rawText, searchLength) {
 
     // Stages in GPX file
 //  var regExStages = /<wpt lat="([^"]*)" lon="([^"]*)">.+?<name>(.{2}).+?<\/name>.+?<cmt>(.*?)<\/cmt>.+?<desc>(.*?)<\/desc>.+?<sym>(.*?)<\/sym>.+?<\/wpt>/g;
-    var regExWaypt  = /(<wpt lat=.+?<\/wpt)>/g;
+    var regExWaypt  = /<wpt lat=[^>]+>(.+?)<\/wpt>/g; // /(<wpt lat=.+?<\/wpt)>/g;
     var regExStWayp = /<wpt lat="([^"]*)" lon="([^"]*)">/;
     var regExStName = /<name>(.{2}).+?<\/name>/;
     var regExWpNr   = /([0-9]+?)/;

@@ -63,13 +63,13 @@ Dialog {
 
             TextArea {
                 width: parent.width
-                height: Screen.height / 4
+                height: Screen.height / 3
                 text: generic.wpNote
                 color: generic.secondaryColor
                 readOnly: true
                 visible: generic.wpNote !== ""
                 labelVisible: false
-                font.pixelSize: Theme.fontSizeLarge
+                font.pixelSize: Theme.fontSizeMedium
 
             }
 
@@ -122,7 +122,7 @@ Dialog {
                 text: TF.remarkValues(lettRemark.text)
                 label: qsTr("Remark analysis")
                 labelVisible: false
-                font.pixelSize: Theme.fontSizeMedium
+                font.pixelSize: Theme.fontSizeSmall
                 color: generic.secondaryColor
                 visible: lettRemark.text !== ""
             }

@@ -31,28 +31,28 @@ Page {
 
     property bool   addEnabled : true
 
-    property string wp1  : "1"
-    property string wp2  : "1"
-    property string wp3  : "1"
-    property string wp4  : "1"
-    property string wp5  : "1"
-    property string wp11 : "1"
-    property string wp21 : "1"
-    property string wp22 : "1"
-    property string wp23 : "1"
-    property string wp24 : "1"
-    property string wp31 : "1"
-    property string wp32 : "1"
-    property string wp41 : "1"
-    property string wp42 : "1"
-    property string wp51 : "1"
-    property string wp52 : "1"
-    property string wp61 : "1"
-    property string wp62 : "1"
-    property string wp71 : "1"
-    property string wp72 : "1"
-    property string wp73 : "1"
-    property string wp81 : "1"
+    property string wp1  : "0"
+    property string wp2  : "0"
+    property string wp3  : "0"
+    property string wp4  : "0"
+    property string wp5  : "0"
+    property string wp11 : "0"
+    property string wp21 : "0"
+    property string wp22 : "0"
+    property string wp23 : "0"
+    property string wp24 : "0"
+    property string wp31 : "0"
+    property string wp32 : "0"
+    property string wp41 : "0"
+    property string wp42 : "0"
+    property string wp51 : "0"
+    property string wp52 : "0"
+    property string wp61 : "0"
+    property string wp62 : "0"
+    property string wp71 : "0"
+    property string wp72 : "0"
+    property string wp73 : "0"
+    property string wp81 : "0"
 
     property string projText   : "" // "Projection of WP " + wp11 + ": " + deg1.text + "° and " + dist1.text + " m"
     property string moveText   : "" // "Moving WP " + wp81 + ": " + dist2.text + " m North, " + dist3.text + " m East"
@@ -202,6 +202,8 @@ Page {
                     Row {
                         spacing: Theme.itemSizeSmall
                         anchors.horizontalCenter: parent.horizontalCenter
+                        bottomPadding: Theme.paddingMedium
+
                         IconButton {
                             icon.source: "image://theme/icon-l-new"
                             icon.color: generic.primaryColor
@@ -231,7 +233,7 @@ Page {
                             icon.color: generic.primaryColor
                             icon.source: "image://theme/icon-l-dismiss"
                             onClicked: {
-                                wp11 = "1"
+                                wp11 = "0"
                                 deg1.text = ""
                                 dist1.text = ""
                                 projCoord = ""
@@ -309,6 +311,8 @@ Page {
                     Row {
                         spacing: Theme.itemSizeSmall
                         anchors.horizontalCenter: parent.horizontalCenter
+                        bottomPadding: Theme.paddingMedium
+
                         IconButton {
                             icon.source: "image://theme/icon-l-new"
                             icon.color: generic.primaryColor
@@ -338,7 +342,7 @@ Page {
                             icon.color: generic.primaryColor
                             icon.source: "image://theme/icon-l-dismiss"
                             onClicked: {
-                                wp81 = "1"
+                                wp81 = "0"
                                 dist2.text = ""
                                 dist3.text = ""
                                 moveCoord = ""
@@ -403,15 +407,15 @@ Page {
                     Row {
                         spacing: Theme.itemSizeSmall
                         anchors.horizontalCenter: parent.horizontalCenter
+                        bottomPadding: Theme.paddingMedium
 
                         IconButton {
                             icon.color: generic.primaryColor
                             icon.source: "image://theme/icon-l-dismiss"
                             onClicked: {
-                                wp61 = "1"
-                                wp62 = "1"
+                                wp61 = "0"
+                                wp62 = "0"
                                 distAngle = ""
-//                                wp61.focus = true
                             }
                         }
                     }
@@ -506,6 +510,7 @@ Page {
                     Row {
                         spacing: Theme.itemSizeSmall
                         anchors.horizontalCenter: parent.horizontalCenter
+                        bottomPadding: Theme.paddingMedium
 
                         IconButton {
                             icon.source: "image://theme/icon-l-new"
@@ -538,10 +543,10 @@ Page {
                             icon.color: generic.primaryColor
                             icon.source: "image://theme/icon-l-dismiss"
                             onClicked: {
-                                wp21 = "1"
-                                wp22 = "1"
-                                wp23 = "1"
-                                wp24 = "1"
+                                wp21 = "0"
+                                wp22 = "0"
+                                wp23 = "0"
+                                wp24 = "0"
                                 intersect1 = ""
                            }
                         }
@@ -632,6 +637,7 @@ Page {
                     Row {
                         spacing: Theme.itemSizeSmall
                         anchors.horizontalCenter: parent.horizontalCenter
+                        bottomPadding: Theme.paddingMedium
 
                         IconButton {
                             icon.source: "image://theme/icon-l-new"
@@ -664,9 +670,9 @@ Page {
                             icon.color: generic.primaryColor
                             icon.source: "image://theme/icon-l-dismiss"
                             onClicked: {
-                                wp31 = "1"
+                                wp31 = "0"
                                 deg31.text = ""
-                                wp32 = "1"
+                                wp32 = "0"
                                 deg32.text = ""
                                 intersect2 = ""
                                 deg31.focus = true
@@ -761,6 +767,7 @@ Page {
                     Row {
                         spacing: Theme.itemSizeSmall
                         anchors.horizontalCenter: parent.horizontalCenter
+                        bottomPadding: Theme.paddingMedium
 
                         IconButton {
                             icon.source: "image://theme/icon-l-new"
@@ -794,9 +801,9 @@ Page {
                             icon.color: generic.primaryColor
                             icon.source: "image://theme/icon-l-dismiss"
                             onClicked: {
-                                wp41 = "1"
+                                wp41 = "0"
                                 deg41.text = ""
-                                wp42 = "1"
+                                wp42 = "0"
                                 radius42.text = ""
                                 intersect3 = undefined
                            }
@@ -890,6 +897,7 @@ Page {
                     Row {
                         spacing: Theme.itemSizeSmall
                         anchors.horizontalCenter: parent.horizontalCenter
+                        bottomPadding: Theme.paddingMedium
 
                         IconButton {
                             icon.source: "image://theme/icon-l-new"
@@ -925,9 +933,9 @@ Page {
                             icon.color: generic.primaryColor
                             icon.source: "image://theme/icon-l-dismiss"
                             onClicked: {
-                                wp51 = "1"
+                                wp51 = "0"
                                 radius51.text = ""
-                                wp52 = "1"
+                                wp52 = "0"
                                 radius52.text = ""
                                 intersect4 = undefined
                            }
@@ -1008,6 +1016,7 @@ Page {
                     Row {
                         spacing: Theme.itemSizeSmall
                         anchors.horizontalCenter: parent.horizontalCenter
+                        bottomPadding: Theme.paddingMedium
 
                         IconButton {
                             icon.source: "image://theme/icon-l-new"
@@ -1042,11 +1051,10 @@ Page {
                             icon.color: generic.primaryColor
                             icon.source: "image://theme/icon-l-dismiss"
                             onClicked: {
-                                wp71 = "1"
-                                wp72 = "1"
-                                wp73 = "1"
+                                wp71 = "0"
+                                wp72 = "0"
+                                wp73 = "0"
                                 circle = undefined
-//                                wp71.focus = true
                            }
                         }
                     }
@@ -1102,6 +1110,7 @@ Page {
                     Row {
                         spacing: Theme.itemSizeSmall
                         anchors.horizontalCenter: parent.horizontalCenter
+                        bottomPadding: Theme.paddingMedium
 
                         IconButton {
                             icon.source: "image://theme/icon-l-new"
@@ -1218,6 +1227,7 @@ Page {
                     Row {
                         spacing: Theme.itemSizeSmall
                         anchors.horizontalCenter: parent.horizontalCenter
+                        bottomPadding: Theme.paddingMedium
 
                         IconButton {
                             icon.source: "image://theme/icon-l-new"
@@ -1367,17 +1377,17 @@ Page {
                     Row {
                         spacing: Theme.itemSizeSmall
                         anchors.horizontalCenter: parent.horizontalCenter
+                        bottomPadding: Theme.paddingMedium
 
                         IconButton {
                             icon.color: generic.primaryColor
                             icon.source: "image://theme/icon-l-dismiss"
                             onClicked: {
-                                wp1 = "1"
-                                wp2 = "1"
-                                wp3 = "1"
-                                wp4 = "1"
-                                wp5 = "1"
-//                                wp1.focus = true
+                                wp1 = "0"
+                                wp2 = "0"
+                                wp3 = "0"
+                                wp4 = "0"
+                                wp5 = "0"
                             }
                         }
                     }
